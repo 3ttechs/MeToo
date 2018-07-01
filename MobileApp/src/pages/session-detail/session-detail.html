@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title *ngIf="session">{{session.name}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="session">
+    <h1>{{session.name}}</h1>
+    <h4 *ngFor="let speaker of session?.speakers">
+    {{speaker.name}}
+  </h4>
+    <p>
+      {{session.timeStart}} - {{session.timeEnd}}
+    </p>
+    <p>{{session.location}}</p>
+    <p>{{session.description}}</p>
+  </div>
+  <ion-fab bottom left #fab>
+      <button ion-fab><ion-icon name="share"></ion-icon></button>
+      <ion-fab-list side="right">
+        <button ion-fab color="google" (click)="openSocial('Google+', fab)"><ion-icon name="logo-googleplus"></ion-icon></button>
+        <button ion-fab color="twitter" (click)="openSocial('Twitter', fab)"><ion-icon name="logo-twitter"></ion-icon></button>
+        <button ion-fab color="facebook" (click)="openSocial('Facebook', fab)"><ion-icon name="logo-facebook"></ion-icon></button>
+      </ion-fab-list>
+    </ion-fab>
+</ion-content>

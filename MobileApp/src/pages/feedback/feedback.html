@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Feedback</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="outer-content session-list">
+  <ion-list>
+    <ion-grid fixed>
+      <ion-row align-items-stretch>
+
+        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+
+          <ion-card class="session-card">
+            <ion-card-header>
+              <button ion-item detail-none>
+                <ion-avatar item-start>
+                  <!--<img [src]="speaker.profilePic" alt="Speaker profile pic">-->
+                </ion-avatar>
+                Session Name 1
+              </button>
+            </ion-card-header>
+
+            <ion-card-content class="outer-content">
+              <ion-list>
+                <button ion-item >
+                  <h3>Session Name 1</h3>
+                </button>
+
+                <button ion-item>
+                  <h3>Session Name 1</h3>
+                </button>
+              </ion-list>
+            </ion-card-content>
+
+          </ion-card>
+
+        </ion-col>
+
+
+
+        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+
+            <ion-card class="session-card">
+              <ion-card-header>
+                <button ion-item detail-none>
+                  <ion-avatar item-start>
+                    <!--<img [src]="speaker.profilePic" alt="Speaker profile pic">-->
+                  </ion-avatar>
+                  Session Name 1
+                </button>
+  
+              </ion-card-header>
+  
+              <ion-card-content class="outer-content">
+
+
+
+                <form #feedbackForm="ngForm" novalidate>
+                  <ion-list no-lines>
+                    <ion-item>
+                      <ion-label stacked color="primary">Feedback </ion-label>
+                      <ion-input name="feedbackby" type="text" required> </ion-input>
+                    </ion-item>
+                    <p ion-text [hidden]="submitted == true" color="danger" padding-left>
+                      Feedback is required
+                    </p>
+              
+                  </ion-list>
+              
+                  <div padding>
+                    <button ion-button  type="submit" block>Submit</button>
+                  </div>
+                </form>
+
+              </ion-card-content>
+  
+            </ion-card>
+  
+          </ion-col>
+
+
+
+
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>
+
+

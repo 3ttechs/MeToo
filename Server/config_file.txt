@@ -1,0 +1,3 @@
+main_server_host: "localhost"
+main_server_port: 5000
+
