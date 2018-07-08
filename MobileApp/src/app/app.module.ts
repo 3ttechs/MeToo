@@ -20,10 +20,16 @@ import { FeedbackPage } from '../pages/feedback/feedback';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { VisionPage } from '../pages/vision/vision';
+import { NotificationPage } from '../pages/notification/notification';
+import { ContactsPage } from '../pages/contacts/contacts';
 
+import { ContactProvider } from '../providers/contact-provider';
 import { ConferenceData } from '../providers/conference-data';
 import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
+
+import { Ionic2RatingModule } from 'ionic2-rating';
+
 
 @NgModule({
   declarations: [
@@ -39,12 +45,15 @@ import { NgCalendarModule  } from 'ionic2-calendar';
     FeedbackPage,
     TabsPage,
     TutorialPage,
-    VisionPage
+    VisionPage,
+    NotificationPage,
+    ContactsPage    
   ],
   imports: [
     NgCalendarModule,
     BrowserModule,
     HttpModule,
+    Ionic2RatingModule,
     IonicModule.forRoot(ConferenceApp, {}, {
       links: [
         { component: TabsPage, name: 'TabsPage', segment: 'tabs-page' },
@@ -54,9 +63,12 @@ import { NgCalendarModule  } from 'ionic2-calendar';
         { component: SessionDetailPage, name: 'SessionDetail', segment: 'sessionDetail/:sessionId' },
         { component: ScheduleFilterPage, name: 'ScheduleFilter', segment: 'scheduleFilter' },
         { component: FeedbackPage, name: 'FeedbackList', segment: 'speakerList' },
-        { component: MapPage, name: 'Map', segment: 'map' },
+        { component: MapPage, name: 'MapPage', segment: 'map' },
         { component: TutorialPage, name: 'Tutorial', segment: 'tutorial' },
         { component: VisionPage, name: 'VisionPage', segment: 'support' },
+        { component: NotificationPage, name: 'NotificationPage', segment: 'notification' },
+        { component: ContactsPage, name: 'ContactsPage', segment: 'contacts' },
+
         { component: LoginPage, name: 'LoginPage', segment: 'login' },
         { component: SignupPage, name: 'SignupPage', segment: 'signup' }
             
@@ -78,11 +90,14 @@ import { NgCalendarModule  } from 'ionic2-calendar';
     FeedbackPage,
     TabsPage,
     TutorialPage,
-    VisionPage
+    VisionPage,
+    NotificationPage,
+    ContactsPage    
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ConferenceData,
+    ContactProvider,
     UserData,
     InAppBrowser,
     SplashScreen

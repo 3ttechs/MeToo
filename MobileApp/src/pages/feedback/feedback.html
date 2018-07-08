@@ -11,70 +11,74 @@
   <ion-list>
     <ion-grid fixed>
       <ion-row align-items-stretch>
+        
 
-        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
-
-          <ion-card class="session-card">
-            <ion-card-header>
-              <button ion-item detail-none>
-                <ion-avatar item-start>
-                  <!--<img [src]="speaker.profilePic" alt="Speaker profile pic">-->
-                </ion-avatar>
-                Session Name 1
-              </button>
-            </ion-card-header>
-
-            <ion-card-content class="outer-content">
-              <ion-list>
-                <button ion-item >
-                  <h3>Session Name 1</h3>
-                </button>
-
-                <button ion-item>
-                  <h3>Session Name 1</h3>
-                </button>
-              </ion-list>
-            </ion-card-content>
-
-          </ion-card>
-
-        </ion-col>
-
-
-
+        
         <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
 
             <ion-card class="session-card">
               <ion-card-header>
                 <button ion-item detail-none>
-                  <ion-avatar item-start>
-                    <!--<img [src]="speaker.profilePic" alt="Speaker profile pic">-->
-                  </ion-avatar>
-                  Session Name 1
+
+                  Status update for XYZ
                 </button>
   
               </ion-card-header>
   
               <ion-card-content class="outer-content">
 
-
-
                 <form #feedbackForm="ngForm" novalidate>
-                  <ion-list no-lines>
-                    <ion-item>
-                      <ion-label stacked color="primary">Feedback </ion-label>
-                      <ion-input name="feedbackby" type="text" required> </ion-input>
-                    </ion-item>
-                    <p ion-text [hidden]="submitted == true" color="danger" padding-left>
-                      Feedback is required
-                    </p>
-              
-                  </ion-list>
-              
-                  <div padding>
-                    <button ion-button  type="submit" block>Submit</button>
-                  </div>
+                 
+                    <ion-list no-lines>
+                        <ion-item>
+                            <ion-label stacked color="black">Organizer : Lakshmy</ion-label>
+                            <ion-label stacked color="black">Date : 4July2018</ion-label>
+                            <ion-label stacked color="black">Venue : TTT Office, Bangalore</ion-label>
+                        </ion-item>
+                        <hr>
+                        <ion-item>
+                            <ion-label stacked color="primary">
+                                Not interested to give feedback
+                            </ion-label>
+                        <ion-checkbox solid></ion-checkbox>
+                          </ion-item>
+               
+                        <ion-item>
+                            <ion-label stacked color="primary">Feedback</ion-label>
+                        </ion-item>
+
+
+                        <ion-item>
+                          <rating [(ngModel)]="rate" name="rate" title="Rating"
+                              readOnly="false"
+                              max="5"
+                              emptyStarIconName="star-outline"
+                              halfStarIconName="star-half"
+                              starIconName="star"
+                              nullable="false"
+                              (ngModelChange)="onModelChange($event)">
+                          </rating>                
+                        </ion-item>
+
+                        <ion-item>
+                              <ion-textarea placeholder="Enter your feedback"></ion-textarea>
+                        </ion-item>
+                    </ion-list>
+
                 </form>
+
+                <ion-grid>
+                    <ion-row >
+                        <ion-col></ion-col>
+                      <ion-col col-8>
+                          <button ion-button round type="submit" block>Submit Feedback</button>
+                
+                      </ion-col>
+                      <ion-col></ion-col>
+                    </ion-row>
+                    </ion-grid>
+
+
 
               </ion-card-content>
   
@@ -82,6 +86,80 @@
   
           </ion-col>
 
+
+          <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+
+              <ion-card class="session-card">
+                <ion-card-header>
+                  <button ion-item detail-none>
+
+                    Information sharing session
+                  </button>
+    
+                </ion-card-header>
+    
+                <ion-card-content class="outer-content">
+  
+                  <form #feedbackForm="ngForm" novalidate>
+                   
+                      <ion-list no-lines>
+                          <ion-item>
+                              <ion-label stacked color="black">Organizer : Lakshmy</ion-label>
+                              <ion-label stacked color="black">Date : 4July2018</ion-label>
+                              <ion-label stacked color="black">Venue : TTT Office, Bangalore</ion-label>
+                          </ion-item>
+                          <hr>
+                          
+                          <ion-item>
+                              <ion-label stacked>
+                                  Not interested to give feedback
+                              </ion-label>
+                          <ion-checkbox solid></ion-checkbox>
+                            </ion-item>
+                 
+                          <ion-item>
+                              <ion-label stacked color="primary">Feedback</ion-label>
+                          </ion-item>
+  
+  
+                          <ion-item>
+                            <rating [(ngModel)]="rate" name="rate" title="Rating"
+                                readOnly="false"
+                                max="5"
+                                emptyStarIconName="star-outline"
+                                halfStarIconName="star-half"
+                                starIconName="star"
+                                nullable="false"
+                                (ngModelChange)="onModelChange($event)">
+                            </rating>                
+                          </ion-item>
+  
+                          <ion-item>
+                                <ion-textarea placeholder="Enter your feedback"></ion-textarea>
+                          </ion-item>
+                      </ion-list>
+  
+                  </form>
+
+
+                  <ion-grid>
+                      <ion-row >
+                          <ion-col></ion-col>
+                        <ion-col col-8>
+                            <button ion-button round type="submit" block>Submit Feedback</button>
+                  
+                        </ion-col>
+                        <ion-col></ion-col>
+                      </ion-row>
+                      </ion-grid>
+
+  
+                </ion-card-content>
+    
+              </ion-card>
+    
+            </ion-col>
+        
 
 
 

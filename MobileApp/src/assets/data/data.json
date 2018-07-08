@@ -9,7 +9,7 @@
         "timeStart": "8:00 am",
         "timeEnd": "9:00 am",
         "location": "Main hallway",
-        "tracks": ["Food"],
+        "tracks": ["Business"],
         "id": "1"
       }]
     }, {
@@ -21,7 +21,7 @@
         "speakerNames": ["Ellie Elephant"],
         "timeStart": "9:15 am",
         "timeEnd": "9:30 am",
-        "tracks": ["Ionic"],
+        "tracks": ["Personal"],
         "id": "2"
       }, {
         "name": "Decision making",
@@ -30,7 +30,7 @@
         "speakerNames": ["Ted Turtle"],
         "timeStart": "9:30 am",
         "timeEnd": "9:45 am",
-        "tracks": ["Ionic"],
+        "tracks": ["Education"],
         "id": "3"
       }, {
         "name": "Problem solving",
@@ -39,7 +39,7 @@
         "speakerNames": ["Rachel Rabbit"],
         "timeStart": "9:45 am",
         "timeEnd": "10:00 am",
-        "tracks": ["Tooling"],
+        "tracks": ["Entertainment"],
         "id": "4"
       }]
     }, {
@@ -51,7 +51,7 @@
         "speakerNames": ["Eva Eagle", "Lionel Lion"],
         "timeStart": "10:00 am",
         "timeEnd": "10:15 am",
-        "tracks": ["Ionic"],
+        "tracks": ["Leisure"],
         "id": "5"
       }, {
         "name": "Innovation meeting",
@@ -60,7 +60,7 @@
         "speakerNames": ["Rachel Rabbit"],
         "timeStart": "10:15 am",
         "timeEnd": "10:30 am",
-        "tracks": ["Angular"],
+        "tracks": ["Family"],
         "id": "6"
       }, {
         "name": "Knowledge sharing",
@@ -69,7 +69,7 @@
         "speakerNames": ["Isabella Iguana", "Eva Eagle"],
         "timeStart": "10:15 am",
         "timeEnd": "10:30 am",
-        "tracks": ["Design"],
+        "tracks": ["Consultation"],
         "id": "7"
       }, {
         "name": "One on One meeting",
@@ -78,7 +78,7 @@
         "speakerNames": ["Charlie Cheetah"],
         "timeStart": "10:45 am",
         "timeEnd": "11:00 am",
-        "tracks": ["Services"],
+        "tracks": ["Sales"],
         "id": "8"
       }]
     }, {
@@ -90,7 +90,7 @@
         "speakerNames": ["Karl Kitten", "Lionel Lion"],
         "timeStart": "11:00 am",
         "timeEnd": "11:45 am",
-        "tracks": ["Workshop"],
+        "tracks": ["Marketing"],
         "id": "9"
       }, {
         "name": "Community Interaction",
@@ -99,7 +99,7 @@
         "speakerNames": ["Lionel Lion", "Gino Giraffe"],
         "timeStart": "11:30 am",
         "timeEnd": "11:50 am",
-        "tracks": ["Communication"],
+        "tracks": ["Business"],
         "id": "10"
       }, {
         "name": "Workout together",
@@ -108,7 +108,7 @@
         "speakerNames": ["Rachel Rabbit", "Eva Eagle"],
         "timeStart": "11:30 am",
         "timeEnd": "12:00 pm",
-        "tracks": ["Navigation"],
+        "tracks": ["Personal"],
         "id": "11"
       }]
     }, {
@@ -119,7 +119,7 @@
         "description": "Come grab lunch with all the Ionic fanatics and talk all things Ionic",
         "timeStart": "12:00 pm",
         "timeEnd": "1:00 pm",
-        "tracks": ["Food"],
+        "tracks": ["Education"],
         "id": "12"
       }]
     }, {
@@ -131,7 +131,7 @@
         "speakerNames": ["Paul Puppy"],
         "timeStart": "1:00 pm",
         "timeEnd": "1:15 pm",
-        "tracks": ["Communication"],
+        "tracks": ["Entertainment"],
         "id": "13"
       }, {
         "name": "Working lunch",
@@ -140,7 +140,7 @@
         "speakerNames": ["Gino Giraffe"],
         "timeStart": "1:15 pm",
         "timeEnd": "1:30 pm",
-        "tracks": ["Communication"],
+        "tracks": ["Leisure"],
         "id": "14"
       }, {
         "name": "Knowledge sharing",
@@ -149,7 +149,7 @@
         "speakerNames": ["Molly Mouse", "Burt Bear"],
         "timeStart": "1:30 pm",
         "timeEnd": "2:00 pm",
-        "tracks": ["Services"],
+        "tracks": ["Family"],
         "id": "15"
       }]
     }, {
@@ -161,7 +161,7 @@
         "speakerNames": ["Burt Bear", "Charlie Cheetah"],
         "timeStart": "2:00 pm",
         "timeEnd": "2:30 pm",
-        "tracks": ["Services"],
+        "tracks": ["Consultation"],
         "id": "16"
       }, {
         "name": "Product demonstration",
@@ -170,7 +170,7 @@
         "speakerNames": ["Donald Duck"],
         "timeStart": "2:30 pm",
         "timeEnd": "2:45 pm",
-        "tracks": ["Documentation"],
+        "tracks": ["Sales"],
         "id": "17"
       }, {
         "name": "UX planning",
@@ -179,7 +179,7 @@
         "speakerNames": ["Isabella Iguana", "Ellie Elephant"],
         "timeStart": "2:45 pm",
         "timeEnd": "3:00 pm",
-        "tracks": ["Design"],
+        "tracks": ["Marketing"],
         "id": "18"
       }]
     }, {
@@ -191,7 +191,7 @@
         "speakerNames": ["Ted Turtle"],
         "timeStart": "3:00 pm",
         "timeEnd": "3:30 pm",
-        "tracks": ["Angular"],
+        "tracks": ["Business"],
         "id": "19"
       }, {
         "name": "Online marketing",
@@ -200,7 +200,7 @@
         "speakerNames": ["Rachel Rabbit"],
         "timeStart": "3:30 pm",
         "timeEnd": "3:45 pm",
-        "tracks": ["Navigation"],
+        "tracks": ["Personal"],
         "id": "20"
       }]
     }]

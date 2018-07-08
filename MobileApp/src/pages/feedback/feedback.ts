@@ -29,6 +29,8 @@ export class FeedbackPage {
   actionSheet: ActionSheet;
   speakers: any[] = [];
 
+  rate: number = 1;
+  
   constructor(
     public actionSheetCtrl: ActionSheetController,
     public navCtrl: NavController,
@@ -77,5 +79,9 @@ export class FeedbackPage {
     } as ActionSheetOptions);
 
     actionSheet.present();
+  }
+
+  onModelChange(data) : void {
+    console.log(". Event data: " + data);        
   }
 }

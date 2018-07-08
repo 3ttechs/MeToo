@@ -10,14 +10,24 @@
 <ion-content class="login-page">
 
 	<div class="logo">
-		<img src="assets/img/appicon.svg" alt="Ionic Logo">
+		<img src="assets/img/appicon.png" alt="Ionic Logo">
 	</div>
 
 	<form #signupForm="ngForm" novalidate>
 		<ion-list no-lines>
+				<ion-item>
+						<ion-label stacked color="primary">Name</ion-label>
+						<ion-input [(ngModel)]="signup.username" placeholder="Name" name="username" type="text" #username="ngModel" required>
+						</ion-input>
+					</ion-item>
+					<p ion-text [hidden]="username.valid || submitted == false" color="danger" padding-left>
+						Name is required
+					</p>
+
+					
 			<ion-item>
 				<ion-label stacked color="primary">Username</ion-label>
-				<ion-input [(ngModel)]="signup.username" name="username" type="text" #username="ngModel" required>
+				<ion-input [(ngModel)]="signup.username" placeholder="Phone Number" name="username" type="text" #username="ngModel" required>
 				</ion-input>
 			</ion-item>
 			<p ion-text [hidden]="username.valid || submitted == false" color="danger" padding-left>
@@ -26,17 +36,41 @@
 
 			<ion-item>
 				<ion-label stacked color="primary">Password</ion-label>
-				<ion-input [(ngModel)]="signup.password" name="password" type="password" #password="ngModel" required>
+				<ion-input [(ngModel)]="signup.password" placeholder="**********" name="password" type="password" #password="ngModel" required>
 				</ion-input>
 			</ion-item>
 			<p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
 				Password is required
 			</p>
+
+			<ion-item>
+				<ion-label stacked color="primary">Confirm Password</ion-label>
+				<ion-input [(ngModel)]="signup.Confirmpassword" placeholder="**********" name="password" type="password" #Confirmpassword="ngModel" required>
+				</ion-input>
+			</ion-item>
+			<p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+				Confirm password is required
+			</p>
+
+
+
+			<ion-item>
+				<ion-label stacked color="primary">Email</ion-label>
+				<ion-input [(ngModel)]="signup.Email" name="Email" placeholder="abc@xyz.com" type="text" #Email="ngModel" required>
+				</ion-input>
+			</ion-item>
+			<p ion-text [hidden]="Email.valid || submitted == false" color="danger" padding-left>
+				Email is required
+			</p>
+
+
 		</ion-list>
 
-		<div padding>
-			<button ion-button (click)="onSignup(signupForm)" type="submit" block>Create</button>
-		</div>
+		<ion-row responsive-sm>
+
+
+			<button ion-button round (click)="onSignup(signupForm)" type="submit" block>Create</button>
+		</ion-row>
 	</form>
 
 </ion-content>

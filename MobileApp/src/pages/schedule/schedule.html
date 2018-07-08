@@ -38,13 +38,13 @@
 
     <ion-item-group *ngFor="let group of groups" [hidden]="group.hide">
 
-      <ion-item-divider sticky>
-        <ion-label>
-          {{group.time}}
+      <ion-item-divider item-md-divider-color sticky >
+        <ion-label color="primary">
+          <B>{{group.time}}</B>
         </ion-label>
       </ion-item-divider>
 
-      <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0] | lowercase" [hidden]="session.hide">
+      <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0]" [hidden]="session.hide">
 
         <button ion-item (click)="goToSessionDetail(session)">
           <h3>{{session.name}}</h3>
@@ -57,10 +57,20 @@
 
         <ion-item-options>
           <button ion-button color="danger" *ngIf="segment === 'upcoming'">
-            DELETE
+              <ion-icon name="trash"></ion-icon>
+            Delete
           </button>
-          <button ion-button color="favorite" *ngIf="segment === 'past'">
-            PLACE HOLDER
+          <button ion-button color="secondary" *ngIf="segment === 'upcoming'">
+              <ion-icon name="checkmark"></ion-icon>
+              Accept
+            </button>
+            <button ion-button color="primary" *ngIf="segment === 'upcoming'">
+                <ion-icon name="close"></ion-icon>
+                Decline
+              </button>
+              <button ion-button color="favorite" *ngIf="segment === 'past'">
+                  <ion-icon name="alert"></ion-icon>
+            Place Holder
           </button>
         </ion-item-options>
 

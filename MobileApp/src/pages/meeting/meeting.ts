@@ -1,11 +1,11 @@
 import { NavController, ModalController, AlertController } from 'ionic-angular/index';
 import { Component } from "@angular/core";
 import * as moment from 'moment';
-
+// io
 @Component({
     templateUrl: "meeting.html"
 })
-export class MeetingPage {
+export class MeetingPage { 
     eventSource = [];
     viewTitle;
     selectedDay = new Date();
@@ -100,10 +100,13 @@ export class MeetingPage {
     }
 
     onCurrentDateChanged(event: Date) {
+      this.selectedDay = new Date(Date.UTC(event.getUTCFullYear(), event.getUTCMonth(), event.getUTCDate()));;
+        event.setDate;
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         event.setHours(0, 0, 0, 0);
         this.isToday = today.getTime() === event.getTime();
+       // this.isToday  = today.getTime();
     }
 
     createRandomEvents() {

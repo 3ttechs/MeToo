@@ -6,16 +6,118 @@
 
 <ion-content padding>
   <div *ngIf="session">
-    <h1>{{session.name}}</h1>
-    <h4 *ngFor="let speaker of session?.speakers">
-    {{speaker.name}}
-  </h4>
-    <p>
-      {{session.timeStart}} - {{session.timeEnd}}
-    </p>
-    <p>{{session.location}}</p>
-    <p>{{session.description}}</p>
+    <h2>Organizer: Balaji</h2>
+      <p>Time: {{session.timeStart}} - {{session.timeEnd}} </p>
+      <p>Venue: {{session.location}}</p>
+      <p>The Robert Wood Johnson Foundation Health & Society Scholars program enhances and broadens the intellectual perspectives that scholars bring from their original disciplines.  The program has enabled up to 12 individuals, each year, who have completed their doctoral training and produced outstanding work to engage in an intensive two-year program at one of four nationally prominent universities. Training activities at the participating universities are intentionally flexible to meet the diverse backgrounds, interests and needs of individual scholars. Specific offerings vary by site, but include two years of intensive seminars, scholar-directed research and analysis conducted with the guidance or collaboration of distinguished faculty mentors, and focused training in the skills necessary for effective leadership, program implementation and policy change. It is anticipated that academic, government and other employers involved in policy-making will seek out program graduates for leadership positions.</p>
+      <BR>
+        <BR>
+
+    <h2>Attendees and Feedback</h2>
+
   </div>
+
+
+
+
+  
+  <ion-content class="outer-content session-list">
+    <ion-list>
+      <ion-grid fixed>
+      <ion-row align-items-stretch>
+    
+        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+        <ion-card class="session-card">
+
+          <ion-card-header>
+          <button ion-item detail-none>Lakshmy1 </button>
+          <p> lakshmy@gmail.com</p>
+          <p> 9448373533</p>
+          </ion-card-header>
+    
+          <ion-card-content class="outer-content">
+          <ion-list><h3>Lakshmy1 Feedback</h3></ion-list>
+          </ion-card-content>
+    
+        </ion-card>    
+        </ion-col>
+  
+        
+        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+            <ion-card class="session-card">
+    
+              <ion-card-header>
+              <button ion-item detail-none>Organiser : Balaji </button>
+              <p> balaji@gmail.com</p>
+              <p> 9448373533</p>
+              </ion-card-header>
+        
+              <ion-card-content class="outer-content">
+              <ion-list><h3>Lakshmy1 Feedback</h3></ion-list>
+              </ion-card-content>
+        
+            </ion-card>    
+            </ion-col> 
+            <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+                <ion-card class="session-card">
+        
+                  <ion-card-header>
+                  <button ion-item detail-none>Lakshmy1 </button>
+                  <p> lakshmy1@gmail.com</p>
+                  <p> 9448373533</p>
+                  </ion-card-header>
+            
+                  <ion-card-content class="outer-content">
+                  <ion-list><h3>Lakshmy1 Feedback</h3></ion-list>
+                  </ion-card-content>
+            
+                </ion-card>    
+                </ion-col> 
+
+                <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+                    <ion-card class="session-card">
+            
+                      <ion-card-header>
+                      <button ion-item detail-none>Lakshmy2 </button>
+                      <p> lakshmy2@gmail.com</p>
+                      <p> 9448373533</p>
+                      </ion-card-header>
+                
+                      <ion-card-content class="outer-content">
+                      <ion-list><h3>Lakshmy2 Feedback</h3></ion-list>
+                      </ion-card-content>
+                
+                    </ion-card>    
+                    </ion-col> 
+                    
+                    <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+                        <ion-card class="session-card">
+                
+                          <ion-card-header>
+                          <button ion-item detail-none>Lakshmy3 </button>
+                          <p> lakshmy3@gmail.com</p>
+                          <p> 9448373533</p>
+                          </ion-card-header>
+                    
+                          <ion-card-content class="outer-content">
+                          <ion-list><h3>Lakshmy3 Feedback</h3></ion-list>
+                          </ion-card-content>
+                    
+                        </ion-card>    
+                        </ion-col>                     
+
+      </ion-row>
+      </ion-grid>
+    </ion-list>
+    </ion-content>
+
+
+
+
+
+
+
+
   <ion-fab bottom left #fab>
       <button ion-fab><ion-icon name="share"></ion-icon></button>
       <ion-fab-list side="right">

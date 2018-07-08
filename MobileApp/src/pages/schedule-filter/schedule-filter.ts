@@ -34,12 +34,14 @@ export class ScheduleFilterPage {
 
   resetFilters() {
     // reset all of the toggles to be checked
+    alert("This is my resetFilters");
     this.tracks.forEach(track => {
       track.isChecked = true;
     });
   }
 
   applyFilters() {
+    
     // Pass back a new array of track names to exclude
     let excludedTrackNames = this.tracks.filter(c => !c.isChecked).map(c => c.name);
     this.dismiss(excludedTrackNames);

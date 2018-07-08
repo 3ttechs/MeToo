@@ -1,24 +1,26 @@
 $categories: (
  ionic: color($colors, primary),
- angular: #AC282B,
- communication: #8E8D93,
- tooling: #FE4C52,
- services: #FD8B2D,
- design: #FED035,
- workshop: #69BB7B,
- food: #3BC7C4,
- documentation: #B16BE3,
- navigation: #6600CC,
+ Business: #AC282B,
+ Personal: #8E8D93,
+ Education: #FE4C52,
+ Entertainment: #FD8B2D,
+ Leisure: #FED035,
+ Family: #69BB7B,
+ Consultation: #3BC7C4,
+ Sales: #B16BE3,
+ Marketing: #6600CC,
 );
 
 @function auxiliary-categories() {
   @return map-remove($categories);
 }
 
+$item-md-divider-color: "primary";
+
 page-schedule {
   @each $track, $value in auxiliary-categories() {
    ion-item-sliding[track=#{$track}] ion-label {
-     border-left: 2px solid $value;
+     border-left: 7px solid $value;
      padding-left: 10px;
    }
   }

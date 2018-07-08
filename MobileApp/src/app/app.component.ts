@@ -11,8 +11,10 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { MeetingPage } from '../pages/meeting/meeting';
 import { FeedbackPage } from '../pages/feedback/feedback';
 import { VisionPage } from '../pages/vision/vision';
+import { NotificationPage } from '../pages/notification/notification';
 import { ConferenceData } from '../providers/conference-data';
 import { UserData } from '../providers/user-data';
+import { ContactsPage } from '../pages/contacts/contacts';
 
 export interface PageInterface {
   title: string;
@@ -39,11 +41,13 @@ export class ConferenceApp {
   appPages: PageInterface[] = [
     { title: 'My Schedules', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
     { title: 'Add Meeting', name: 'TabsPage', component: TabsPage, tabComponent: MeetingPage, index: 1, icon: 'clock' },
-    { title: 'Feedbacks', name: 'TabsPage', component: TabsPage, tabComponent: FeedbackPage, index: 2, icon: 'contacts' },
-    { title: 'Map', name: 'TabsPage', component: TabsPage, tabComponent: MapPage, index: 3, icon: 'map' },
+    { title: 'Feedback', name: 'TabsPage', component: TabsPage, tabComponent: FeedbackPage, index: 2, icon: 'contacts' },
   ];
   loggedInPages: PageInterface[] = [
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
+    { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
+    { title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
+    { title: 'Map', name: 'MapPage', component: MapPage, icon: 'map' },
     { title: 'Logout', name: 'TabsPage', component: TabsPage, icon: 'log-out', logsOut: true }
   ];
   loggedOutPages: PageInterface[] = [
@@ -67,7 +71,7 @@ export class ConferenceApp {
     this.storage.get('hasSeenTutorial')
       .then((hasSeenTutorial) => {
         if (hasSeenTutorial) {
-          this.rootPage = TabsPage;
+          this.rootPage = LoginPage;
         } else {
           this.rootPage = TutorialPage;
         }
@@ -110,6 +114,7 @@ export class ConferenceApp {
 
     if (page.logsOut === true) {
       // Give the menu time to close before changing to logged out
+      this.nav.push(LoginPage);
       this.userData.logout();
     }
   }

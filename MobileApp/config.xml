@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.conferenceapp" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Ionic Conference</name>
-    <description>An Ionic Framework application for the Ionic Conference.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <name>MeToo</name>
+    <description>App for Prevention for Men and Protection for Women</description>
+    <author email="" href="">Thinking Things Technologies</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -16,13 +16,13 @@
     <allow-navigation href="mailto:*" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
-        <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon density="ldpi" src="resources/android/icon/appicon.png" />
+        <icon density="mdpi" src="resources/android/icon/appicon.png" />
+        <icon density="hdpi" src="resources/android/icon/appicon.png" />
+        <icon density="xhdpi" src="resources/android/icon/appicon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/appicon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/appicon.png" />
+        <icon src="resources/android/icon/appicon.png" />
         <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
         <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
         <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />

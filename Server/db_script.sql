@@ -1,35 +1,69 @@
+--###################################################################################################################
+--# DB Schema
+--###################################################################################################################
+
+
 DROP TABLE IF EXISTS attendee;
-DROP TABLE IF EXISTS session;
+DROP TABLE IF EXISTS meeting;
 DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS contact;
+DROP TABLE IF EXISTS feedback;
+DROP TABLE IF EXISTS notification;
 
 
 CREATE TABLE user (
-    user_id   INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-    login     TEXT    NOT NULL ,
-    password  TEXT    NOT NULL,
-    user_type TEXT    NOT NULL,
-    name      TEXT    NOT NULL,
-    phone_no  INT,
-    photo     BLOB
+    user_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    login_id    TEXT    NOT NULL,
+    passwd TEXT    NOT NULL,
+    user_name     TEXT    NOT NULL,
+    phone_no INTEGER,
+    email    TEXT
 );
-CREATE TABLE session (
-    session_id   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    user_id      INTEGER REFERENCES user (user_id) NOT NULL,
-    session_date DATE    NOT NULL,
-    from_time    TIME,
-    to_time      TIME,
+
+CREATE TABLE meeting (
+    meeting_id   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    organiser_id INTEGER REFERENCES user (user_id) NOT NULL,
+    start_date   DATE,
+    end_date     DATE,
+    start_time   TIME,
+    end_time     TIME,
+    title        TEXT,
     venue        TEXT,
-    attachment   TEXT
+    notes        TEXT,
+    category     TEXT,
+    response       TEXT
 );
+
+CREATE TABLE feedback (
+    feedback_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    star_rating INTEGER,
+    response      TEXT,
+    note        TEXT
+);
+
 CREATE TABLE attendee (
-	attendee_id INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL,
-    session_id INTEGER REFERENCES session (session_id) NOT NULL,
+    attendee_id INTEGER REFERENCES user (user_id) NOT NULL,
+    meeting_id  INTEGER REFERENCES meeting (meeting_id) NOT NULL,
+    feedback_id INTEGER REFERENCES feedback (feedback_id) NOT NULL,
+    response      TEXT
+);
+
+CREATE TABLE contact (
     user_id    INTEGER REFERENCES user (user_id) NOT NULL,
-    response   TEXT
+    contact_id INTEGER REFERENCES user (user_id) NOT NULL
 );
 
 
--###################################################################################################################
+CREATE TABLE notification (
+    user_id       INTEGER REFERENCES user (user_id) NOT NULL,
+    meeting_id  INTEGER REFERENCES meeting (meeting_id) NOT NULL,
+    note          TEXT,
+    notification_date DATE,
+    notification_time TIME
+);
+
+
+--###################################################################################################################
 --# Initial Data
 --###################################################################################################################
 
