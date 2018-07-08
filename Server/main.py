@@ -17,7 +17,7 @@ def home():
 
 #http://localhost:5000/add_meeting - Done
 #http://localhost:5000/get_meeting_list -Done
-#http://localhost:5000/get_meeting_details
+#http://localhost:5000/get_meeting_details - Done
 #http://localhost:5000/get_meeting_attendees
 #http://localhost:5000/get_meeting_attendees_feedback
 #http://localhost:5000/update_meeting_response
@@ -65,7 +65,8 @@ def get_meeting_list(user_id):
 #http://localhost:5000/get_meeting_details/meeting_id=1
 @app.route('/get_meeting_details/meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_details(user_id):
-
+    query = 'select * from meeting where meeting_id ='+ meeting_id
+    result = run_query(query)
     return "", 200
 
 
@@ -84,7 +85,7 @@ def get_meeting_details(user_id):
   "attendee_ids": [ 2,3]
 }
 '''
-
+#http://localhost:5000/add_meeting
 @app.route('/add_meeting', methods=['GET'])
 def add_meeting():
     d = json.loads(request.data)
