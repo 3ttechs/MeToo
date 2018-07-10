@@ -8,6 +8,7 @@ def run_select_query(query):
     cur = con.cursor()
     cur.execute(query)
     rows = cur.fetchall()
+    cur.connection.close()
     return rows
 
 def run_insert_query(query):
@@ -16,6 +17,7 @@ def run_insert_query(query):
     cur = con.cursor()
     cur.execute(query)
     con.commit()
+    cur.connection.close()
     return 0
 
 

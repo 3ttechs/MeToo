@@ -18,19 +18,184 @@ def home():
 #http://localhost:5000/add_meeting - Done
 #http://localhost:5000/get_meeting_list -Done
 #http://localhost:5000/get_meeting_details - Done
-#http://localhost:5000/get_meeting_attendees
-#http://localhost:5000/get_meeting_attendees_feedback
-#http://localhost:5000/update_meeting_response
+#http://localhost:5000/get_meeting_attendees - Done
+#http://localhost:5000/get_meeting_attendees_feedback - Done
+#http://localhost:5000/update_meeting_response - Done
+#http://localhost:5000/delete_meeting - Done
 
-#http://localhost:5000/add_feedback
+
+#http://localhost:5000/add_feedback - Done
 
 #http://localhost:5000/login - Done
-#http://localhost:5000/get_contacts_list
-#http://localhost:5000/get_notifications_list
+#http://localhost:5000/get_contacts_list  - Done
+#http://localhost:5000/get_notifications_list - Done
 #http://localhost:5000/add_general_comments
+#http://localhost:5000/add_new_user - Done
+#http://localhost:5000/add_contact - Done
+#http://localhost:5000/update_user_profile - Done
+
+
+#http://localhost:5000/get_contacts_list/user_id=1
+@app.route('/get_contacts_list/user_id=<user_id>', methods=['GET'])
+def get_contacts_list(user_id):
+    query = 'select * from user where user_id in (select contact_id from contact where user_id ='+ user_id+' )'
+    return json.dumps(run_query(query)), 200
+
+#http://localhost:5000/get_notifications_list/user_id=1
+@app.route('/get_notifications_list/user_id=<user_id>', methods=['GET'])
+def get_notifications_list(user_id):
+    query = 'select * from notification where user_id ='+ user_id
+    return json.dumps(run_query(query)), 200
+
+
+''' 
+{
+  "user_id": 1,  
+  "comment": "My Comments"
+}
+'''
+
+#http://localhost:5000/add_general_comments
+@app.route('/add_general_comments', methods=['GET'])
+def add_general_comments():
+    d = json.loads(request.data)
+    user_id = d['user_id']
+    comment = d['comment']
+
+    query = "INSERT INTO comment (user_id, comment) VALUES (%d, '%s')"% (user_id,comment)
+    run_insert_query(query)
+    return "Success", 200   
+
+
+''' 
+{
+  "login_id": "Lakshmy",
+  "passwd": "LaKsHmY",
+  "user_name": "Lakshmy", 
+  "phone_no": "9988776655",
+  "email": "g@h.com"
+}
+'''
+
 #http://localhost:5000/add_new_user
+@app.route('/add_new_user', methods=['GET'])
+def add_new_user():
+    d = json.loads(request.data)
+    login_id = d['login_id']
+    passwd = d['passwd']
+    user_name = d['user_name']
+    phone_no  = d['phone_no']
+    email  = d['email']
+
+    query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
+    run_insert_query(query)
+    user_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+    return str(user_id), 200   
+
+
+''' 
+{
+  "user_id": 1,  
+  "contact_name": "Lakshmy", 
+  "phone_no": "9988776655",
+  "email": "g@h.com"
+}
+'''
+
 #http://localhost:5000/add_contact
-#http://localhost:5000/upade_user_profile
+@app.route('/add_contact', methods=['GET'])
+def add_contact():
+    d = json.loads(request.data)
+    user_id = d['user_id']
+    login_id = d['contact_name']
+    passwd = d['contact_name']
+    user_name = d['contact_name']
+    phone_no  = d['phone_no']
+    email  = d['email']
+
+    # Check for duplicate user
+    data = run_select_query("select user_id from user where email='" + email+"'")
+    if (len(data)>0):
+        return '0', 200
+    data = run_select_query("select user_id from user where phone_no='" + phone_no+"'")
+    if (len(data)>0):
+        return '0', 200
+
+    query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
+    run_insert_query(query)
+    contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+    query = "INSERT INTO contact (user_id,contact_id) VALUES (%d,%d)"% (user_id,contact_id)
+    run_insert_query(query)
+    return str(contact_id), 200   
+
+
+
+''' 
+{
+  "user_id": 1,
+  "login_id": "Lakshmy",
+  "passwd": "LaKsHmY",
+  "user_name": "Lakshmy", 
+  "phone_no": "9988776655",
+  "email": "g@h.com"
+}
+'''
+
+#http://localhost:5000/update_user_profile
+@app.route('/update_user_profile', methods=['GET'])
+def update_user_profile():
+    d = json.loads(request.data)
+    user_id = d['user_id']
+    login_id = d['login_id']
+    passwd = d['passwd']
+    user_name  = d['user_name']
+    phone_no  = d['phone_no']
+    email  = d['email']        
+
+    query = "UPDATE user SET login_id='%s',passwd='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,passwd,user_name,phone_no,email,user_id)
+    run_insert_query(query)
+    return "Success", 200  
+
+
+''' 
+{
+  "feedback_id": 1,
+  "star_rating": 5,
+  "response": "ACCEPT", 
+  "note": "Response note"
+}
+'''
+
+#http://localhost:5000/add_feedback
+@app.route('/add_feedback', methods=['GET'])
+def add_feedback():
+    d = json.loads(request.data)
+    feedback_id = d['feedback_id']
+    star_rating = d['star_rating']
+    response = d['response']
+    note  = d['note']
+
+    query = "UPDATE feedback SET star_rating=%d,response='%s',note='%s' WHERE feedback_id=%s" % (star_rating,response,note,feedback_id)
+    run_insert_query(query)
+    return "Success", 200   
+
+
+
+#http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=ACCEPT or DECLINE
+@app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['GET'])
+def update_meeting_response(meeting_id, attendee_id,response):
+    query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)
+    run_insert_query(query)
+    return "Success", 200    
+
+#http://localhost:5000/delete_meeting/meeting_id=1
+@app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
+def delete_meeting(meeting_id):
+    response = "DELETE"
+    query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
+    run_insert_query(query)
+    return "Success", 200   
+
 
 #http://localhost:5000/login
 # body : {"login_id": "a","passwd":"a"}
@@ -64,13 +229,30 @@ def get_meeting_list(user_id):
 
 #http://localhost:5000/get_meeting_details/meeting_id=1
 @app.route('/get_meeting_details/meeting_id=<meeting_id>', methods=['GET'])
-def get_meeting_details(user_id):
+def get_meeting_details(meeting_id):
     query = 'select * from meeting where meeting_id ='+ meeting_id
-    result = run_query(query)
-    return "", 200
+    return json.dumps(run_query(query)), 200
+
+#http://localhost:5000/get_meeting_attendees/meeting_id=1
+@app.route('/get_meeting_attendees/meeting_id=<meeting_id>', methods=['GET'])
+def get_meeting_attendees(meeting_id):
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
+    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
+    query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
+    return json.dumps(run_query(query)), 200
 
 
-''' ------------------------------------BODY JSON-------------------------------------------------------------
+#http://localhost:5000/get_meeting_attendees_feedback/meeting_id=1
+@app.route('/get_meeting_attendees_feedback/meeting_id=<meeting_id>', methods=['GET'])
+def get_meeting_attendees_feedback(meeting_id):
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email '
+    query += 'from (select attendee_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
+    query += 'where  user.user_id = a.attendee_id '
+    return json.dumps(run_query(query)), 200
+
+
+
+''' 
 {
   "organiser_id": 1,
   "title": "Sample meeting",
@@ -110,6 +292,9 @@ def add_meeting():
     (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,response)
     run_insert_query(query)
     meeting_id = run_select_query('SELECT MAX(meeting_id) FROM meeting')[0][0]
+    attendee_ids.append(organiser_id)
+
+
 
     for attendee_id in attendee_ids:
         print('attendee_id: ',attendee_id)

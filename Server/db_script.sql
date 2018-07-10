@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS contact;
 DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS notification;
-
+DROP TABLE IF EXISTS comment;
 
 CREATE TABLE user (
     user_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -61,6 +61,12 @@ CREATE TABLE notification (
     notification_date DATE,
     notification_time TIME
 );
+
+CREATE TABLE comment (
+    user_id INTEGER REFERENCES user (user_id) NOT NULL,
+    comment TEXT
+);
+
 
 
 --###################################################################################################################
