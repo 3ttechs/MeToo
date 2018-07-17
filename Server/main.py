@@ -56,7 +56,7 @@ def get_notifications_list(user_id):
 '''
 
 #http://localhost:5000/add_general_comments
-@app.route('/add_general_comments', methods=['GET'])
+@app.route('/add_general_comments', methods=['POST'])
 def add_general_comments():
     d = json.loads(request.data)
     user_id = d['user_id']
@@ -78,7 +78,7 @@ def add_general_comments():
 '''
 
 #http://localhost:5000/add_new_user
-@app.route('/add_new_user', methods=['GET'])
+@app.route('/add_new_user', methods=['POST'])
 def add_new_user():
     d = json.loads(request.data)
     login_id = d['login_id']
@@ -103,7 +103,7 @@ def add_new_user():
 '''
 
 #http://localhost:5000/add_contact
-@app.route('/add_contact', methods=['GET'])
+@app.route('/add_contact', methods=['POST'])
 def add_contact():
     d = json.loads(request.data)
     user_id = d['user_id']
@@ -142,7 +142,7 @@ def add_contact():
 '''
 
 #http://localhost:5000/update_user_profile
-@app.route('/update_user_profile', methods=['GET'])
+@app.route('/update_user_profile', methods=['POST'])
 def update_user_profile():
     d = json.loads(request.data)
     user_id = d['user_id']
@@ -167,7 +167,7 @@ def update_user_profile():
 '''
 
 #http://localhost:5000/add_feedback
-@app.route('/add_feedback', methods=['GET'])
+@app.route('/add_feedback', methods=['POST'])
 def add_feedback():
     d = json.loads(request.data)
     feedback_id = d['feedback_id']
@@ -199,7 +199,7 @@ def delete_meeting(meeting_id):
 
 #http://localhost:5000/login
 # body : {"login_id": "a","passwd":"a"}
-@app.route('/login', methods=['GET'])
+@app.route('/login', methods=['POST'])
 def login():
     d = json.loads(request.data)
     login_id = d['login_id']
@@ -268,7 +268,7 @@ def get_meeting_attendees_feedback(meeting_id):
 }
 '''
 #http://localhost:5000/add_meeting
-@app.route('/add_meeting', methods=['GET'])
+@app.route('/add_meeting', methods=['POST'])
 def add_meeting():
     d = json.loads(request.data)
 
