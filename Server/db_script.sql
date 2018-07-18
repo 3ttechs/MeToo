@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS comment;
 CREATE TABLE user (
     user_id  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     login_id    TEXT    NOT NULL,
-    passwd TEXT    NOT NULL,
+    passwd TEXT,
     user_name     TEXT    NOT NULL,
     phone_no INTEGER,
     email    TEXT

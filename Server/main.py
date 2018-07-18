@@ -49,11 +49,14 @@ def get_notifications_list(user_id):
     query = 'select * from notification where user_id ='+ user_id
     return json.dumps(run_query(query)), 200
 
-#http://localhost:5000/get_user_details/user_id=1
-@app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
-def get_user_details(user_id):
-    query = 'select * from user where user_id  ='+ user_id
-    return json.dumps(run_query(query)), 200
+#http://localhost:5000/get_user_details/login_id='b'
+@app.route('/get_user_details/login_id=<login_id>', methods=['GET'])
+def get_user_details(login_id):
+    query = 'select user_id,login_id,user_name,phone_no,email from user where login_id  ='+ login_id
+    data = run_query(query)
+    if (len(data)<=0):
+        return '0', 200
+    return json.dumps(data), 200
 
 ''' 
 {
@@ -212,16 +215,11 @@ def login():
     login_id = d['login_id']
     passwd = d['passwd']
 
-    query = 'select user_id from user where login_id = "'+ login_id +'" and passwd = "' +passwd +'"'
-    print(query)
+    query = 'select user_id,login_id,user_name,phone_no,email from user where login_id = "'+ login_id +'" and passwd = "' +passwd +'"'
     result = run_query(query)
     if (len(result)<=0):
         return '0', 200
-    user_id = result[0]['user_id']
-    # Get full user details
-    query = 'select * from user where user_id  ='+ str(user_id)
-    print(query)
-    return json.dumps(run_query(query)), 200
+    return json.dumps(result), 200
 
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
