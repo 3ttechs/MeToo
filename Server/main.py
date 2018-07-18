@@ -7,6 +7,7 @@ import sqlite3
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for
 from  db_utilities import *
 import requests
+from datetime import datetime
 
 app = Flask(__name__,static_url_path = "", static_folder = "static")
 
@@ -259,11 +260,11 @@ def get_meeting_attendees_feedback(meeting_id):
   "category": "Business",
   "venue": "Office",
   "notes": "Sample notes",
-  "all_day": 1,
-  "start_date": "08-07-2018",
-  "end_date": "08-07-2018",
+  "all_day": 0,
+  "start_date": "2018-07-08",
+  "end_date": "2018-07-08",
   "start_time": "10:00",
-  "end_time": "11-00",
+  "end_time": "11:00",
   "attendee_ids": [ 2,3]
 }
 '''
@@ -286,6 +287,49 @@ def add_meeting():
     attendee_ids = d['attendee_ids']
     response ='ACTIVE'
 
+    if(all_day==1):
+        start_time="00:00"
+        end_time="00:00"
+
+    # check for end_time >= start_time
+    start = datetime.strptime(start_date +" "+ start_time, '%Y-%m-%d %H:%M')
+    end = datetime.strptime(end_date +" "+ end_time, '%Y-%m-%d %H:%M')
+
+    if(end<=start):
+        data = {
+            'value'  : -1,
+            'status' : 'ERROR',
+            'message': 'Start datetime is before or equal to End datetime'
+        }
+        return (Response(json.dumps(data), status=200, mimetype='application/json'))
+    # check for past time
+    current = datetime.now()
+    if(end<current): 
+        data = {
+            'value'  : -2,
+            'status' : 'ERROR',
+            'message': 'End datetime is before Current datetime'
+        }
+        return (Response(json.dumps(data), status=200, mimetype='application/json'))
+ 
+    # check for overlap with other meetings
+    query = "select meeting_id from meeting where  ( \
+            datetime('"+start_date+"', '"+start_time+"') < datetime(end_date, end_time) and \
+            datetime('"+end_date+"', '"+end_time+"') > datetime(start_date, start_time)) and \
+            organiser_id = "+str(organiser_id)+" and response = 'ACTIVE' "
+    print(query)
+    result_list = run_query(query)
+    if(len(result_list)>0):
+        data = {
+            'value'  : -3,
+            'status' : 'ERROR',
+            'message': 'Overlapping Meeting found'
+        }
+        return (Response(json.dumps(data), status=200, mimetype='application/json'))
+ 
+
+
+    # Now create meeting 
     query = "INSERT INTO meeting \
     (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,response) \
     VALUES (%d,'%s','%s','%s','%s','%s','%s','%s','%s','%s' )"% \
@@ -293,8 +337,6 @@ def add_meeting():
     run_insert_query(query)
     meeting_id = run_select_query('SELECT MAX(meeting_id) FROM meeting')[0][0]
     attendee_ids.append(organiser_id)
-
-
 
     for attendee_id in attendee_ids:
         print('attendee_id: ',attendee_id)
@@ -308,7 +350,13 @@ def add_meeting():
         (meeting_id, attendee_id,  feedback_id)
         run_insert_query(query)
 
-    return "1", 200
+    data = {
+        'value'  : meeting_id,
+        'status' : 'SUCCESS',
+        'message': ' '
+    }
+    return (Response(json.dumps(data), status=200, mimetype='application/json'))
+
 
 
 @app.after_request
