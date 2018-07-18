@@ -58,6 +58,26 @@ def get_user_details(login_id):
         return '0', 200
     return json.dumps(data), 200
 
+#http://localhost:5000/forgot_password/login_id='b'
+@app.route('/forgot_password/login_id=<login_id>', methods=['GET'])
+def forgot_password_by_login_id(login_id):
+    query = 'select * from user where login_id  ='+ login_id
+    data = run_query(query)
+    if (len(data)<=0):
+        return '0', 200
+    #  TODO: Need to send email
+    return json.dumps(data), 200
+
+#http://localhost:5000/forgot_password/email='c@d.com'
+@app.route('/forgot_password/email=<email>', methods=['GET'])
+def forgot_password_by_email(email):
+    query = 'select * from user where email  ='+ email
+    data = run_query(query)
+    if (len(data)<=0):
+        return '0', 200
+    #  TODO: Need to send email
+    return json.dumps(data), 200
+    
 ''' 
 {
   "user_id": 1,  
@@ -208,7 +228,7 @@ def delete_meeting(meeting_id):
 
 
 #http://localhost:5000/login
-# body : {"login_id": "a","passwd":"a"}
+# body : {"login_id": "b","passwd":"b"}
 @app.route('/login', methods=['POST'])
 def login():
     d = json.loads(request.data)
@@ -233,7 +253,8 @@ def get_meeting_list(user_id):
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
     query = 'select * from meeting where organiser_id = "'+ user_id +'" or meeting_id in ('+meeting_ids_str+')'
     result = run_query(query)
-
+    if (len(result)<=0):
+        return '0', 200    
     return json.dumps(result), 200
 
 #http://localhost:5000/get_meeting_details/meeting_id=1
