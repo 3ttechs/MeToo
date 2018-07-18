@@ -47,6 +47,7 @@
       <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0]" [hidden]="session.hide">
 
         <button ion-item (click)="goToSessionDetail(session)">
+            <ion-icon small item-right name="ribbon" color="primary" ></ion-icon>
           <h3>{{session.name}}</h3>
           <p>
             {{session.timeStart}} &mdash;
@@ -56,6 +57,11 @@
         </button>
 
         <ion-item-options>
+            <button ion-button color="edit" *ngIf="segment === 'upcoming'">
+                <ion-icon name="brush"></ion-icon>
+              Edit
+            </button>
+
           <button ion-button color="danger" *ngIf="segment === 'upcoming'">
               <ion-icon name="trash"></ion-icon>
             Delete

@@ -46,8 +46,8 @@ export class ConferenceApp {
   loggedInPages: PageInterface[] = [
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
     { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
-    { title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
-    { title: 'Map', name: 'MapPage', component: MapPage, icon: 'map' },
+    //{ title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
+    //{ title: 'Map', name: 'MapPage', component: MapPage, icon: 'map' },
     { title: 'Logout', name: 'TabsPage', component: TabsPage, icon: 'log-out', logsOut: true }
   ];
   loggedOutPages: PageInterface[] = [
