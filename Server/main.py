@@ -28,6 +28,7 @@ def home():
 #http://localhost:5000/add_feedback - Done
 
 #http://localhost:5000/login - Done
+#http://localhost:5000/get_user_details
 #http://localhost:5000/get_contacts_list  - Done
 #http://localhost:5000/get_notifications_list - Done
 #http://localhost:5000/add_general_comments
@@ -48,6 +49,11 @@ def get_notifications_list(user_id):
     query = 'select * from notification where user_id ='+ user_id
     return json.dumps(run_query(query)), 200
 
+#http://localhost:5000/get_user_details/user_id=1
+@app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
+def get_user_details(user_id):
+    query = 'select * from user where user_id  ='+ user_id
+    return json.dumps(run_query(query)), 200
 
 ''' 
 {
@@ -209,9 +215,13 @@ def login():
     query = 'select user_id from user where login_id = "'+ login_id +'" and passwd = "' +passwd +'"'
     print(query)
     result = run_query(query)
+    if (len(result)<=0):
+        return '0', 200
     user_id = result[0]['user_id']
-    print(user_id)
-    return str(user_id), 200
+    # Get full user details
+    query = 'select * from user where user_id  ='+ str(user_id)
+    print(query)
+    return json.dumps(run_query(query)), 200
 
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
