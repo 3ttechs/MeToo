@@ -47,7 +47,7 @@
       <ion-item-sliding *ngFor="let session of group.sessions" #slidingItem [attr.track]="session.tracks[0]" [hidden]="session.hide">
 
         <button ion-item (click)="goToSessionDetail(session)">
-            <ion-icon small item-right name="ribbon" color="primary" ></ion-icon>
+            <ion-icon item-right name="ribbon" color="primary" ></ion-icon>
           <h3>{{session.name}}</h3>
           <p>
             {{session.timeStart}} &mdash;
