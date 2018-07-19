@@ -17,7 +17,7 @@ def home():
     return('MeToo Application API')
 
 #http://localhost:5000/add_meeting 
-#http://localhost:5000/get_meeting_list  ascending order, upcoming/past, organiser/attendee, delete/edit is for chair, accept/decline for attendee, no actions for past meetings 
+#http://localhost:5000/get_meeting_list  
 #http://localhost:5000/get_meeting_details 
 #http://localhost:5000/get_meeting_attendees organiser/attendee
 #http://localhost:5000/get_meeting_attendees_feedback 
@@ -259,6 +259,9 @@ def get_meeting_list(user_id):
     for i in range(len(result)):
         if(str(result[i]['organiser_id'])==user_id):
             result[i]['Is_Organiser'] ='Yes'
+        else:
+            result[i]['Is_Organiser'] ='No' 
+                        
         start_date = result[i]['start_date']
         start_time = result[i]['start_time']
         start = datetime.strptime(start_date +" "+ start_time, '%Y-%m-%d %H:%M')
@@ -278,13 +281,19 @@ def get_meeting_details(meeting_id):
     result = run_query(query)
     return json.dumps(result[0]), 200
 
-#http://localhost:5000/get_meeting_attendees/meeting_id=1
-@app.route('/get_meeting_attendees/meeting_id=<meeting_id>', methods=['GET'])
-def get_meeting_attendees(meeting_id):
+#http://localhost:5000/get_meeting_attendees/user_id=1,meeting_id=1
+@app.route('/get_meeting_attendees/user_id=<user_id>,meeting_id=<meeting_id>', methods=['GET'])
+def get_meeting_attendees(user_id,meeting_id):
     query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
     query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
-    return json.dumps(run_query(query)), 200
+    result = run_query(query)
+    for i in range(len(result)):
+        if(str(result[i]['attendee_id'])==user_id):
+            result[i]['Is_Organiser'] ='Yes'
+        else:
+            result[i]['Is_Organiser'] ='No'            
+    return json.dumps(result), 200
 
 #http://localhost:5000/get_meeting_attendees_feedback/meeting_id=1
 @app.route('/get_meeting_attendees_feedback/meeting_id=<meeting_id>', methods=['GET'])
