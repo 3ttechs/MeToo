@@ -16,26 +16,26 @@ app = Flask(__name__,static_url_path = "", static_folder = "static")
 def home():
     return('MeToo Application API')
 
-#http://localhost:5000/add_meeting - Done
-#http://localhost:5000/get_meeting_list -Done
-#http://localhost:5000/get_meeting_details - Done
-#http://localhost:5000/get_meeting_attendees - Done
-#http://localhost:5000/get_meeting_attendees_feedback - Done
-#http://localhost:5000/update_meeting_response - Done
-#http://localhost:5000/delete_meeting - Done
+#http://localhost:5000/add_meeting 
+#http://localhost:5000/get_meeting_list  ascending order, upcoming/past, organiser/attendee, delete/edit is for chair, accept/decline for attendee, no actions for past meetings 
+#http://localhost:5000/get_meeting_details 
+#http://localhost:5000/get_meeting_attendees organiser/attendee
+#http://localhost:5000/get_meeting_attendees_feedback 
+#http://localhost:5000/update_meeting_response 
+#http://localhost:5000/delete_meeting 
+
+#http://localhost:5000/ask_for_feedback
+#http://localhost:5000/add_feedback , Time stamp checking, collapsable form
 
 
-#http://localhost:5000/add_feedback - Done
-
-#http://localhost:5000/login - Done
+#http://localhost:5000/login 
 #http://localhost:5000/get_user_details
-#http://localhost:5000/get_contacts_list  - Done
-#http://localhost:5000/get_notifications_list - Done
+#http://localhost:5000/get_contacts_list  
+#http://localhost:5000/get_notifications_list 
 #http://localhost:5000/add_general_comments
-#http://localhost:5000/add_new_user - Done
-#http://localhost:5000/add_contact - Done
-#http://localhost:5000/update_user_profile - Done
-
+#http://localhost:5000/add_new_user 
+#http://localhost:5000/add_contact 
+#http://localhost:5000/update_user_profile 
 
 #http://localhost:5000/get_contacts_list/user_id=1
 @app.route('/get_contacts_list/user_id=<user_id>', methods=['GET'])
@@ -56,7 +56,8 @@ def get_user_details(login_id):
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
-    return json.dumps(data), 200
+    return json.dumps(data[0]), 200
+
 
 #http://localhost:5000/forgot_password/login_id='b'
 @app.route('/forgot_password/login_id=<login_id>', methods=['GET'])
@@ -66,7 +67,7 @@ def forgot_password_by_login_id(login_id):
     if (len(data)<=0):
         return '0', 200
     #  TODO: Need to send email
-    return json.dumps(data), 200
+    return json.dumps(data[0]), 200
 
 #http://localhost:5000/forgot_password/email='c@d.com'
 @app.route('/forgot_password/email=<email>', methods=['GET'])
@@ -76,7 +77,7 @@ def forgot_password_by_email(email):
     if (len(data)<=0):
         return '0', 200
     #  TODO: Need to send email
-    return json.dumps(data), 200
+    return json.dumps(data[0]), 200
     
 ''' 
 {
@@ -158,8 +159,6 @@ def add_contact():
     run_insert_query(query)
     return str(contact_id), 200   
 
-
-
 ''' 
 {
   "user_id": 1,
@@ -187,6 +186,13 @@ def update_user_profile():
     return "Success", 200  
 
 
+#http://localhost:5000/ask_for_feedback/user_id=1
+@app.route('/ask_for_feedback/user_id=<user_id>', methods=['GET'])
+def ask_for_feedback(user_id):
+    # get the list of meetings end_time before current time, where feedback not given
+    return "Success", 200  
+
+
 ''' 
 {
   "feedback_id": 1,
@@ -209,9 +215,7 @@ def add_feedback():
     run_insert_query(query)
     return "Success", 200   
 
-
-
-#http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=ACCEPT or DECLINE
+#http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=GIVEN or DECLINE
 @app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['GET'])
 def update_meeting_response(meeting_id, attendee_id,response):
     query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)
@@ -226,7 +230,6 @@ def delete_meeting(meeting_id):
     run_insert_query(query)
     return "Success", 200   
 
-
 #http://localhost:5000/login
 # body : {"login_id": "b","passwd":"b"}
 @app.route('/login', methods=['POST'])
@@ -239,7 +242,7 @@ def login():
     result = run_query(query)
     if (len(result)<=0):
         return '0', 200
-    return json.dumps(result), 200
+    return json.dumps(result[0]), 200
 
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
@@ -251,8 +254,19 @@ def get_meeting_list(user_id):
         meeting_ids.append(result['meeting_id'])
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
-    query = 'select * from meeting where organiser_id = "'+ user_id +'" or meeting_id in ('+meeting_ids_str+')'
+    query = 'select * from meeting where organiser_id = "'+ user_id +'" or meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
     result = run_query(query)
+    for i in range(len(result)):
+        if(str(result[i]['organiser_id'])==user_id):
+            result[i]['Is_Organiser'] ='Yes'
+        start_date = result[i]['start_date']
+        start_time = result[i]['start_time']
+        start = datetime.strptime(start_date +" "+ start_time, '%Y-%m-%d %H:%M')
+        current = datetime.now()
+        if(start>current):
+            result[i]['Is_Past'] ='No'
+        else:
+            result[i]['Is_Past'] ='Yes'            
     if (len(result)<=0):
         return '0', 200    
     return json.dumps(result), 200
@@ -261,7 +275,8 @@ def get_meeting_list(user_id):
 @app.route('/get_meeting_details/meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_details(meeting_id):
     query = 'select * from meeting where meeting_id ='+ meeting_id
-    return json.dumps(run_query(query)), 200
+    result = run_query(query)
+    return json.dumps(result[0]), 200
 
 #http://localhost:5000/get_meeting_attendees/meeting_id=1
 @app.route('/get_meeting_attendees/meeting_id=<meeting_id>', methods=['GET'])
@@ -271,7 +286,6 @@ def get_meeting_attendees(meeting_id):
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
     return json.dumps(run_query(query)), 200
 
-
 #http://localhost:5000/get_meeting_attendees_feedback/meeting_id=1
 @app.route('/get_meeting_attendees_feedback/meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_attendees_feedback(meeting_id):
@@ -279,8 +293,6 @@ def get_meeting_attendees_feedback(meeting_id):
     query += 'from (select attendee_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
     query += 'where  user.user_id = a.attendee_id '
     return json.dumps(run_query(query)), 200
-
-
 
 ''' 
 {
@@ -368,8 +380,8 @@ def add_meeting():
     attendee_ids.append(organiser_id)
 
     for attendee_id in attendee_ids:
-        print('attendee_id: ',attendee_id)
-        query = "INSERT INTO feedback (meeting_id,attendee_id) VALUES (%d,%d)"% (meeting_id,attendee_id)
+        response = 'NOT_GIVEN'
+        query = "INSERT INTO feedback (meeting_id,attendee_id,response) VALUES (%d,%d,'%s')"% (meeting_id,attendee_id,response)
         run_insert_query(query)
         feedback_id = run_select_query('SELECT MAX(feedback_id) FROM feedback')[0][0]
 
@@ -410,8 +422,6 @@ def load_properties(filepath, sep=':', comment_char='#'):
                 value = sep.join(key_value[1:]).strip().strip('"')
                 props[key] = value
     return props
-
-
 
 if __name__ == '__main__':
     props = load_properties('config_file.txt')
