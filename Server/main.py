@@ -32,7 +32,7 @@ def home():
 #http://localhost:5000/get_user_details
 #http://localhost:5000/get_contacts_list  
 #http://localhost:5000/get_notifications_list 
-#http://localhost:5000/add_general_comments
+#http://localhost:5000/add_contact
 #http://localhost:5000/add_new_user 
 #http://localhost:5000/add_contact 
 #http://localhost:5000/update_user_profile 
@@ -107,7 +107,7 @@ def add_general_comments():
   "email": "g@h.com"
 }
 '''
-
+# If new user already exist, return 0
 #http://localhost:5000/add_new_user
 @app.route('/add_new_user', methods=['POST'])
 def add_new_user():
@@ -117,6 +117,17 @@ def add_new_user():
     user_name = d['user_name']
     phone_no  = d['phone_no']
     email  = d['email']
+
+    # Check for duplicate user
+    data = run_select_query("select user_id from user where email='" + email+"'")
+    if (len(data)>0):
+        return '0', 200
+    data = run_select_query("select user_id from user where login_id='" + login_id+"'")
+    if (len(data)>0):
+        return '0', 200
+    data = run_select_query("select user_id from user where phone_no='" + phone_no+"'")
+    if (len(data)>0):
+        return '0', 200
 
     query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
     run_insert_query(query)
@@ -132,14 +143,14 @@ def add_new_user():
   "email": "g@h.com"
 }
 '''
-
+# If User already exist, use the contact_id
 #http://localhost:5000/add_contact
 @app.route('/add_contact', methods=['POST'])
 def add_contact():
     d = json.loads(request.data)
     user_id = d['user_id']
-    login_id = d['contact_name']
-    passwd = d['contact_name']
+    login_id = d['email']
+    passwd = 'password'
     user_name = d['contact_name']
     phone_no  = d['phone_no']
     email  = d['email']
@@ -154,6 +165,8 @@ def add_contact():
 
     query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
     run_insert_query(query)
+
+
     contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
     query = "INSERT INTO contact (user_id,contact_id) VALUES (%d,%d)"% (user_id,contact_id)
     run_insert_query(query)
