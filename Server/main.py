@@ -9,7 +9,18 @@ from  db_utilities import *
 import requests
 from datetime import datetime
 
+from flask_mail import Mail, Message
+
 app = Flask(__name__,static_url_path = "", static_folder = "static")
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = '3ttechs@gmail.com'
+app.config['MAIL_PASSWORD'] = 'udqufbctqmjlwtkh'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
 
 
 @app.route('/')
@@ -36,6 +47,29 @@ def home():
 #http://localhost:5000/add_new_user 
 #http://localhost:5000/add_contact 
 #http://localhost:5000/update_user_profile 
+
+
+
+''' 
+{
+  "to": ["lakshmynarayanan.al@gmail.com","lakshmynarayanan.al@gmail.com"],  
+  "subject": "This is the email subject",
+  "body": "This is the email body"
+}
+'''
+#http://localhost:5000/send_metoo_mail
+@app.route("/send_metoo_mail", methods=['POST'])
+def send_metoo_mail():
+    d = json.loads(request.data)
+    to = d['to']
+    subject = d['subject']
+    body = d['body']
+    print(to)
+
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
+    msg.body = body
+    mail.send(msg)
+    return "SUCCESS"
 
 #http://localhost:5000/get_contacts_list/user_id=1
 @app.route('/get_contacts_list/user_id=<user_id>', methods=['GET'])
@@ -155,22 +189,41 @@ def add_contact():
     phone_no  = d['phone_no']
     email  = d['email']
 
+    duplicate_found =0
+
     # Check for duplicate user
-    data = run_select_query("select user_id from user where email='" + email+"'")
+    data = run_select_query("select distinct user_id from user where email='" + email+"'")
     if (len(data)>0):
-        return '0', 200
-    data = run_select_query("select user_id from user where phone_no='" + phone_no+"'")
+        contact_id = data[0][0]
+        duplicate_found =1
+    else:
+        data = run_select_query("select distinct user_id from user where phone_no='" + phone_no+"'")
+        if (len(data)>0):
+            contact_id = data[0][0]
+            duplicate_found =1
+
+
+    if(duplicate_found==0):
+        # Create user
+        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
+        run_insert_query(query)
+        contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+
+    # check for duplicate contact
+    duplicate_found =0    
+    data = run_select_query("select distinct user_id from contact where user_id=" + str(user_id)+" and contact_id= "+str(contact_id))
     if (len(data)>0):
-        return '0', 200
+        contact_id = data[0][0]
+        duplicate_found =1  
 
-    query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
-    run_insert_query(query)
+    if(duplicate_found==0):
+        query = "INSERT INTO contact (user_id,contact_id) VALUES (%d,%d)"% (user_id,contact_id)
+        run_insert_query(query)
+        return str(contact_id), 200   
+    else:
+        return "0", 200
 
 
-    contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
-    query = "INSERT INTO contact (user_id,contact_id) VALUES (%d,%d)"% (user_id,contact_id)
-    run_insert_query(query)
-    return str(contact_id), 200   
 
 ''' 
 {
