@@ -4,12 +4,12 @@ pyinstaller main.py
 '''
 
 import sqlite3
-from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for
-from  db_utilities import *
 import requests
 from datetime import datetime
-
+from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for
 from flask_mail import Mail, Message
+from  db_utilities import *
+
 
 app = Flask(__name__,static_url_path = "", static_folder = "static")
 
@@ -64,7 +64,6 @@ def send_metoo_mail():
     to = d['to']
     subject = d['subject']
     body = d['body']
-    print(to)
 
     msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
     msg.body = body
@@ -100,7 +99,20 @@ def forgot_password_by_login_id(login_id):
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
-    #  TODO: Need to send email
+
+    #  TODO: Need to send email    
+    to = data[0]['email']
+    login = data[0]['login']    
+    passwd = data[0]['passwd']
+    subject = "MeToo Update"
+    body = 'Please find your Password\n'
+    body+= 'login: '+login+'\n'
+    body+= 'passwd: '+passwd+'\n'
+
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = [to])
+    msg.body = body
+    mail.send(msg)
+
     return json.dumps(data[0]), 200
 
 #http://localhost:5000/forgot_password/email='c@d.com'
@@ -166,6 +178,18 @@ def add_new_user():
     query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
     run_insert_query(query)
     user_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+    
+    # send mail to user
+    to = email
+    subject = "Welcome to MeToo"
+    body = "Welcome to MeToo\n\nNew user created\n"
+    body+= "login_id = "+login_id+"\n"
+    body+= "passwd = "+passwd+"\n"
+
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
+    msg.body = body
+    mail.send(msg)
+
     return str(user_id), 200   
 
 
@@ -286,6 +310,7 @@ def add_feedback():
 def update_meeting_response(meeting_id, attendee_id,response):
     query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)
     run_insert_query(query)
+    # send mail to all
     return "Success", 200    
 
 #http://localhost:5000/delete_meeting/meeting_id=1
@@ -294,6 +319,7 @@ def delete_meeting(meeting_id):
     response = "DELETE"
     query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
     run_insert_query(query)
+    # send mail to all
     return "Success", 200   
 
 #http://localhost:5000/login
@@ -417,7 +443,7 @@ def add_meeting():
     end_date = d['end_date']
     start_time = d['start_time']
     end_time = d['end_time']
-    attendee_count = len(d['attendee_ids'])
+    #attendee_count = len(d['attendee_ids'])
     attendee_ids = d['attendee_ids']
     response ='ACTIVE'
 
@@ -459,10 +485,10 @@ def add_meeting():
             'status' : 'ERROR',
             'message': 'Overlapping Meeting found'
         }
+
+
         return (Response(json.dumps(data), status=200, mimetype='application/json'))
  
-
-
     # Now create meeting 
     query = "INSERT INTO meeting \
     (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,response) \
@@ -472,7 +498,10 @@ def add_meeting():
     meeting_id = run_select_query('SELECT MAX(meeting_id) FROM meeting')[0][0]
     attendee_ids.append(organiser_id)
 
+    attendee_id_str=''
     for attendee_id in attendee_ids:
+        attendee_id_str+=str(attendee_id)+','
+
         response = 'NOT_GIVEN'
         query = "INSERT INTO feedback (meeting_id,attendee_id,response) VALUES (%d,%d,'%s')"% (meeting_id,attendee_id,response)
         run_insert_query(query)
@@ -489,8 +518,30 @@ def add_meeting():
         'status' : 'SUCCESS',
         'message': ' '
     }
-    return (Response(json.dumps(data), status=200, mimetype='application/json'))
+    # send mail to all
+    attendee_id_str = attendee_id_str[:-1]
+    query = 'select distinct email from user where user_id in ('+ attendee_id_str +')'
+    result_list = run_query(query)
+    email_ids=[]
+    for result in result_list:
+        email_ids.append(result['email'])
 
+    to = email_ids
+    subject = "New meeting from MeToo"
+    body = "Welcome to MeToo\n\nNew Meeting created\n"
+    body+= "Title: "+title+"\n"
+    body+= "Category: "+category+"\n"
+    body+= "Venue: "+venue+"\n"
+    body+= "Notes: "+notes+"\n"
+    body+= "All_day: "+str(all_day)+"\n"
+    body+= "Start: "+start_date+" " +start_time+"\n"
+    body+= "End: "+end_date+" " +end_time+"\n"
+    body+= "Attendees: "+",".join(to)+"\n"
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
+    msg.body = body
+    mail.send(msg)    
+
+    return (Response(json.dumps(data), status=200, mimetype='application/json'))
 
 
 @app.after_request
