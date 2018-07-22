@@ -14,7 +14,7 @@ import { EventModalPage } from '../pages/event-modal/event-modal';
 
 
 import { ScheduleFilterPage } from '../pages/schedule-filter/schedule-filter';
-import { SessionDetailPage } from '../pages/session-detail/session-detail';
+import { MeetingDetailPage } from '../pages/meeting-detail/meeting-detail';
 import { SignupPage } from '../pages/signup/signup';
 import { FeedbackPage } from '../pages/feedback/feedback';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
@@ -24,7 +24,10 @@ import { NotificationPage } from '../pages/notification/notification';
 import { ContactsPage } from '../pages/contacts/contacts';
 
 import { ContactProvider } from '../providers/contact-provider';
-import { ConferenceData } from '../providers/conference-data';
+import { DummyLoginProvider } from '../providers/dummy-login-provider';
+import { MeetingProvider } from '../providers/meeting-provider';
+import { FeedbackProvider } from '../providers/feedback-provider';
+
 import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
 
@@ -40,7 +43,7 @@ import { Ionic2RatingModule } from 'ionic2-rating';
     MeetingPage,
     EventModalPage,    
     ScheduleFilterPage,
-    SessionDetailPage,
+    MeetingDetailPage,
     SignupPage,
     FeedbackPage,
     TabsPage,
@@ -60,7 +63,7 @@ import { Ionic2RatingModule } from 'ionic2-rating';
         { component: MeetingPage, name: 'MeetingPage', segment: 'meeting' },    
         { component: EventModalPage, name: 'EventModalPage', segment: 'calendar-event' },           
         { component: SchedulePage, name: 'Schedule', segment: 'schedule' },
-        { component: SessionDetailPage, name: 'SessionDetail', segment: 'sessionDetail/:sessionId' },
+        { component: MeetingDetailPage, name: 'MeetingDetail', segment: 'meetingDetail/:meetingId' },
         { component: ScheduleFilterPage, name: 'ScheduleFilter', segment: 'scheduleFilter' },
         { component: FeedbackPage, name: 'FeedbackList', segment: 'speakerList' },
         { component: MapPage, name: 'MapPage', segment: 'map' },
@@ -85,7 +88,7 @@ import { Ionic2RatingModule } from 'ionic2-rating';
     MeetingPage,
     EventModalPage, 
     ScheduleFilterPage,
-    SessionDetailPage,
+    MeetingDetailPage,
     SignupPage,
     FeedbackPage,
     TabsPage,
@@ -96,8 +99,10 @@ import { Ionic2RatingModule } from 'ionic2-rating';
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    ConferenceData,
+    MeetingProvider,
     ContactProvider,
+    DummyLoginProvider,
+    FeedbackProvider,
     UserData,
     InAppBrowser,
     SplashScreen

@@ -9,7 +9,9 @@ import {
 } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-import { ConferenceData } from '../../providers/conference-data';
+//import { ConferenceData } from '../../providers/conference-data';
+import { MeetingProvider } from '../../providers/meeting-provider';
+
 
 
 // TODO remove
@@ -34,7 +36,7 @@ export class FeedbackPage {
   constructor(
     public actionSheetCtrl: ActionSheetController,
     public navCtrl: NavController,
-    public confData: ConferenceData,
+    public confData: MeetingProvider,
     public config: Config,
     public inAppBrowser: InAppBrowser
   ) {}
