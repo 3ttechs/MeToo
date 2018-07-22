@@ -3,7 +3,7 @@ import { Events, MenuController, Nav, Platform } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
 import { LoginPage } from '../pages/login/login';
-import { MapPage } from '../pages/map/map';
+//import { MapPage } from '../pages/map/map';
 import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
@@ -11,8 +11,8 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { MeetingPage } from '../pages/meeting/meeting';
 import { FeedbackPage } from '../pages/feedback/feedback';
 import { VisionPage } from '../pages/vision/vision';
-import { NotificationPage } from '../pages/notification/notification';
-import { ConferenceData } from '../providers/conference-data';
+//import { NotificationPage } from '../pages/notification/notification';
+import { MeetingProvider } from '../providers/meeting-provider';
 import { UserData } from '../providers/user-data';
 import { ContactsPage } from '../pages/contacts/contacts';
 
@@ -42,10 +42,11 @@ export class ConferenceApp {
     { title: 'My Schedules', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
     { title: 'Add Meeting', name: 'TabsPage', component: TabsPage, tabComponent: MeetingPage, index: 1, icon: 'clock' },
     { title: 'Feedback', name: 'TabsPage', component: TabsPage, tabComponent: FeedbackPage, index: 2, icon: 'contacts' },
+    { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
   ];
   loggedInPages: PageInterface[] = [
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
-    { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
+    //{ title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
     //{ title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
     //{ title: 'Map', name: 'MapPage', component: MapPage, icon: 'map' },
     { title: 'Logout', name: 'TabsPage', component: TabsPage, icon: 'log-out', logsOut: true }
@@ -62,7 +63,7 @@ export class ConferenceApp {
     public userData: UserData,
     public menu: MenuController,
     public platform: Platform,
-    public confData: ConferenceData,
+    public confData: MeetingProvider,
     public storage: Storage,
     public splashScreen: SplashScreen
   ) {

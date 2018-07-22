@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 
 import { Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { Http, Headers } from "@angular/http";
 
+import { Contact } from '../interfaces/contact';
+
+let apiUrl = 'http://localhost:5000';
 
 @Injectable()
 export class ContactProvider {
@@ -11,68 +15,34 @@ export class ContactProvider {
   HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
 
   constructor(
+    private http: Http,
     public events: Events,
     public storage: Storage
   ) {}
-/*
-  hasFavorite(sessionName: string): boolean {
-    return (this._favorites.indexOf(sessionName) > -1);
-  };
 
-  addFavorite(sessionName: string): void {
-    this._favorites.push(sessionName);
-  };
+  addContact(contact: Contact){
+    return new Promise((resolve,reject) => {
+      let headers = new Headers();
+      
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
 
-  removeFavorite(sessionName: string): void {
-    let index = this._favorites.indexOf(sessionName);
-    if (index > -1) {
-      this._favorites.splice(index, 1);
-    }
-  };
+      //let postParams = JSON.stringify(contact)
 
-  login(username: string): void {
-    this.storage.set(this.HAS_LOGGED_IN, true);
-    this.setUsername(username);
-    this.events.publish('user:login');
-  };
+      let postParams = {user_id: contact.UserId, contact_name: contact.ContactName,
+        phone_no: contact.ContactMobile, email: contact.ContactEmail}
 
-  signup(username: string): void {
-    this.storage.set(this.HAS_LOGGED_IN, true);
-    this.setUsername(username);
-    this.events.publish('user:signup');
-  };
+      console.log(postParams);
+      
+      this.http.post(apiUrl+'/add_contact', postParams, {headers: headers})
+        .subscribe(res => {
+          resolve(res.json());
+        }, (err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
+  }
 
-  logout(): void {
-    this.storage.remove(this.HAS_LOGGED_IN);
-    this.storage.remove('username');
-    this.events.publish('user:logout');
-  };
 
-  setUsername(username: string): void {
-    this.storage.set('username', username);
-  };
-
-  getUsername(): Promise<string> {
-    return this.storage.get('username').then((value) => {
-      return value;
-    });
-  };
-
-  hasLoggedIn(): Promise<boolean> {
-    return this.storage.get(this.HAS_LOGGED_IN).then((value) => {
-      return value === true;
-    });
-  };
-
-  checkHasSeenTutorial(): Promise<string> {
-    return this.storage.get(this.HAS_SEEN_TUTORIAL).then((value) => {
-      return value;
-    });
-  };
-  */
-
- dummy(username: string): void {
-   console.log('tjv...Inside dummy...' + username);
-  //this.storage.set('username', username);
-};
 }

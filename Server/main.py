@@ -100,7 +100,7 @@ def forgot_password_by_login_id(login_id):
     if (len(data)<=0):
         return '0', 200
 
-    #  TODO: Need to send email    
+    # Need to send email    
     to = data[0]['email']
     login = data[0]['login']    
     passwd = data[0]['passwd']
@@ -122,7 +122,20 @@ def forgot_password_by_email(email):
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
-    #  TODO: Need to send email
+    
+    # Need to send email
+    to = data[0]['email']
+    login = data[0]['login']    
+    passwd = data[0]['passwd']
+    subject = "MeToo Update"
+    body = 'Please find your Password\n'
+    body+= 'login: '+login+'\n'
+    body+= 'passwd: '+passwd+'\n'
+
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = [to])
+    msg.body = body
+    mail.send(msg)
+
     return json.dumps(data[0]), 200
     
 ''' 
@@ -405,6 +418,7 @@ def get_meeting_attendees_feedback(user_id,meeting_id):
     query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
     query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
+    print(query)
     result = run_query(query)
     for i in range(len(result)):
         if(str(result[i]['attendee_id'])==user_id):
@@ -485,8 +499,6 @@ def add_meeting():
             'status' : 'ERROR',
             'message': 'Overlapping Meeting found'
         }
-
-
         return (Response(json.dumps(data), status=200, mimetype='application/json'))
  
     # Now create meeting 

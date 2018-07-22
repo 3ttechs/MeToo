@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title *ngIf="meeting">{{meeting.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="meeting">
+    <h2>OrganizerID: {{meeting.organiserId}}</h2>
+      <p>Date:  {{meeting.startDate}}</p>
+      <p>Time: {{meeting.startTime}} - {{meeting.endTime}} </p>
+      <p>Venue: {{meeting.venue}}</p>
+      <p>{{meeting.notes}}</p>
+      <BR>
+        <BR>
+
+    <h2>Attendees and Feedback</h2>
+
+  </div>
+
+  <ion-content class="outer-content session-list">
+    <ion-list>
+      <ion-grid fixed>
+      <ion-row align-items-stretch>
+    
+        <ion-item *ngFor="let attendee of attendees">
+        <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
+        <ion-card class="session-card">
+
+          <ion-card-header>
+          <button ion-item detail-none>{{attendee.attendee_name}} </button>
+          <!--
+          <p> {{attendee.user.email}}</p>
+          <p> {{attendee.user.phone_no}}</p>
+          -->
+          </ion-card-header>
+    
+          <ion-card-content class="outer-content">
+          <ion-list><h3>Feedback</h3></ion-list>
+          </ion-card-content>
+    
+        </ion-card>    
+        </ion-col>
+        </ion-item>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+
+  <ion-fab bottom left #fab>
+      <button ion-fab><ion-icon name="share"></ion-icon></button>
+      <ion-fab-list side="right">
+        <button ion-fab color="google" (click)="openSocial('Google+', fab)"><ion-icon name="logo-googleplus"></ion-icon></button>
+        <button ion-fab color="twitter" (click)="openSocial('Twitter', fab)"><ion-icon name="logo-twitter"></ion-icon></button>
+        <button ion-fab color="facebook" (click)="openSocial('Facebook', fab)"><ion-icon name="logo-facebook"></ion-icon></button>
+      </ion-fab-list>
+    </ion-fab>
+</ion-content>

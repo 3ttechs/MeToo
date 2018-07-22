@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 
-import { ConferenceData } from '../../providers/conference-data';
+import { MeetingProvider } from '../../providers/meeting-provider';
 
 import { Platform } from 'ionic-angular';
 
@@ -15,7 +15,7 @@ declare var google: any;
 export class MapPage {
 
   @ViewChild('mapCanvas') mapElement: ElementRef;
-  constructor(public confData: ConferenceData, public platform: Platform) {
+  constructor(public confData: MeetingProvider, public platform: Platform) {
   }
 
   ionViewDidLoad() {

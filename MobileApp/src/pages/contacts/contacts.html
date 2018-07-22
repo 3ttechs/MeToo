@@ -9,12 +9,12 @@
 
 <ion-content padding>
 
-    <form #contactsForm="ngForm" novalidate>
+      <form #contactForm="ngForm" novalidate>
         <ion-list no-lines>
           <ion-item>
             <ion-label stacked color="primary">Name</ion-label>
             
-            <ion-input [(ngModel)]="contact.Name" name="contactName" type="text" placeholder="Enter the name" #contactName="ngModel" spellcheck="false" autocapitalize="off"
+            <ion-input [(ngModel)]="contact.ContactName" name="contactName" type="text" placeholder="Enter the name" #contactName="ngModel" spellcheck="false" autocapitalize="off"
               required>
             </ion-input>
           </ion-item>
@@ -25,37 +25,36 @@
         
           <ion-item>
             <ion-label stacked color="primary">Mobile</ion-label>
-            <ion-input [(ngModel)]="contact.Mobile" name="contactMobile" type="number" placeholder=999999999 #contactMobile="ngModel" required>
+            <ion-input [(ngModel)]="contact.ContactMobile" name="contactMobile" type="text" placeholder=999999999 #contactMobile="ngModel" 
+             pattern="^[0-9]{10}$" required>
             </ion-input>
           </ion-item>
           <p ion-text [hidden]="contactMobile.valid || submitted == false" color="danger" padding-left>
-            Mobile is required
+            Mobile is required. Should be of 10 digits
           </p>
 
           <ion-item>
               <ion-label stacked color="primary">Email</ion-label>
-              <ion-input [(ngModel)]="contact.Email" name="contactEmail" type="email" placeholder="abc@xyz.com" #contactEmail="ngModel" required>
+              <ion-input [(ngModel)]="contact.ContactEmail" name="contactEmail" type="email" placeholder="abc@xyz.com" #contactEmail="ngModel" 
+               pattern="[A-Za-z0-9._%+-]{2,}@[a-zA-Z-_.]{2,}[.]{1}[a-zA-Z]{2,}" required>
               </ion-input>
           </ion-item>
           <p ion-text [hidden]="contactEmail.valid || submitted == false" color="danger" padding-left>
-            Email is required
+            Email is required. Should have the proper pattern of email ID
           </p>
 
         </ion-list>
-    
-      
-      </form>
-  
 
-      <ion-grid>
-          <ion-row >
+        <ion-grid>
+            <ion-row >
+                <ion-col></ion-col>
+              <ion-col col-8>
+                  <button ion-button round  type="submit" block (click)="onAddContact(contactForm)" type="submit">Add to Contact List</button>
+              </ion-col>
               <ion-col></ion-col>
-            <ion-col col-8>
-                <button ion-button round (click)="onAddContact(contactsForm)" type="submit" block>Add to Contact List</button>
+            </ion-row>
+        </ion-grid>
+        
+      </form>
       
-            </ion-col>
-            <ion-col></ion-col>
-          </ion-row>
-          </ion-grid>
-
 </ion-content>
