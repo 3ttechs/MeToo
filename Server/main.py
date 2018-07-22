@@ -257,9 +257,18 @@ def login():
         return '0', 200
     return json.dumps(result[0]), 200
 
+def get_user_name(user_id):
+    query = 'select distinct user_name from user where user_id  ='+ user_id
+    data = run_query(query)
+    return data[0]['user_name']
+
+
+
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
 def get_meeting_list(user_id):
+    user_name = get_user_name(user_id)
+
     query = 'select distinct meeting_id from attendee where attendee_id = "'+ user_id +'"'
     result_list = run_query(query)
     meeting_ids=[]
@@ -270,6 +279,7 @@ def get_meeting_list(user_id):
     query = 'select * from meeting where organiser_id = "'+ user_id +'" or meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
     result = run_query(query)
     for i in range(len(result)):
+        result[i]['organiser_name'] = user_name
         if(str(result[i]['organiser_id'])==user_id):
             result[i]['Is_Organiser'] ='Yes'
         else:
@@ -285,6 +295,7 @@ def get_meeting_list(user_id):
             result[i]['Is_Past'] ='Yes'            
     if (len(result)<=0):
         return '0', 200    
+
     return json.dumps(result), 200
 
 #http://localhost:5000/get_meeting_details/meeting_id=1
@@ -294,12 +305,13 @@ def get_meeting_details(meeting_id):
     result = run_query(query)
     return json.dumps(result[0]), 200
 
+
 #http://localhost:5000/get_meeting_attendees/user_id=1,meeting_id=1
 @app.route('/get_meeting_attendees/user_id=<user_id>,meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_attendees(user_id,meeting_id):
-    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
-    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
-    query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email '
+    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
+    query += 'where user.user_id = a.attendee_id '
     result = run_query(query)
     for i in range(len(result)):
         if(str(result[i]['attendee_id'])==user_id):
@@ -308,12 +320,18 @@ def get_meeting_attendees(user_id,meeting_id):
             result[i]['Is_Organiser'] ='No'            
     return json.dumps(result), 200
 
-#http://localhost:5000/get_meeting_attendees_feedback/meeting_id=1
-@app.route('/get_meeting_attendees_feedback/meeting_id=<meeting_id>', methods=['GET'])
-def get_meeting_attendees_feedback(meeting_id):
-    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email '
-    query += 'from (select attendee_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
-    query += 'where  user.user_id = a.attendee_id '
+#http://localhost:5000/get_meeting_attendees_feedback/user_id=1,meeting_id=1
+@app.route('/get_meeting_attendees_feedback/user_id=<user_id>,meeting_id=<meeting_id>', methods=['GET'])
+def get_meeting_attendees_feedback(user_id,meeting_id):
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
+    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
+    query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
+    result = run_query(query)
+    for i in range(len(result)):
+        if(str(result[i]['attendee_id'])==user_id):
+            result[i]['Is_Organiser'] ='Yes'
+        else:
+            result[i]['Is_Organiser'] ='No'     
     return json.dumps(run_query(query)), 200
 
 ''' 
