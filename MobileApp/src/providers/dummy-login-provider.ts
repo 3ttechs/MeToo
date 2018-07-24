@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DummyLoginProvider {
  
-   public UserId: number = 1; //tjv hardcoded
+   public UserId: number ; 
 
   constructor() {}
 

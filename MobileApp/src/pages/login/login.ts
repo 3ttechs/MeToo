@@ -7,17 +7,21 @@ import { TabsPage } from '../tabs-page/tabs-page';
 import { SignupPage } from '../signup/signup';
 import { FeedbackProvider } from '../../providers/feedback-provider';  // where feeback provider will use for login screen  -- ChandraRao
 import { ForgotPasswordPage } from '../forgot-password/forgot-password';
+import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 
 @Component({
   selector: 'page-user',
   templateUrl: 'login.html'
 })
 export class LoginPage {
+  public UserId: string =""; // ChandraRao
+  inputdataVal: any[0]; // ChandraRao  
   login: UserOptions = { username: '', password: '', Confirmpassword: '', Email: '',PhoneNumber: '',Name: '' };
   submitted = false;
   data: any;
   constructor(public navCtrl: NavController, public userData: UserData,
-    private feedbackProvider: FeedbackProvider) { }
+    private feedbackProvider: FeedbackProvider,
+    private loginProvider: DummyLoginProvider) { }
 
   onLogin(form: NgForm) {
     // Added by ChandraRao
@@ -33,6 +37,9 @@ export class LoginPage {
         if (this.data === 0) {
           this.feedbackProvider.showAlert('Invalid user',"Login");
         } else {
+          this.inputdataVal =this.data;
+          //alert(JSON.stringify(this.inputdataVal['login_id']));
+          this.loginProvider.UserId=this.inputdataVal['user_id'];
           this.navCtrl.push(TabsPage);
         }
       }).catch(function (error) {

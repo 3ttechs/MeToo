@@ -369,6 +369,7 @@ def login():
     passwd = d['passwd']
 
     query = 'select user_id,login_id,user_name,phone_no,email from user where login_id = "'+ login_id +'" and passwd = "' +passwd +'"'
+
     result = run_query(query)
     if (len(result)<=0):
         return '0', 200

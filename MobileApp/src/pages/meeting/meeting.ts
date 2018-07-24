@@ -43,7 +43,7 @@ export class MeetingPage {
     };
 
     constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController) {
-
+    //this.addEvent();
     }
 
     addEvent() {
@@ -52,6 +52,7 @@ export class MeetingPage {
         modal.onDidDismiss(data => {
             if (data) {
                 let eventData = data;
+                alert(JSON.stringify(data));
 
                 eventData.startTime = new Date(data.startTime);
                 eventData.endTime = new Date(data.endTime);

@@ -27,13 +27,13 @@ export class ForgotPasswordPage {
         this.feedbackProvider.showAlert("User Id Should not left blank", "Error");
       } else {
           this.submitted = true;
-        //  let forgotPwdData = JSON.stringify({
-        //    login_id: this.forgotPwd.LoginId
-        //  });
-            this.feedbackProvider.GetData("login_id='b'","/forgot_password/").then((result) => {
-            this.data = result;
+          //let forgotPwdData = JSON.stringify({
+          //  login_id: this.forgotPwd.LoginId
+         // });
+            this.feedbackProvider.GetData("login_id='"+this.forgotPwd.LoginId+"'","/forgot_password/").then((result) => {
+              this.data = result;
             if (this.data === 0) {
-              this.feedbackProvider.showAlert('In Valied user',"Error");
+              this.feedbackProvider.showAlert('Invalid user',"Error");
             } else {
               this.feedbackProvider.showAlert("Password sucessfully sent to registered email", "Forgot Password");
             }

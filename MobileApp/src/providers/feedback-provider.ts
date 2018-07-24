@@ -31,7 +31,7 @@ export class FeedbackProvider {
   }
    // this method is used for save data
    PostData(InsertData: string, CallingMethodName: string) {
-    alert(apiUrl+CallingMethodName+InsertData);
+    //alert(apiUrl+CallingMethodName+InsertData);
     let loginBody = InsertData;
     return new Promise(resolve => {
       this.http.post(apiUrl+CallingMethodName, loginBody, this.HeaderOptionsValues())
@@ -41,7 +41,7 @@ export class FeedbackProvider {
 
   // Generic method to GET data
   GetData(InputData: string,CallingMethodName: string ) {
-    alert(apiUrl+CallingMethodName+InputData);
+    //alert(apiUrl+CallingMethodName+InputData);
     return new Promise(resolve => {
       this.http.get(apiUrl+CallingMethodName+InputData)
       .subscribe(res => resolve(res.json()))
