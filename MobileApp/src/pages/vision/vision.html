@@ -50,8 +50,10 @@
 	<form #submitForm="ngForm" novalidate (ngSubmit)="submit(submitForm)">
 		<ion-list no-lines>
 			<ion-item>
-				<ion-label stacked color="primary">Enter your support message below</ion-label>
-				<ion-textarea [(ngModel)]="supportMessage" name="supportQuestion" #supportQuestion="ngModel" rows="6" required></ion-textarea>
+				<ion-label stacked color="primary">Enter your support message here..</ion-label>
+				<ion-textarea [(ngModel)]="supportMessage" name="supportQuestion" #supportQuestion="ngModel" rows="6" 
+				required></ion-textarea>
+				
 			</ion-item>
 		</ion-list>
 
@@ -65,7 +67,7 @@
 			<ion-row >
 					<ion-col></ion-col>
 				<ion-col col-8>
-						<button ion-button round type="submit">Submit</button>					
+						<button ion-button round type="submit" block (click)="submit(submitForm)">Submit</button>					
 	
 
 				</ion-col>

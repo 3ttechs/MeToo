@@ -306,7 +306,6 @@ def ask_for_feedback(user_id):
     query += 'from feedback,meeting, user, attendee '
     query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
     query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.response='NOT_GIVEN' and meeting_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
-    print(query)
 
     result = run_query(query)
     if (len(result)<=0):
@@ -324,9 +323,10 @@ def ask_for_feedback(user_id):
 {
   "feedback_id": 1,
   "star_rating": 5,
-  "response": "ACCEPT", 
+  "response": "ACCEPT",  # options are ACCEPT or DECLINE
   "note": "Response note"
 }
+
 '''
 
 #http://localhost:5000/add_feedback
@@ -335,7 +335,7 @@ def add_feedback():
     d = json.loads(request.data)
     feedback_id = d['feedback_id']
     star_rating = d['star_rating']
-    response = d['response']
+    response = d['response'] 
     note  = d['note']
 
     query = "UPDATE feedback SET star_rating=%d,response='%s',note='%s' WHERE feedback_id=%s" % (star_rating,response,note,feedback_id)
@@ -347,7 +347,7 @@ def add_feedback():
 def update_meeting_response(meeting_id, attendee_id,response):
     query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)
     run_insert_query(query)
-    # send mail to all
+    # TODO: send mail to all
     return "Success", 200    
 
 #http://localhost:5000/delete_meeting/meeting_id=1
@@ -356,7 +356,7 @@ def delete_meeting(meeting_id):
     response = "DELETE"
     query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
     run_insert_query(query)
-    # send mail to all
+    #  TODO: send mail to all
     return "Success", 200   
 
 #http://localhost:5000/login

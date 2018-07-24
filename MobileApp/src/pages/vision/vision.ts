@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { AlertController, NavController, ToastController } from 'ionic-angular';
+import { Http, Headers } from "@angular/http";
 
+
+
+let apiUrl = 'http://localhost:5000';
 
 @Component({
   selector: 'page-vision',
@@ -14,36 +18,92 @@ export class VisionPage {
   supportMessage: string;
 
   constructor(
+    private http: Http,
     public navCtrl: NavController,
     public alertCtrl: AlertController,
     public toastCtrl: ToastController
   ) {
 
   }
-
+/*
   ionViewDidEnter() {
     let toast = this.toastCtrl.create({
       message: 'This does not actually send a support request.',
       duration: 3000
     });
     toast.present();
-  }
+  }*/
 
   submit(form: NgForm) {
     this.submitted = true;
 
     if (form.valid) {
-      this.supportMessage = '';
-      this.submitted = false;
-
-      let toast = this.toastCtrl.create({
-        message: 'Your support request has been sent.',
-        duration: 3000
+      //this.supportMessage = '';
+      //this.submitted = false;
+      //this.showLoader();
+      this.addGeneralComment(this.supportMessage).then((result) => {
+        console.log('Balaji...Completed posting');
+        //this.loading.dismiss();
+        //console.log(result);
+        //console.log('Balaji...Posting Completed');
+        if(result == "Success"){
+          //console.log('result === 0');
+          console.log('Comment Posting Completed!!!');
+          //this.showAlert('Contact exists!!!');
+          //this.navCtrl.setRoot(ContactsPage);
+          this.supportMessage = "";
+          this.navCtrl.push(VisionPage);
+        }
+        else{
+          //console.log('result != 0');
+          //this.showAlert('Contact Added');
+          //this.navCtrl.setRoot(ContactsPage);
+          this.navCtrl.push(VisionPage);
+        }
+        //console.log(result);
+      }, (err) => {
+        //console.log('Balaji...Posting Not Completed');
+        console.log(err);
+        //this.loading.dismiss();
+        //this.presentToast(err);
       });
-      toast.present();
+      //oast.present();
     }
   }
 
+
+  addGeneralComment(supportMessage){
+    return new Promise((resolve,reject) => {
+      let headers = new Headers();
+      
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+      let user_id = 2 // harcoded need to change to global variable USER_ID or global method
+      //let postParams = JSON.stringify({user_id:user_id, comment:this.supportMessage})
+     
+      let postParams = {user_id: user_id, comment: this.supportMessage}
+      console.log(supportMessage);
+      console.log(postParams);
+      
+      this.http.post(apiUrl+'/add_general_comments', postParams, {headers: headers})
+        .subscribe(res => {
+          resolve(res.text());
+          console.log('Balaji..Getting into Success loop after posting');
+        }, (err) => {
+          //console.log(err);
+          //console.log('Balaji..Getting into error loop after posting');
+          reject(err);
+        });
+    })
+  }
+  /*
+  showLoader(){
+    this.loading = this.loadingCtrl.create({
+        content: 'Adding your comments...'
+    });
+    this.loading.present();
+  }
+  */
   // If the user enters text in the support question and then navigates
   // without submitting first, ask if they meant to leave the page
   ionViewCanLeave(): boolean | Promise<boolean> {
