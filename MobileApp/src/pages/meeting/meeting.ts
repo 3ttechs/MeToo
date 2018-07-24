@@ -43,7 +43,6 @@ export class MeetingPage {
     };
 
     constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController) {
-    //this.addEvent();
     }
 
     addEvent() {
