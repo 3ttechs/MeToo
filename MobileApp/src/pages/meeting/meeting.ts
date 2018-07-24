@@ -111,6 +111,7 @@ export class MeetingPage {
 
     createRandomEvents() {
         var events = [];
+        
         for (var i = 0; i < 50; i += 1) {
             var date = new Date();
             var eventType = Math.floor(Math.random() * 2);
