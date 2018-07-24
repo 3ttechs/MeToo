@@ -32,6 +32,7 @@ import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
 
 import { Ionic2RatingModule } from 'ionic2-rating';
+import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import { Ionic2RatingModule } from 'ionic2-rating';
     TutorialPage,
     VisionPage,
     NotificationPage,
-    ContactsPage    
+    ContactsPage,
+    ForgotPasswordPage
   ],
   imports: [
     NgCalendarModule,
@@ -95,7 +97,8 @@ import { Ionic2RatingModule } from 'ionic2-rating';
     TutorialPage,
     VisionPage,
     NotificationPage,
-    ContactsPage    
+    ContactsPage,  
+    ForgotPasswordPage 
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

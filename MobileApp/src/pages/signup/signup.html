@@ -15,23 +15,32 @@
 
 	<form #signupForm="ngForm" novalidate>
 		<ion-list no-lines>
-				<ion-item>
-						<ion-label stacked color="primary">Name</ion-label>
-						<ion-input [(ngModel)]="signup.username" placeholder="Name" name="username" type="text" #username="ngModel" required>
-						</ion-input>
-					</ion-item>
-					<p ion-text [hidden]="username.valid || submitted == false" color="danger" padding-left>
-						Name is required
-					</p>
+			<ion-item>
+				<ion-label stacked color="primary">Name</ion-label>
+				<ion-input [(ngModel)]="signup.Name" placeholder="Name" name="Name" type="text" #Name="ngModel" required>
+				</ion-input>
+			</ion-item>
+			<p ion-text [hidden]="Name.valid || submitted == false" color="danger" padding-left>
+				Name is required
+			</p>
 
 					
 			<ion-item>
 				<ion-label stacked color="primary">Username</ion-label>
-				<ion-input [(ngModel)]="signup.username" placeholder="Phone Number" name="username" type="text" #username="ngModel" required>
+				<ion-input [(ngModel)]="signup.username" placeholder="Username" name="username" type="text" #username="ngModel" required>
 				</ion-input>
 			</ion-item>
 			<p ion-text [hidden]="username.valid || submitted == false" color="danger" padding-left>
 				Username is required
+			</p>
+
+			<ion-item>
+				<ion-label stacked color="primary">Phone Number</ion-label>
+				<ion-input [(ngModel)]="signup.PhoneNumber" placeholder="Phone Number" name="PhoneNumber" type="text" #PhoneNumber="ngModel" required>
+				</ion-input>
+			</ion-item>
+			<p ion-text [hidden]="PhoneNumber.valid || submitted == false" color="danger" padding-left>
+				PhoneNumber is required
 			</p>
 
 			<ion-item>
@@ -45,7 +54,8 @@
 
 			<ion-item>
 				<ion-label stacked color="primary">Confirm Password</ion-label>
-				<ion-input [(ngModel)]="signup.Confirmpassword" placeholder="**********" name="password" type="password" #Confirmpassword="ngModel" required>
+				<ion-input [(ngModel)]="signup.Confirmpassword" placeholder="**********" name="password" type="password" #Confirmpassword="ngModel"
+				 required>
 				</ion-input>
 			</ion-item>
 			<p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>

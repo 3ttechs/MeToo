@@ -1,33 +1,45 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-
 import { NavController } from 'ionic-angular';
-
 import { UserData } from '../../providers/user-data';
-
 import { UserOptions } from '../../interfaces/user-options';
-
 import { TabsPage } from '../tabs-page/tabs-page';
 import { SignupPage } from '../signup/signup';
-
+import { FeedbackProvider } from '../../providers/feedback-provider';  // where feeback provider will use for login screen  -- ChandraRao
+import { ForgotPasswordPage } from '../forgot-password/forgot-password';
 
 @Component({
   selector: 'page-user',
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  login: UserOptions = { username: '', password: '', Confirmpassword: '', Email: '',PhoneNumber: '' };
+  login: UserOptions = { username: '', password: '', Confirmpassword: '', Email: '',PhoneNumber: '',Name: '' };
   submitted = false;
-
-  constructor(public navCtrl: NavController, public userData: UserData) { }
+  data: any;
+  constructor(public navCtrl: NavController, public userData: UserData,
+    private feedbackProvider: FeedbackProvider) { }
 
   onLogin(form: NgForm) {
-    this.submitted = true;
+    // Added by ChandraRao
+    //this.submitted = true;
 
     if (form.valid) {
-      this.userData.login(this.login.username);
-      this.navCtrl.push(TabsPage);
+      let LoginData = JSON.stringify({
+        login_id: this.login.username,passwd: this.login.password
+      });
+  
+        this.feedbackProvider.PostData(LoginData,"/login").then((result) => {
+        this.data = result;
+        if (this.data === 0) {
+          this.feedbackProvider.showAlert('Invalid user',"Login");
+        } else {
+          this.navCtrl.push(TabsPage);
+        }
+      }).catch(function (error) {
+        this.feedbackProvider.showAlert(JSON.stringify(error),"Error");
+      });
     }
+
   }
 
   onSignup() {
@@ -35,7 +47,7 @@ export class LoginPage {
   }
   onForgotPassword()
   {
-    this.navCtrl.push(SignupPage);
+    this.navCtrl.push(ForgotPasswordPage);
   }
 
   onGLogin(form: NgForm) {

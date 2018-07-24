@@ -4,11 +4,17 @@ export interface UserOptions {
   password: string,
   Confirmpassword: string,
   Email: string,
-  PhoneNumber: string
+  PhoneNumber: string,
+  Name:string
 }
+
 
 export interface contacts {
   name: string,
   email: string,
   phone: string
+}
+
+export interface ForgotPwd {
+  LoginId: string
 }

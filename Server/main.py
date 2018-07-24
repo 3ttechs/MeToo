@@ -95,13 +95,14 @@ def get_user_details(login_id):
 @app.route('/forgot_password/login_id=<login_id>', methods=['GET'])
 def forgot_password_by_login_id(login_id):
     query = 'select * from user where login_id  ='+ login_id
+    print(query)
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
 
     # Need to send email    
     to = data[0]['email']
-    login = data[0]['login']    
+    login = data[0]['login_id']    
     passwd = data[0]['passwd']
     subject = "MeToo Update"
     body = 'Please find your Password\n'
@@ -124,7 +125,7 @@ def forgot_password_by_email(email):
     
     # Need to send email
     to = data[0]['email']
-    login = data[0]['login']    
+    login = data[0]['login_id']    
     passwd = data[0]['passwd']
     subject = "MeToo Update"
     body = 'Please find your Password\n'
