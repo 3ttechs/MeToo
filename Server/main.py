@@ -91,7 +91,6 @@ def get_user_details(login_id):
         return '0', 200
     return json.dumps(data[0]), 200
 
-
 #http://localhost:5000/forgot_password/login_id='b'
 @app.route('/forgot_password/login_id=<login_id>', methods=['GET'])
 def forgot_password_by_login_id(login_id):
@@ -293,8 +292,33 @@ def update_user_profile():
 @app.route('/ask_for_feedback/user_id=<user_id>', methods=['GET'])
 def ask_for_feedback(user_id):
     # get the list of meetings end_time before current time, where feedback not given
-    return "Success", 200  
+    query = 'select distinct meeting_id from attendee where attendee_id = "'+ user_id +'"'
+    result_list = run_query(query)
+    meeting_ids=[]
+    for result in result_list:
+        meeting_ids.append(result['meeting_id'])
+    
+    meeting_ids_str = ','.join(str(e) for e in meeting_ids)
 
+    query = 'select meeting.meeting_id,meeting.category,meeting.title,meeting.venue,meeting.start_date,meeting.start_time,meeting.end_date,meeting.end_time,meeting.notes as meeting_notes,meeting.response as meeting_response, '
+    query += 'feedback.attendee_id, user.user_name as attendee_name,user.phone_no, user.email,attendee.response as attendee_response, '
+    query += 'feedback.feedback_id,feedback.star_rating,feedback.note,feedback.response as feedback_response '
+    query += 'from feedback,meeting, user, attendee '
+    query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.response='NOT_GIVEN' and meeting_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
+    print(query)
+
+    result = run_query(query)
+    if (len(result)<=0):
+        return '0', 200
+
+    for i in range(len(result)):
+        if(str(result[i]['attendee_id'])==user_id):
+            result[i]['Is_Organiser'] ='Yes'
+        else:
+            result[i]['Is_Organiser'] ='No'
+
+    return json.dumps(result), 200
 
 ''' 
 {
@@ -316,7 +340,7 @@ def add_feedback():
 
     query = "UPDATE feedback SET star_rating=%d,response='%s',note='%s' WHERE feedback_id=%s" % (star_rating,response,note,feedback_id)
     run_insert_query(query)
-    return "Success", 200   
+    return "1", 200   
 
 #http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=GIVEN or DECLINE
 @app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['GET'])
@@ -354,8 +378,6 @@ def get_user_name(user_id):
     data = run_query(query)
     return data[0]['user_name']
 
-
-
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
 def get_meeting_list(user_id):
@@ -368,7 +390,7 @@ def get_meeting_list(user_id):
         meeting_ids.append(result['meeting_id'])
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
-    query = 'select * from meeting where organiser_id = "'+ user_id +'" or meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
+    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
     result = run_query(query)
     for i in range(len(result)):
         result[i]['organiser_name'] = user_name
@@ -519,10 +541,11 @@ def add_meeting():
         run_insert_query(query)
         feedback_id = run_select_query('SELECT MAX(feedback_id) FROM feedback')[0][0]
 
+        response = 'ACCEPT'
         query = "INSERT INTO attendee \
-        (meeting_id, attendee_id,  feedback_id) \
-        VALUES (%d,%d,%d)"% \
-        (meeting_id, attendee_id,  feedback_id)
+        (meeting_id, attendee_id,  feedback_id, response) \
+        VALUES (%d,%d,%d,'%s')"% \
+        (meeting_id, attendee_id,  feedback_id,response)
         run_insert_query(query)
 
     data = {
