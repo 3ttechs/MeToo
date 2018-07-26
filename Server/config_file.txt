@@ -1,3 +1,4 @@
-main_server_host: "localhost"
+main_server_host: "ec2-18-191-60-101.us-east-2.compute.amazonaws.com"
+
 main_server_port: 5000
 

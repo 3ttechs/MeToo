@@ -12,11 +12,11 @@
     <ion-content class="outer-content">
 
       <ion-list>
-        
+        <!--
         <ion-list-header>
           Navigate
         </ion-list-header>
-      
+      -->
         <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
@@ -25,9 +25,11 @@
 
       <ion-list>
         
+        <!--
         <ion-list-header>
           Account
         </ion-list-header>
+      -->
         
         <button ion-item menuClose *ngFor="let p of loggedOutPages" (click)="openPage(p)">
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
@@ -35,11 +37,14 @@
         </button>
       </ion-list>
 
+   
       <ion-list>
+             <!--
         <ion-list-header>
           Tutorial
         </ion-list-header>
-        <button ion-item menuClose (click)="openTutorial()">
+      -->
+      <button ion-item menuClose (click)="openTutorial()">
           <ion-icon item-start name="hammer"></ion-icon>
           Show Tutorial
         </button>
@@ -60,9 +65,11 @@
     <ion-content class="outer-content">
 
       <ion-list>
+        <!--
         <ion-list-header>
           Navigate
         </ion-list-header>
+        -->
         <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
@@ -70,9 +77,11 @@
       </ion-list>
 
       <ion-list>
+        <!--
         <ion-list-header>
           Account
         </ion-list-header>
+      -->
         <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openPage(p)">
           <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
           {{p.title}}
@@ -80,9 +89,11 @@
       </ion-list>
 
       <ion-list>
+        <!--
         <ion-list-header>
           Tutorial
         </ion-list-header>
+      -->
         <button ion-item menuClose (click)="openTutorial()">
           <ion-icon item-start name="hammer"></ion-icon>
           Show Tutorial

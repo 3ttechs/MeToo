@@ -18,3 +18,15 @@ export interface contacts {
 export interface ForgotPwd {
   LoginId: string
 }
+
+export interface AddMeeting {
+  title: string,
+  notes: string,
+  StartDate: string,
+  EndDate: string,
+  Location: string,
+  Category_Type:string,
+  //All_Day : string,
+  AddContact:string[],
+  email: string[]
+}

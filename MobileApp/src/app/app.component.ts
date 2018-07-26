@@ -7,10 +7,11 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
-import { SchedulePage } from '../pages/schedule/schedule';
-import { MeetingPage } from '../pages/meeting/meeting';
-import { FeedbackPage } from '../pages/feedback/feedback';
+//import { SchedulePage } from '../pages/schedule/schedule';
+//import { MeetingPage } from '../pages/meeting/meeting';
+//import { FeedbackPage } from '../pages/feedback/feedback';
 import { VisionPage } from '../pages/vision/vision';
+import { SettingsPage } from '../pages/settings/settings';
 //import { NotificationPage } from '../pages/notification/notification';
 import { MeetingProvider } from '../providers/meeting-provider';
 import { UserData } from '../providers/user-data';
@@ -39,16 +40,17 @@ export class ConferenceApp {
   // the left menu only works after login
   // the login page disables the left menu
   appPages: PageInterface[] = [
-    { title: 'My Schedules', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
-    { title: 'Add Meeting', name: 'TabsPage', component: TabsPage, tabComponent: MeetingPage, index: 1, icon: 'clock' },
-    { title: 'Feedback', name: 'TabsPage', component: TabsPage, tabComponent: FeedbackPage, index: 2, icon: 'contacts' },
-    { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
+    //{ title: 'My Schedules', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'calendar' },
+    //{ title: 'Add Meeting', name: 'TabsPage', component: TabsPage, tabComponent: MeetingPage, index: 1, icon: 'clock' },
+    //{ title: 'Feedback', name: 'TabsPage', component: TabsPage, tabComponent: FeedbackPage, index: 2, icon: 'contacts' },
+    //{ title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
   ];
   loggedInPages: PageInterface[] = [
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
     { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
     //{ title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
     //{ title: 'Map', name: 'MapPage', component: MapPage, icon: 'map' },
+    { title: 'Settings', name: 'SettingsPage', component: SettingsPage, icon: 'settings' },
     { title: 'Logout', name: 'TabsPage', component: TabsPage, icon: 'log-out', logsOut: true }
   ];
   loggedOutPages: PageInterface[] = [

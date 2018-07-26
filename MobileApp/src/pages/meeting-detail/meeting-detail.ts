@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavParams, LoadingController } from 'ionic-angular';
 
 import { FeedbackProvider } from '../../providers/feedback-provider';
+import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 
 @Component({
   selector: 'page-meeting-detail',
@@ -9,40 +10,53 @@ import { FeedbackProvider } from '../../providers/feedback-provider';
 })
 export class MeetingDetailPage {
 
-  private attendees: any;
   private meeting: any;
+  private attendees: any;
 
   private loading: any;
 
   constructor(
     private navParams: NavParams,
     private loadingCtrl: LoadingController,
-    private feedbackProvider: FeedbackProvider
+    private feedbackProvider: FeedbackProvider,
+    private loginProvider: DummyLoginProvider
   ) {}
 
   ionViewWillEnter() {
-    
-    console.log('tjv...ionViewWillEnter()....>>>this.navParams.data : ' + JSON.stringify(this.navParams.data));
+    let userId = this.loginProvider.UserId;
     this.meeting = this.navParams.data;
-
-    console.log('tjv...Calling showAttendees()...this.meeting.id : ' + this.meeting.id);
-    this.showAttendees(this.meeting.id);
+    this.showAttendees(userId, this.meeting.id);
   }
 
-  showAttendees(meetingId: number) {
+  showAttendees(userId: number, meetingId: number) {
   
     this.loading = this.loadingCtrl.create({
       content: 'Fetching Attendees...'
     });
 
     this.loading.present().then(()=>{
-      console.log('tjv...Calling getAttendeesFeedbackForMeeting()...meetingId : ' + meetingId);
-      this.feedbackProvider.getAttendeesFeedbackForMeeting(meetingId).then(result => {
+      this.feedbackProvider.getAttendeesFeedbackForMeeting(userId, meetingId).then(result => {
         
-        this.attendees = result;
-        console.log('tjv...this.attendees : ' + JSON.stringify(this.attendees));
+        let attendeesData: any = result;
+        
+        this.attendees = [];
+        let i: number = 0;
+        attendeesData.forEach(attendeeData => {
+                              
+          let attendee: any = {
+            attendeeName : attendeeData.attendee_name,
+            attendeeEmail : attendeeData['user.email'],
+            attendeePhoneNo : attendeeData['user.phone_no'],
+            attendeeFeedback : attendeeData['feedback.note']
+          };
+          
+          this.attendees[i] = attendee;
+          i = i+1;
+        });
+        
         this.loading.dismiss();
       });
+
     });
 
   }

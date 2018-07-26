@@ -12,30 +12,31 @@
 <ion-content>
     <ion-list padding>
         <ion-item>
-            <ion-input type="text" placeholder="Title" [(ngModel)]="event.title"></ion-input>
+            <ion-input type="text" placeholder="Title" [(ngModel)]="addMeeting.title"></ion-input>
         </ion-item>
 
         <ion-item>
-            <ion-textarea placeholder="Notes" [(ngModel)]="event.notes" rows="3"></ion-textarea>
+            <ion-textarea placeholder="Notes" [(ngModel)]="addMeeting.notes" rows="3"></ion-textarea>
         </ion-item>
 
         <ion-item>
             <ion-label>Start</ion-label>
-            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.startTime" [min]="minDate"></ion-datetime>
+            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="YYYY-MM-DDTHH:mm" [(ngModel)]="addMeeting.StartDate" [min]="minDate" ></ion-datetime>
+            
         </ion-item>
 
         <ion-item>
             <ion-label>End</ion-label>
-            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="MMM D:HH:mm" [(ngModel)]="event.endTime" [min]="minDate"></ion-datetime>
+            <ion-datetime displayFormat="MM/DD/YYYY HH:mm" pickerFormat="YYYY-MM-DDTHH:mm" [(ngModel)]="addMeeting.EndDate" [min]="minDate"></ion-datetime>
         </ion-item>
 
         <ion-item>
             <ion-label>Location</ion-label>
-            <div >
-                    <img  alt="Ionic logo">
-                </div>
-            <ion-input  type="text"  spellcheck="false" autocapitalize="off">
-                </ion-input>
+            <div>
+                <img alt="Ionic logo">
+            </div>
+            <ion-input type="text" [(ngModel)]="addMeeting.Location" spellcheck="false" autocapitalize="off">
+            </ion-input>
 
             <!--<ion-select>
                 <ion-option (ionSelect)="optionSelected($event)" *ngFor="let room of rooms$ | async" [value]="room">{{room.name}}</ion-option>
@@ -43,39 +44,37 @@
         </ion-item>
 
         <ion-item>
-                <ion-label>Category/Type</ion-label>
-                <ion-select [(ngModel)]="Category">
-                  <ion-option value="B">Business</ion-option>
-                  <ion-option value="P">Personal</ion-option>
-                </ion-select>
-              </ion-item>
-
+            <ion-label>Category/Type</ion-label>
+            <ion-select [(ngModel)]="addMeeting.Category_Type">
+                <ion-option value="Business">Business</ion-option>
+                <ion-option value="Personal">Personal</ion-option>
+            </ion-select>
+        </ion-item>
+        <!--
         <ion-item>
             <ion-label>All Day?</ion-label>
-            <ion-checkbox [(ngModel)]="event.allDay" [disabled]="event.blockDay"></ion-checkbox>
+            <ion-checkbox [(ngModel)]="addMeeting.All_Day" [disabled]="event.blockDay"></ion-checkbox>
         </ion-item>
-
+        -->
         <ion-item>
             <ion-label> Add Contacts</ion-label>
         </ion-item>
-        <ion-item>
-            <ion-label>chandrarao_ch@yahoo.com</ion-label>
-            <ion-checkbox color="danger"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-                <ion-label>tony@gmail.com</ion-label>
-                <ion-checkbox color="danger"></ion-checkbox>
-            </ion-item>
-            <ion-item>
-                    <ion-label>lakhmi@gmail.com</ion-label>
-                    <ion-checkbox color="danger"></ion-checkbox>
-                </ion-item>
-                <ion-item>
-                        <ion-label>balaji@hotmail.com</ion-label>
-                        <ion-checkbox color="danger"></ion-checkbox>
+        <ion-list  >
+                <!-- <ion-item *ngFor="let item of inputdataVal;let i = index" >
+                        <ion-label [(ngModel)]="addMeeting.email[i]">{{item.email}}</ion-label>
+                        <ion-checkbox  [(ngModel)]="addMeeting.AddContact[i]" color="danger"></ion-checkbox>
+                    </ion-item> -->
+                   
+                     <ion-item *ngFor="let item of inputdataVal;let i = index" >
+                        <ion-label >{{item?.user_name || 'N/A'}}</ion-label>
+                        <ion-checkbox  [(ngModel)]="addMeeting.AddContact[i]"
+                         (ionChange)="addCheckbox($event,item.user_id)" color="danger">
+                            {{item?.email || 'N/A'}}
+                        </ion-checkbox>
+                        
                     </ion-item>
-
+                
+    </ion-list>
         <!-- <ion-item>
                 <ion-label>Block Day</ion-label>
                 <ion-checkbox [(ngModel)]="event.blockDay" (ionChange)="blockDay($event.value)"></ion-checkbox>

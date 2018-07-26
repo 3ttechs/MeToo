@@ -205,7 +205,6 @@ def add_new_user():
 
     return str(user_id), 200   
 
-
 ''' 
 {
   "user_id": 1,  
@@ -259,8 +258,6 @@ def add_contact():
         return str(contact_id), 200   
     else:
         return "0", 200
-
-
 
 ''' 
 {
@@ -364,6 +361,7 @@ def delete_meeting(meeting_id):
 # body : {"login_id": "b","passwd":"b"}
 @app.route('/login', methods=['POST'])
 def login():
+    #print(request.data)
     d = json.loads(request.data)
     login_id = d['login_id']
     passwd = d['passwd']
@@ -465,10 +463,25 @@ def get_meeting_attendees_feedback(user_id,meeting_id):
   "end_time": "11:00",
   "attendee_ids": [ 2,3]
 }
+
+{
+    "organiser_id":2,
+"title":"e",
+"category":"Personal",
+"venue":"a",
+"notes":"a",
+"start_date":"2018-6-25",
+"end_date":"2018-6-25",
+"start_time":"5:30 AM",
+"end_time":"5:30 AM",
+"attendee_ids":["2"]
+}
+
 '''
 #http://localhost:5000/add_meeting
 @app.route('/add_meeting', methods=['POST'])
 def add_meeting():
+    print(request.data)
     d = json.loads(request.data)
 
     organiser_id = d['organiser_id']
@@ -476,7 +489,7 @@ def add_meeting():
     category=data = d['category']
     venue = d['venue']
     notes = d['notes']
-    all_day = d['all_day']
+    all_day = 0
     start_date = d['start_date']
     end_date = d['end_date']
     start_time = d['start_time']
@@ -484,6 +497,11 @@ def add_meeting():
     #attendee_count = len(d['attendee_ids'])
     attendee_ids = d['attendee_ids']
     response ='ACTIVE'
+
+    # processing input list to get integer array 
+    attendee_ids_str = attendee_ids[0]
+    attendee_ids = attendee_ids_str.split(',')
+    attendee_ids = [int(numeric_string) for numeric_string in attendee_ids]
 
     if(all_day==1):
         start_time="00:00"
@@ -499,6 +517,7 @@ def add_meeting():
             'status' : 'ERROR',
             'message': 'Start datetime is before or equal to End datetime'
         }
+        print('Start datetime is before or equal to End datetime')
         return (Response(json.dumps(data), status=200, mimetype='application/json'))
     # check for past time
     current = datetime.now()
@@ -508,6 +527,7 @@ def add_meeting():
             'status' : 'ERROR',
             'message': 'End datetime is before Current datetime'
         }
+        print('End datetime is before Current datetime')
         return (Response(json.dumps(data), status=200, mimetype='application/json'))
  
     # check for overlap with other meetings
@@ -515,7 +535,6 @@ def add_meeting():
             datetime('"+start_date+"', '"+start_time+"') < datetime(end_date, end_time) and \
             datetime('"+end_date+"', '"+end_time+"') > datetime(start_date, start_time)) and \
             organiser_id = "+str(organiser_id)+" and response = 'ACTIVE' "
-    print(query)
     result_list = run_query(query)
     if(len(result_list)>0):
         data = {
@@ -523,6 +542,7 @@ def add_meeting():
             'status' : 'ERROR',
             'message': 'Overlapping Meeting found'
         }
+        print('Overlapping Meeting found')        
         return (Response(json.dumps(data), status=200, mimetype='application/json'))
  
     # Now create meeting 
@@ -555,6 +575,7 @@ def add_meeting():
         'status' : 'SUCCESS',
         'message': ' '
     }
+    print('SUCCESS ',meeting_id)
     # send mail to all
     attendee_id_str = attendee_id_str[:-1]
     query = 'select distinct email from user where user_id in ('+ attendee_id_str +')'

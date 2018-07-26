@@ -40,39 +40,39 @@
 
       <ion-item-divider item-md-divider-color sticky >
         <ion-label color="primary">
-          <B>{{group.time}}</B>
+          <B>{{group.startDate}}</B>
         </ion-label>
       </ion-item-divider>
 
       <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [hidden]="meeting.hide">
+              <button ion-item (click)="goToMeetingDetail(meeting)">
+                  <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
+                  <h3>{{meeting.title}}</h3>
+          <p>Time : {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}</p>
+          <p>Venue : {{meeting.venue}}</p>
+        </button>
 
-      <button ion-item (click)="goToMeetingDetail(meeting)">
-        <h3>{{meeting.title}}</h3>
-        <p>
-          {{meeting.startTime}} &mdash;
-          {{meeting.endTime}}:
-          {{meeting.venue}}
-        </p>
-      </button>
-
-      <ion-item-options>
-        <button ion-button color="danger" *ngIf="segment === 'upcoming'">
-          <ion-icon name="trash"></ion-icon>
-          Delete
-        </button>
-        <button ion-button color="secondary" *ngIf="segment === 'upcoming'">
-          <ion-icon name="checkmark"></ion-icon>
-          Accept
-        </button>
-        <button ion-button color="primary" *ngIf="segment === 'upcoming'">
-          <ion-icon name="close"></ion-icon>
-          Decline
-        </button>
-        <button ion-button color="favorite" *ngIf="segment === 'past'">
-          <ion-icon name="alert"></ion-icon>
-          Place Holder
-        </button>
-      </ion-item-options>
+        <ion-item-options>
+          <button ion-button color="primary" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
+              <ion-icon name="construct"></ion-icon>
+              Edit
+          </button>
+          <button ion-button color="danger" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
+            <ion-icon name="trash"></ion-icon>
+            Delete
+          </button>
+          
+          <button ion-button color="secondary" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No'">
+            <ion-icon name="checkmark"></ion-icon>
+            Accept
+          </button>
+          <button ion-button color="danger" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No'">
+            <ion-icon name="close"></ion-icon>
+            Decline
+          </button>
+        
+        </ion-item-options>
+      
         
       </ion-item-sliding>
 
@@ -85,16 +85,13 @@
   </ion-list-header>
 
   <!--
-  <button ion-button color="danger" (click)="doRefresh($event)">
+  <button ion-button color="danger" (click)="dummyRefresh($event, 0)">
     Dummy
+  </button>
+
+  <button ion-button color="danger" (click)="dummyRefresh2($event, 0)">
+    Dummy2
   </button>
   -->
-
-  <!--
-  <button ion-button color="danger" (click)="dummy()">
-    Dummy
-  </button>
--->
-
 
 </ion-content>

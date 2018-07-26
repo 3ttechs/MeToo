@@ -10,10 +10,10 @@ import { Http, Headers } from "@angular/http";
 let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Component({
-  selector: 'page-vision',
-  templateUrl: 'vision.html'
+  selector: 'page-settings',
+  templateUrl: 'settings.html'
 })
-export class VisionPage {
+export class SettingsPage {
 
   submitted: boolean = false;
   supportMessage: string;
@@ -53,13 +53,13 @@ export class VisionPage {
           //this.showAlert('Contact exists!!!');
           //this.navCtrl.setRoot(ContactsPage);
           this.supportMessage = "";
-          this.navCtrl.push(VisionPage);
+          this.navCtrl.push(SettingsPage);
         }
         else{
           //console.log('result != 0');
           //this.showAlert('Contact Added');
           //this.navCtrl.setRoot(ContactsPage);
-          this.navCtrl.push(VisionPage);
+          this.navCtrl.push(SettingsPage);
         }
         //console.log(result);
       }, (err) => {

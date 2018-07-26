@@ -20,6 +20,8 @@ import { FeedbackPage } from '../pages/feedback/feedback';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { VisionPage } from '../pages/vision/vision';
+import { SettingsPage } from '../pages/settings/settings';
+
 import { NotificationPage } from '../pages/notification/notification';
 import { ContactsPage } from '../pages/contacts/contacts';
 
@@ -50,6 +52,7 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
     TabsPage,
     TutorialPage,
     VisionPage,
+    SettingsPage,
     NotificationPage,
     ContactsPage,
     ForgotPasswordPage
@@ -71,6 +74,7 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
         { component: MapPage, name: 'MapPage', segment: 'map' },
         { component: TutorialPage, name: 'Tutorial', segment: 'tutorial' },
         { component: VisionPage, name: 'VisionPage', segment: 'support' },
+        { component: SettingsPage, name: 'SettingsPage', segment: 'settings' },
         { component: NotificationPage, name: 'NotificationPage', segment: 'notification' },
         { component: ContactsPage, name: 'ContactsPage', segment: 'contacts' },
 
@@ -96,6 +100,7 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
     TabsPage,
     TutorialPage,
     VisionPage,
+    SettingsPage,
     NotificationPage,
     ContactsPage,  
     ForgotPasswordPage 

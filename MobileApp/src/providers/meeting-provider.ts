@@ -6,7 +6,8 @@ import 'rxjs/add/observable/of';
 
 import { UserData } from './user-data';
 
-let apiUrl = 'http://localhost:5000';
+//let apiUrl = 'http://localhost:5000';
+let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class MeetingProvider {
@@ -24,6 +25,8 @@ export class MeetingProvider {
       return this.http.get('assets/data/data.json')
         .map(this.processData, this);
     }
+
+    
   }
 
   processData(data: any) {
@@ -87,7 +90,7 @@ export class MeetingProvider {
       let queryWords = queryText.split(' ').filter(w => !!w.trim().length);
 
       day.groups.forEach((group: any) => {
-        console.log('tjv...group : ' + group.time);
+        console.log('tjv...group : ' + group.startDate);
 
         group.hide = true;
 
@@ -120,6 +123,38 @@ export class MeetingProvider {
     })
   }
 
+  callGetMeetingListService(userId): any{
+    return this.http.get(apiUrl + '/get_meeting_list/user_id=' + userId);
+  }
+
+  private getTimeInAMOrPMStr(timeStr: string): string {
+
+    let strAMOrPM = '';
+    
+    let timeStrArray = timeStr.split(':');
+    if(timeStrArray.length <1) return '';
+
+    let hrsStr = timeStrArray[0];
+    let mtsStr = timeStrArray[1];
+    let hrs: number = parseInt(hrsStr);
+
+    if(hrs === 12)
+    {
+      strAMOrPM = 'PM';
+    }
+    else if(hrs > 12)
+    {
+      hrs = hrs - 12;
+      strAMOrPM = 'PM';
+    }
+    else
+    {
+      strAMOrPM = 'AM';
+    }
+
+    return hrs + ':' + mtsStr + ' ' + strAMOrPM;
+  }
+
   public getMeetingGroupsDataFromAllMeetings(allMeetings: any, queryText = '', excludeTracks: any[] = [], segment = 'all')
   {
     let meetingGroupsData = {groups: [], shownMeetingsCount: 0};
@@ -131,8 +166,15 @@ export class MeetingProvider {
       let key = allMeetings[i].start_date;
 
       let mtg = {id : allMeetings[i].meeting_id, title : allMeetings[i].title, venue : allMeetings[i].venue,
-                 startDate: allMeetings[i].start_date, startTime: allMeetings[i].start_time, endTime : allMeetings[i].end_time,
-                 category : allMeetings[i].category, notes : allMeetings[i].notes, organiserId : allMeetings[i].organiser_id};
+                 startDate : allMeetings[i].start_date, startTime : allMeetings[i].start_time, endTime : allMeetings[i].end_time,
+                 category : allMeetings[i].category, notes : allMeetings[i].notes, 
+                 organiserId : allMeetings[i].organiser_id, organiserName : allMeetings[i].organiser_name,
+                 isPast : allMeetings[i].Is_Past, isOrganiser : allMeetings[i].Is_Organiser,
+                 startTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].start_time),
+                 endTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].end_time)
+                };
+     
+      //console.log('startTimeAMOrPMStr : ' + mtg.startTimeAMOrPMStr + ' endTimeAMOrPMStr : ' + mtg.endTimeAMOrPMStr );
 
       if(meetingHashTable[key] == null)
       {
@@ -182,9 +224,7 @@ export class MeetingProvider {
     for(let i=0; i<keys.length; i++)
     {
       let key = keys[i];
-      //let meetingGroup = {StartDate : key, meetings : meetingHashTable[key]};
-      //let meetingGroup = {time : key, meetings : meetingHashTable[key]};
-      let meetingGroup = {time : key, meetings : meetingHashTable[key], hide : true};
+      let meetingGroup = {startDate : key, meetings : meetingHashTable[key], hide : true};
       meetingGroups[i] = meetingGroup;
     }
 
@@ -218,7 +258,7 @@ export class MeetingProvider {
       
       let len = meetingGroup.meetings.length;
       
-      console.log('Date : ' + meetingGroup.time);
+      console.log('Date : ' + meetingGroup.startDate);
       for(let j=0; j<len; j++)
       {
         let mtg = meetingGroup.meetings[j];
@@ -228,7 +268,7 @@ export class MeetingProvider {
   }
 
   filterMeeting(meeting: any, queryWords: string[], excludeCategories: any[], segment: string) {
-    console.log('segment : ' + segment);
+    
     let matchesQueryText = false;
     if (queryWords.length) {
       // of any query word is in the meeting title than it passes the query test
@@ -248,30 +288,29 @@ export class MeetingProvider {
       matchesCategory = true;
     }
 
-    // if the segement is 'favorites', but session is not a user favorite
-    // then this session does not pass the segment test
-    //let matchesSegment = false;
-
-    //tjv blocked for testing
-    /*
-    if (segment === 'favorites') {
-      if (this.user.hasFavorite(session.name)) {
-        matchesSegment = true;
-      }
-    } else {
+    let matchesSegment = false;
+    if (segment === 'past' && meeting.isPast === 'Yes') 
+    {
       matchesSegment = true;
+    } 
+    else if (segment === 'upcoming' && meeting.isPast === 'No') 
+    {
+      matchesSegment = true;
+    } 
+    else 
+    {
     }
-    */
 
     // all tests must be true if it should not be hidden
-    //session.hide = !(matchesQueryText && matchesTracks && matchesSegment);
-      meeting.hide = !(matchesQueryText && matchesCategory);
-    /*
-    if(matchesQueryText && matchesTracks && matchesSegment))
+    //meeting.hide = !(matchesQueryText && matchesCategory && matchesSegment);
+    if(matchesQueryText && matchesCategory && matchesSegment)
     {
-      session.hide  = false; //show
+      meeting.hide  = false; //show meeting
     }
-    */
+    else
+    {
+      meeting.hide  = true;
+    }
   }
 
   getSpeakers() {

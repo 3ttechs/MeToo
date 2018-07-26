@@ -25,7 +25,7 @@ export class LoginPage {
 
   onLogin(form: NgForm) {
     // Added by ChandraRao
-    //this.submitted = true;
+    this.submitted = true;
 
     if (form.valid) {
       let LoginData = JSON.stringify({
@@ -40,6 +40,7 @@ export class LoginPage {
           this.inputdataVal =this.data;
           //alert(JSON.stringify(this.inputdataVal['login_id']));
           this.loginProvider.UserId=this.inputdataVal['user_id'];
+          this.userData.login(this.login.username);
           this.navCtrl.push(TabsPage);
         }
       }).catch(function (error) {

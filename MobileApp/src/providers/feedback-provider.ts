@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { Headers,Http, RequestOptions } from '@angular/http';
 import { AlertController } from 'ionic-angular';
 
-let apiUrl = 'http://localhost:5000';
+//let apiUrl = 'http://localhost:5000';
+let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class FeedbackProvider {
   
   constructor(public http: Http,public alertCtrl: AlertController) { }
 
-  public getAttendeesFeedbackForMeeting(meetingId: number){
+  public getAttendeesFeedbackForMeeting(userId: number, meetingId: number){
+    console.log('Calling get_meeting_attendees_feedback with 2 arguments...user_id : ' + userId + ' meetingId : ' + meetingId);
     return new Promise((resolve,reject) =>{
-      this.http.get(apiUrl + '/get_meeting_attendees_feedback/user_id=1,meeting_id=' + meetingId)
+      this.http.get(apiUrl + '/get_meeting_attendees_feedback/user_id='+userId+ ',meeting_id=' + meetingId)
         .subscribe(res=>{
           resolve(res.json());
         },(err) => {
@@ -20,6 +22,42 @@ export class FeedbackProvider {
         });
     })
   }
+
+  public getPendingFeedbackListForUser(userId: number){
+    return new Promise((resolve,reject) =>{
+      this.http.get(apiUrl + '/ask_for_feedback/user_id=' + userId)
+        .subscribe(res=>{
+          resolve(res.json());
+        },(err) => {
+          console.log(err);
+          reject(err);
+        });
+    }) 
+  }
+
+  addFeedback(feedback: any){
+    return new Promise((resolve,reject) => {
+      let headers = new Headers();
+      
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+
+      let postParams = {feedback_id: feedback.feedbackId, star_rating: feedback.starRating,
+                        response: feedback.response, note: feedback.note};
+
+      console.log(postParams);
+      
+      this.http.post(apiUrl+'/add_feedback', postParams, {headers: headers})
+        .subscribe(res => {
+          resolve(res.json());
+          //resolve(res.text());
+        }, (err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
+  }
+
 // ChandraRao Implimented
   HeaderOptionsValues() {
     let myHeader: Headers = new Headers;

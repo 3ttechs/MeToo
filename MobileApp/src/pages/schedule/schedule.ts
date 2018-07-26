@@ -51,7 +51,7 @@ export class SchedulePage {
 
     let userId = this.loginProvider.UserId;
     console.log('userId : ' + userId);
-    
+        
     this.loading = this.loadingCtrl.create({
       content: 'Fetching Meetings...'
     });
@@ -61,11 +61,10 @@ export class SchedulePage {
         let allMeetings: any = result;
         let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(allMeetings, this.queryText, this.excludeCategories, this.segment);
         let meetingGroups: any = meetingGroupsData.groups;
-        let shownMeetings: number = meetingGroupsData.shownMeetings;
-
-        this.shownMeetingsCount = shownMeetings;
+        
+        this.shownMeetingsCount = meetingGroupsData.shownMeetingsCount;
         this.groups = meetingGroups;
-
+        console.log('this.shownMeetingsCount : ' + this.shownMeetingsCount);
         this.loading.dismiss();
       });
     });
@@ -85,13 +84,6 @@ export class SchedulePage {
   }
 
   goToMeetingDetail(meeting: any) {
-    
-    console.log('tjv...meetingData.id : ' + meeting.id);
-    console.log('tjv...meetingData.title : ' + meeting.title);
-    console.log('tjv...meetingData.startTime : ' + meeting.startTime);
-    console.log('tjv...meetingData.endTime : ' + meeting.endTime);
-
-    //this.navCtrl.push(MeetingDetailPage, { sessionId: meetingData.meeting_id, name: meetingData.title });
     this.navCtrl.push(MeetingDetailPage, meeting);
   }
 
@@ -108,23 +100,15 @@ export class SchedulePage {
   }
 
   doRefresh(refresher: Refresher) {
-    console.log('tjv...Inside doRefresh()...refresher._didStart : ' + refresher._didStart);
+    
     this.meetingProvider.getTimeline(this.dayIndex, this.queryText, this.excludeCategories, this.segment).subscribe((data: any) => {
       this.shownMeetingsCount = data.shownSessions;
       this.groups = data.groups;
 
-      console.log('tjv...this.dayIndex :  ' + this.dayIndex);
-      console.log('tjv...this.queryText :  ' + this.queryText);
-      console.log('tjv...this.excludeCategories.length :  ' + this.excludeCategories.length);
-
-      console.log('tjv...data.shownSessions :  ' + data.shownSessions);
-      console.log('tjv...this.groups.length :  ' + this.groups.length);
-      console.log('tjv...this.groups[0] :  ' + JSON.stringify(this.groups[0]))
-
       // simulate a network request that would take longer
-      // than just pulling from out local json file
+      // than just pulling from our local json file
       setTimeout(() => {
-        //refresher.complete(); tjv blocked for testing
+        refresher.complete(); //Note : This will give error if the function is called from a button click
 
         const toast = this.toastCtrl.create({
           message: 'Meetings have been updated.',
@@ -135,42 +119,59 @@ export class SchedulePage {
     });
   }
 
-  //tjv : dummy() is to simulate doRefresh()
-   dummy() {
-    
+  //Note : This is very similar to updateSchedule(). Rename it to doRefresh() at a later stage
+  dummyRefresh(refresher: Refresher, flag: number) {
     let userId = this.loginProvider.UserId;
-    console.log('userId : ' + userId);
-    console.log("tjv...Inside dummy()...");
-
-    this.loading = this.loadingCtrl.create({
-      content: 'Fetching Meetings...'
-    });
-
-    this.loading.present().then(()=>{
-      console.log('tjv...Calling getMeetingListForUser()...');
-
-      this.meetingProvider.getMeetingListForUser(userId).then(result => {
-        let allMeetings: any = result;
-        console.log('meetings.length : ' + allMeetings.length);
-     
-        let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(allMeetings, this.queryText, this.excludeCategories, this.segment);
-        let meetingGroups: any = meetingGroupsData.groups;
-        let shownMeetingsCount: number = meetingGroupsData.shownMeetings;
-        
-        console.log('meetingGroups.length : ' + meetingGroups.length);
-
-        console.log('tjv...Initial');
-        console.log(this.groups[0]);
-
-        this.shownMeetingsCount = shownMeetingsCount;
-        this.groups = meetingGroups;
-
-        console.log('tjv...Final');
-        console.log(this.groups[0]);
-
-        this.loading.dismiss();
-      });
+    
+    //Note : Earlier the below was a 'subscribe'. Now it is a 'then'. Refer getTimeline()
+    this.meetingProvider.getMeetingListForUser(userId).then(result => {
+    
+      let allMeetings: any = result;
+    
+      let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(allMeetings, this.queryText, this.excludeCategories, this.segment);
+      let meetingGroups: any = meetingGroupsData.groups;
+      let shownMeetingsCount: number = meetingGroupsData.shownMeetingsCount;
       
+      this.shownMeetingsCount = shownMeetingsCount;
+      this.groups = meetingGroups;
+    
+      setTimeout(() => {
+
+        if(flag === 1) refresher.complete();
+
+        const toast = this.toastCtrl.create({
+          message: 'Meetings have been updated.',
+          duration: 3000
+        });
+        toast.present();
+      }, 1000);
+    });
+  }
+
+  dummyRefresh2(refresher: Refresher, flag: number) {
+    let userId = this.loginProvider.UserId;
+    
+    this.meetingProvider.callGetMeetingListService(userId).subscribe((data: any) => {
+
+      let allMeetings: any = data.json();
+            
+      let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(allMeetings, this.queryText, this.excludeCategories, this.segment);
+      let meetingGroups: any = meetingGroupsData.groups;
+      let shownMeetingsCount: number = meetingGroupsData.shownMeetingsCount;
+            
+      this.shownMeetingsCount = shownMeetingsCount;
+      this.groups = meetingGroups;
+    
+      setTimeout(() => {
+
+        if(flag === 1) refresher.complete();
+
+        const toast = this.toastCtrl.create({
+          message: 'Meetings have been updated.',
+          duration: 3000
+        });
+        toast.present();
+      }, 1000);
     });
   }
 }
