@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavParams, LoadingController } from 'ionic-angular';
+import { NavParams, LoadingController,FabContainer } from 'ionic-angular';
 
 import { FeedbackProvider } from '../../providers/feedback-provider';
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
+
 
 @Component({
   selector: 'page-meeting-detail',
@@ -60,5 +61,17 @@ export class MeetingDetailPage {
     });
 
   }
+
+  openSocial(network: string, fab: FabContainer) {
+    let loading = this.loadingCtrl.create({
+      content: `Posting to ${network}`,
+      duration: (Math.random() * 1000) + 500
+    });
+    loading.onWillDismiss(() => {
+      fab.close();
+    });
+    loading.present();
+  }
+
 
 }

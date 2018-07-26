@@ -1,7 +1,7 @@
 $categories: (
  ionic: color($colors, primary),
- Business: #AC282B,
- Personal: #8E8D93,
+ Business: #6600CC,
+ Personal: #FD8B2D,
  Education: #FE4C52,
  Entertainment: #FD8B2D,
  Leisure: #FED035,
@@ -9,6 +9,8 @@ $categories: (
  Consultation: #3BC7C4,
  Sales: #B16BE3,
  Marketing: #6600CC,
+ Business1: #AC282B,
+ Personal1: #8E8D93,
 );
 
 @function auxiliary-categories() {

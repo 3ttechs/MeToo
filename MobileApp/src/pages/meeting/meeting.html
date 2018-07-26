@@ -8,12 +8,12 @@
 
             <ion-title>{{viewTitle}}</ion-title>
         </ion-navbar>
-        <ion-navbar color="primary">
+        <ion-navbar >
                 <ion-buttons>
                 <!--<button ion-button [disabled]="isToday" (click)="today()">Today</button>-->
-                <button ion-button  (click)="changeMode('month')">M</button>
-                <button ion-button  (click)="changeMode('week')">W</button>
-                <button ion-button  (click)="changeMode('day')">D</button>
+                <button ion-button outline color="light" (click)="changeMode('month')">M</button>
+                <button ion-button outline color="light" (click)="changeMode('week')">W</button>
+                <button ion-button outline color="light" (click)="changeMode('day')">D</button>
             </ion-buttons>
             <ion-buttons end>
                         <button ion-button  block outline icon-end  (click)="addEvent()">Add Meeting <ion-icon name="add"></ion-icon></button>

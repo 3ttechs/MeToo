@@ -44,7 +44,7 @@
         </ion-label>
       </ion-item-divider>
 
-      <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [hidden]="meeting.hide">
+      <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [attr.track]="meeting.category" [hidden]="meeting.hide">
               <button ion-item (click)="goToMeetingDetail(meeting)">
                   <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
                   <h3>{{meeting.title}}</h3>
