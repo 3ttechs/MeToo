@@ -30,7 +30,7 @@ export class ForgotPasswordPage {
           //let forgotPwdData = JSON.stringify({
           //  login_id: this.forgotPwd.LoginId
          // });
-            this.feedbackProvider.GetData("login_id='"+this.forgotPwd.LoginId+"'","/forgot_password/").then((result) => {
+            this.feedbackProvider.GetData("email='"+this.forgotPwd.LoginId+"'","/forgot_password/").then((result) => {
               this.data = result;
             if (this.data === 0) {
               this.feedbackProvider.showAlert('Invalid user',"Error");
