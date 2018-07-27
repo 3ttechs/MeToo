@@ -7,7 +7,7 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
-//import { SchedulePage } from '../pages/schedule/schedule';
+import { SchedulePage } from '../pages/schedule/schedule';
 //import { MeetingPage } from '../pages/meeting/meeting';
 //import { FeedbackPage } from '../pages/feedback/feedback';
 import { VisionPage } from '../pages/vision/vision';
@@ -46,6 +46,7 @@ export class ConferenceApp {
     //{ title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
   ];
   loggedInPages: PageInterface[] = [
+    { title: 'Home', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'home' },
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
     { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
     //{ title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },
