@@ -84,10 +84,10 @@ def get_notifications_list(user_id):
     query = 'select * from notification where user_id ='+ user_id
     return json.dumps(run_query(query)), 200
 
-#http://localhost:5000/get_user_details/login_id='b'
-@app.route('/get_user_details/login_id=<login_id>', methods=['GET'])
-def get_user_details(login_id):
-    query = 'select user_id,login_id,user_name,phone_no,email from user where login_id  ='+ login_id
+#http://localhost:5000/get_user_details/user_id=1
+@app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
+def get_user_details(user_id):
+    query = 'select user_id,login_id,user_name,phone_no,email from user where user_id  ='+ user_id
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
@@ -284,6 +284,7 @@ def update_user_profile():
     email  = d['email']        
 
     query = "UPDATE user SET login_id='%s',passwd='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,passwd,user_name,phone_no,email,user_id)
+    print(query)
     run_insert_query(query)
     return "Success", 200  
 
@@ -645,7 +646,7 @@ def load_properties(filepath, sep=':', comment_char='#'):
     return props
 
 if __name__ == '__main__':
-    props = load_properties('config_file_local.txt')
+    props = load_properties('config_file.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]
