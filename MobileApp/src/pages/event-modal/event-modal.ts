@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import * as moment from 'moment';
-import { of } from "rxjs/observable/of";
+//import { of } from "rxjs/observable/of";
 import { FeedbackProvider } from '../../providers/feedback-provider';  // where feeback provider will use for login screen  -- ChandraRao
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 import { AddMeeting } from '../../interfaces/user-options';
+//import { SchedulePage } from '../../pages/schedule/schedule';
 
 @IonicPage()
 @Component({
@@ -17,13 +18,18 @@ export class EventModalPage {
   lstEmails: Array<String> = [];
   userIds: string = '';
   addMeeting: AddMeeting = {
-    title: '', notes: '', StartDate: '',
-    EndDate: '', Location: '',
-    Category_Type: '', 
+    title: '',
+    notes: '',
+    startDate: '',
+    endDate: '',
+    Location: '',
+    Category_Type: '',
     //All_Day: '',
-    AddContact: [], email: []
+    AddContact: [],
+    email: []
   };
-
+  errMsg: string = '';
+  Mydata: any;
   data: any;
   event = {
     startTime: new Date().toISOString(),
@@ -34,9 +40,9 @@ export class EventModalPage {
   };
 
   minDate = new Date().toISOString();
-  rooms$ = of([{ id: "room1", name: "room1" }, { id: "room2", name: "room2" }, { id: "room3", name: "room3" }])
+  //rooms$ = of([{ id: "room1", name: "room1" }, { id: "room2", name: "room2" }, { id: "room3", name: "room3" }])
   selectedDay: string = '';
-
+  AddMeetingDataGetArg : string ='';
 
   constructor(
     public navCtrl: NavController,
@@ -48,14 +54,14 @@ export class EventModalPage {
     let preselectedDate = moment(this.navParams.get('selectedDay')).format();
     //this.event.startTime = preselectedDate;
     //this.event.endTime = preselectedDate;
-    this.addMeeting.StartDate = preselectedDate;
-    this.addMeeting.EndDate = preselectedDate;
+    this.addMeeting.startDate = preselectedDate;
+    this.addMeeting.endDate = preselectedDate;
     this.onGetContactList();
   }
 
   onGetContactList() {
     //alert(this.loginProvider.UserId);
-    let inputdata="user_id="+this.loginProvider.UserId;
+    let inputdata = "user_id=" + this.loginProvider.UserId;
     //let inputdata = "user_id=1";
     this.feedbackProvider.GetData(inputdata, "/get_contacts_list/").then(data => {
       this.inputdataVal = data;
@@ -70,7 +76,8 @@ export class EventModalPage {
 
   GetOnlyDateformat(event: Date, DateFormatyyyyMMdd: string) {
     if (DateFormatyyyyMMdd === "yyyyMMdd") {
-      return DateFormatyyyyMMdd = event.getUTCFullYear().toString() + "-" + event.getUTCMonth().toString() + "-" + event.getUTCDate();
+      let MonthVal=event.getUTCMonth()+1;
+      return DateFormatyyyyMMdd = event.getUTCFullYear().toString() + "-" + MonthVal + "-" + event.getUTCDate();
     }
   }
 
@@ -87,7 +94,7 @@ export class EventModalPage {
   }
 
   save() {
-     if (this.addMeeting.title === "") {
+    if (this.addMeeting.title === "") {
       this.feedbackProvider.showAlert("Please add title", "Add Meeting");
     }
     else if (this.addMeeting.notes === "") {
@@ -102,77 +109,110 @@ export class EventModalPage {
     else if (this.lstEmails.length <= 0) {
       this.feedbackProvider.showAlert("Please select atleast one add contacts", "Add Meeting");
     } else {
-      for (let i = 0; i <= this.lstEmails.length - 1; i++) {
-        this.userIds += this.lstEmails[i] + ',';
-      }
-
+     // this.feedbackProvider.showAlert("Please select atleast one add contacts", "Add Meeting");
+ var blnVal=1;
       this.userIds = this.userIds.substring(0, this.userIds.length - 1);
-      var myStartdate = new Date(this.addMeeting.StartDate);
-      var myEnddate = new Date(this.addMeeting.EndDate);
-      // where organiser_id is nothing but this.loginProvider.UserId
-      let AddMeetingData = JSON.stringify({
-        organiser_id: this.loginProvider.UserId,
-        title: this.addMeeting.title,
-        category: this.addMeeting.Category_Type,
-        venue: this.addMeeting.Location,
-        notes: this.addMeeting.notes,
-        //all_day: "0",
-        start_date: this.GetOnlyDateformat(myStartdate, "yyyyMMdd"),
-        end_date: this.GetOnlyDateformat(myEnddate, "yyyyMMdd"),
-        start_time: this.GetOnlyTimeformat(myStartdate, "HHmm"),
-        end_time: this.GetOnlyTimeformat(myEnddate, "HHmm"),
-        attendee_ids: [this.userIds]
-      });
+      var myStartdate = new Date(this.addMeeting.startDate);
+      var myEnddate = new Date(this.addMeeting.endDate);
+      
+       this.AddMeetingDataGetArg  = 
+        "organiser_id="+ this.loginProvider.UserId +
+        ",start_date="+ this.GetOnlyDateformat(myStartdate, "yyyyMMdd")+
+        ",start_time="+ this.GetOnlyTimeformat(myStartdate, "HHmm")+
+        ",end_date="+ this.GetOnlyDateformat(myEnddate, "yyyyMMdd")+
+        ",end_time="+ this.GetOnlyTimeformat(myEnddate, "HHmm");
+     try {
+      this.feedbackProvider.GetData( this.AddMeetingDataGetArg, "/add_meeting_validation/").then((result) => {
+        this.Mydata = result;
+        this.errMsg=this.Mydata.toString();
+        this.feedbackProvider.showAlert(this.Mydata, "");
 
-      //alert(AddMeetingData);
-      this.userIds="";
-
-      this.feedbackProvider.PostData(AddMeetingData, "/add_meeting").then((result) => {
-        this.data = result;
-        //alert('aaaaaaaaaaa');
-        //alert(result);
-        //alert(this.data);
-        if (this.data === 0) {
-          this.feedbackProvider.showAlert('error', "Login");
-        } else {
-          this.inputdataVal = this.data;
-          //alert('ssssssss');
-          //alert(this.data);
-          //alert(this.inputdataVal);
-          //alert(JSON.stringify(this.inputdataVal['login_id']));
-          // this.loginProvider.UserId=this.inputdataVal['login_id'];
-          //this.navCtrl.push(TabsPage);
+        if(this.errMsg.toString().substring(0,5)==="Error")
+        {
+          blnVal=1;
         }
+        else
+        {
+        this.AddMeetingDetails();
+
+        }
+
       }).catch(function (error) {
-        this.feedbackProvider.showAlert(JSON.stringify(error), "Error");
+        console.log(error);
       });
 
-      //alert('ssssssss');
+     
+    } catch (error) {
+      console.log(error);
     }
-    //this.viewCtrl.dismiss(this.event);
+
+    }
   }
+
+private AddMeetingDetails(){
+
+  for (let i = 0; i <= this.lstEmails.length - 1; i++) {
+    this.userIds += this.lstEmails[i] + ',';
+  }
+
+  this.userIds = this.userIds.substring(0, this.userIds.length - 1);
+  var myStartdate = new Date(this.addMeeting.startDate);
+  var myEnddate = new Date(this.addMeeting.endDate);
+  // where organiser_id is nothing but this.loginProvider.UserId
+  let AddMeetingData = JSON.stringify({
+    organiser_id: this.loginProvider.UserId,
+    title: this.addMeeting.title,
+    category: this.addMeeting.Category_Type,
+    venue: this.addMeeting.Location,
+    notes: this.addMeeting.notes,
+    //all_day: "0",
+    start_date: this.GetOnlyDateformat(myStartdate, "yyyyMMdd"),
+    end_date: this.GetOnlyDateformat(myEnddate, "yyyyMMdd"),
+    start_time: this.GetOnlyTimeformat(myStartdate, "HHmm"),
+    end_time: this.GetOnlyTimeformat(myEnddate, "HHmm"),
+    attendee_ids: [this.userIds]
+  });
+
+  this.data=AddMeetingData;
+  //alert(AddMeetingData);
+  this.userIds = "";
+
+  this.feedbackProvider.PostData(AddMeetingData, "/add_meeting").then((result) => {
+    this.Mydata = result;
+    if (this.Mydata === 0) {
+      this.feedbackProvider.showAlert('error', "Meeting Details");
+    } else {
+      this.inputdataVal = this.Mydata;
+      if (JSON.parse(JSON.stringify(this.Mydata)).status.toString() === "ERROR") {
+        this.feedbackProvider.showAlert(JSON.parse(JSON.stringify(this.Mydata)).message.toString() ,
+         JSON.parse(JSON.stringify(this.Mydata)).status.toString());
+         //this.viewCtrl.dismiss(this.data);
+        //this.viewCtrl.dismiss(this.addMeeting.AddContact);
+      } else {
+        //this.viewCtrl.dismiss(this.data);
+      }
+    }
+  }).catch(function (error) {
+    // this.feedbackProvider.showAlert(JSON.stringify(error), "Error");
+    console.log(error);
+  });
+
+  this.navCtrl.pop();
+
+}
 
   blockDay($event) {
     console.log($event)
   }
 
 
-
-  // cb_value: boolean;
-
-  // updateCbValue() {
-  //   console.log('Something new state:' + this.cb_value);
-  // }
-  //checked = [];
-  addCheckbox(event, checkbox: String) {
+  addCheckbox(addMeeting, checkbox: String) {
     this.AddContactSelectedEmails = checkbox + ',';
     this.AddContactSelectedEmails = this.AddContactSelectedEmails.substring(0, this.AddContactSelectedEmails.length - 1);
-    if (event.checked) {
+    if (addMeeting.checked) {
       this.lstEmails.push(checkbox);
     } else {
-      alert(this.AddContactSelectedEmails)
       let indexq = this.lstEmails.indexOf(this.AddContactSelectedEmails);
-      alert(indexq)
       this.lstEmails.splice(indexq, 1);
     }
   }

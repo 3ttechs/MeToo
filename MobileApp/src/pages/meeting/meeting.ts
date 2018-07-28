@@ -1,7 +1,6 @@
 import { NavController, ModalController, AlertController } from 'ionic-angular/index';
 import { Component } from "@angular/core";
 import * as moment from 'moment';
-// io
 @Component({
     templateUrl: "meeting.html"
 })
@@ -42,64 +41,98 @@ export class MeetingPage {
         }
     };
 
-    constructor(public navCtrl: NavController, private modalCtrl: ModalController, private alertCtrl: AlertController) {
+    constructor(public navCtrl: NavController, private modalCtrl: ModalController
+        ,private alertCtrl: AlertController
+    ) {
     }
 
     addEvent() {
         let modal = this.modalCtrl.create('EventModalPage', { selectedDay: this.selectedDay });
         modal.present();
-        modal.onDidDismiss(data => {
-            if (data) {
-                let eventData = data;
-                alert(JSON.stringify(data));
+       /*
+       
+        try {
+            
 
-                eventData.startTime = new Date(data.startTime);
-                eventData.endTime = new Date(data.endTime);
+        modal.onDidDismiss(addMeeting => {
+            
+            if (addMeeting) {
+                let eventData = addMeeting;
+                alert('Chandra - addEvent')
+               // alert(new Date(JSON.parse(addMeeting).start_date.toString()));
+               // alert(JSON.parse(addMeeting).end_time.toString());
+              //  alert(JSON.parse(eventData));
+                eventData.startTime = new Date(addMeeting.startTime);
+                eventData.endTime = new Date(addMeeting.endTime);
+               eventData.startTime = new Date(JSON.parse(addMeeting).start_date.toString());                                              
+               eventData.endTime = new Date(JSON.parse(addMeeting).end_date.toString());
 
+               eventData.startTime = JSON.parse(addMeeting).start_time.toString();
+               eventData.startTime =JSON.parse(addMeeting).end_time.toString();
+               
+               
+               alert('aaa');
+               
+
+                alert(eventData.start_time);
+                
                 let events = this.eventSource;
+                alert(this.eventSource.length);
                 events.push(eventData);
                 this.eventSource = [];
                 setTimeout(() => {
                     this.eventSource = events;
-                });
+                }); 
             }
-        });
+        }); 
+    } catch (error) {
+        console.log(error);
+            
+    }
+    */
     }
 
     onEventSelected(event) {
         let start = moment(event.startTime).format('LLLL');
-        let end = moment(event.endTime).format('LLLL');
-
+        let end = moment(event.endTime).format('LLLL');       
         let alert = this.alertCtrl.create({
             title: '' + event.title,
             subTitle: 'From: ' + start + '<br>To: ' + end,
             buttons: ['OK']
         })
         alert.present();
-    }
+       // alert('onEventSelected');
+    } 
 
     loadEvents() {
+       // alert('loadEvents');
         this.eventSource = this.createRandomEvents();
     }
 
     onViewTitleChanged(title) {
+        //alert('onViewTitleChanged');
         this.viewTitle = title;
     }
 
     changeMode(mode) {
+       // alert('changeMode');
         this.calendar.mode = mode;
     }
 
     today() {
+      //  alert('today');
         this.calendar.currentDate = new Date();
     }
 
     onTimeSelected(ev) {
+     // alert('onTimeSelected');
         console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
             (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
     }
+    
 
     onCurrentDateChanged(event: Date) {
+       // alert('onCurrentDateChanged');
       this.selectedDay = new Date(Date.UTC(event.getUTCFullYear(), event.getUTCMonth(), event.getUTCDate()));;
         event.setDate;
         var today = new Date();
@@ -109,7 +142,9 @@ export class MeetingPage {
        // this.isToday  = today.getTime();
     }
 
+
     createRandomEvents() {
+        //alert('createRandomEvents');
         var events = [];
         
         for (var i = 0; i < 50; i += 1) {
@@ -148,12 +183,14 @@ export class MeetingPage {
     }
 
     onRangeChanged(ev) {
+        //alert('onRangeChanged');
         console.log('range changed: startTime: ' + ev.startTime + ', endTime: ' + ev.endTime);
     }
 
 
 
     markDisabled = (date: Date) => {
+       // alert('markDisabled');
         var current = new Date();
         current.setHours(0, 0, 0);
         return date < current;

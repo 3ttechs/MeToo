@@ -22,8 +22,8 @@ export interface ForgotPwd {
 export interface AddMeeting {
   title: string,
   notes: string,
-  StartDate: string,
-  EndDate: string,
+  startDate: string,
+  endDate: string,
   Location: string,
   Category_Type:string,
   //All_Day : string,

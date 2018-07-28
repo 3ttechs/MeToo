@@ -458,25 +458,11 @@ def get_meeting_attendees_feedback(user_id,meeting_id):
   "category": "Business",
   "venue": "Office",
   "notes": "Sample notes",
-  "all_day": 0,
   "start_date": "2018-07-08",
   "end_date": "2018-07-08",
   "start_time": "10:00",
   "end_time": "11:00",
-  "attendee_ids": [ 2,3]
-}
-
-{
-    "organiser_id":2,
-"title":"e",
-"category":"Personal",
-"venue":"a",
-"notes":"a",
-"start_date":"2018-6-25",
-"end_date":"2018-6-25",
-"start_time":"5:30 AM",
-"end_time":"5:30 AM",
-"attendee_ids":["2"]
+  "attendee_ids": [ '2,3']
 }
 
 '''
@@ -601,8 +587,39 @@ def add_meeting():
     msg.body = body
     mail.send(msg)    
 
-    return (Response(json.dumps(data), status=200, mimetype='application/json'))
+    return (Response(json.dumps(data), status=500, mimetype='application/json'))
 
+
+#http://localhost:5000/add_meeting_validation/organiser_id=1,start_date='2018-07-08',start_time='10:00',end_date='2018-6-25',end_time='11:00'
+@app.route('/add_meeting_validation/organiser_id=<organiser_id>,start_date=<start_date>,start_time=<start_time>,end_date=<end_date>,end_time=<end_time>', methods=['GET'])
+def add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time):
+
+    # check for end_time >= start_time
+    start = datetime.strptime(start_date +" "+ start_time, '%Y-%m-%d %H:%M')
+    end = datetime.strptime(end_date +" "+ end_time, '%Y-%m-%d %H:%M')
+
+    if(end<=start):
+        print('Start datetime is before or equal to End datetime')
+        return(json.dumps('Error: Start datetime is before or equal to End datetime')), 200
+
+    # check for past time
+    current = datetime.now()
+    if(end<current):
+        print('End datetime is before Current datetime')
+        return(json.dumps('Error: End datetime is before Current datetime')), 200
+ 
+    # check for overlap with other meetings
+    query = "select meeting_id from meeting where  ( \
+            datetime('"+start_date+"', '"+start_time+"') < datetime(end_date, end_time) and \
+            datetime('"+end_date+"', '"+end_time+"') > datetime(start_date, start_time)) and \
+            organiser_id = "+str(organiser_id)+" and response = 'ACTIVE' "
+    result_list = run_query(query)
+    if(len(result_list)>0):
+        print('Overlapping Meeting found')
+        return(json.dumps('Error: Overlapping Meeting found')), 200
+    
+    return(json.dumps('Meeting added Successfully')), 200
+    
 
 @app.after_request
 def after_request(response):
@@ -628,7 +645,7 @@ def load_properties(filepath, sep=':', comment_char='#'):
     return props
 
 if __name__ == '__main__':
-    props = load_properties('config_file.txt')
+    props = load_properties('config_file_local.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]
