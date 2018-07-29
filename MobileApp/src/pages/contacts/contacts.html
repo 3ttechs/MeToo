@@ -3,14 +3,47 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Contacts</ion-title>
   </ion-navbar>
+  <ion-toolbar no-border-top *ngIf="addNewContact === false && this.contactSearch === true">    
+    <ion-searchbar color="primary"
+                   [(ngModel)]="queryText"
+                   (ionInput)="updateContacts()"
+                   placeholder="Search">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+  
+  <ion-list *ngIf="addNewContact === false && this.contactSearch === true">
+ 
+    <ion-item-sliding *ngFor="let contact of contacts; let i = index" [hidden]="contact.hide">
+      
+      <button ion-item>
+          <h3>{{contact.userName}}</h3>
+      </button>
 
+      <ion-item-options>
+        <button ion-button color="primary" >
+          <ion-icon name="construct"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger" > 
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+    
+  </ion-list>
+  <ion-list-header [hidden]="shownContactsCount > 0">
+      No Contacts Found
+  </ion-list-header>
+
+  <!--SHOW FORM IF ADD NEW CONTACT IS CLICKED  -->  
       <form #contactForm="ngForm" novalidate>
-        <ion-list no-lines>
+        <ion-list no-lines *ngIf="this.addNewContact === true && this.contactSearch === false">
           <ion-item>
             <ion-label stacked color="primary">Name</ion-label>
             
@@ -45,7 +78,7 @@
 
         </ion-list>
 
-        <ion-grid>
+        <ion-grid *ngIf="this.addNewContact === true && this.contactSearch === false">
             <ion-row >
                 <ion-col></ion-col>
               <ion-col col-8>
@@ -54,7 +87,12 @@
               <ion-col></ion-col>
             </ion-row>
         </ion-grid>
-        
       </form>
-      
+      <ion-fab bottom left #fab>
+        <button ion-fab><ion-icon name="add-circle"></ion-icon></button>
+        <ion-fab-list side="right">
+          <button ion-fab color="twitter" (click)="onAddNewContact()"><ion-icon name="keypad"></ion-icon></button>
+          <button ion-fab color="twitter" (click)="onAddNewContactFromPhone()"><ion-icon name="contacts"></ion-icon></button>
+        </ion-fab-list>
+      </ion-fab>
 </ion-content>

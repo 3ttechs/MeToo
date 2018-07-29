@@ -45,7 +45,8 @@ export class SchedulePage {
     this.updateSchedule();
   }
 
-  updateSchedule() {
+    updateSchedule() {
+
     // Close any open sliding items when the schedule updates
     this.scheduleList && this.scheduleList.closeSlidingItems();
 
@@ -57,6 +58,7 @@ export class SchedulePage {
     });
 
     this.loading.present().then(()=>{
+
       this.meetingProvider.getMeetingListForUser(userId).then(result => {
         let allMeetings: any = result;
         let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(allMeetings, this.queryText, this.excludeCategories, this.segment);
@@ -121,6 +123,7 @@ export class SchedulePage {
 
   //Note : This is very similar to updateSchedule(). Rename it to doRefresh() at a later stage
   dummyRefresh(refresher: Refresher, flag: number) {
+
     let userId = this.loginProvider.UserId;
     
     //Note : Earlier the below was a 'subscribe'. Now it is a 'then'. Refer getTimeline()

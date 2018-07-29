@@ -7,7 +7,7 @@ import { ContactProvider } from '../../providers/contact-provider';
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 
 import { Contact } from '../../interfaces/contact';
-import { TabsPage } from '../tabs-page/tabs-page';
+//import { TabsPage } from '../tabs-page/tabs-page';
 
 @Component({
   selector: 'page-contacts',
@@ -18,52 +18,48 @@ export class ContactsPage {
   private loading: any;
   private contact: Contact = {UserId: 0, ContactName: "", ContactMobile:0, ContactEmail:"" };
   private submitted = false;
+  private addNewContact: Boolean = false;
+  //private addNewContactFromPhone: Boolean = false;
+  private contactSearch: Boolean = true;
 
+  private queryText: string = '';
+  private contacts: any = [];
+  private shownContactsCount: number = 0;
+  
   constructor(private navCtrl: NavController, 
     private contactProvider: ContactProvider, private loginProvider: DummyLoginProvider,
-    private loadingCtrl: LoadingController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    private loadingCtrl: LoadingController, private alertCtrl: AlertController, 
+    private toastCtrl: ToastController) {
     console.log('tjv..ContactsPage constructor');
   }
 
   ionViewDidLoad() {
-
-      console.log('tjv...ionViewDidLoad+++');
+    
+    this.updateContacts();
   }
 
   onAddContact(form: NgForm) {
-
+    
     this.submitted = true;
 
-    console.log('tjv...form.valid : ' + form.valid);
-
     if (form.valid) {
-      console.log('tjv...Inside onAddContact()...');
-
+  
       this.contact.UserId = this.loginProvider.UserId;
-      console.log('UserId : ' + this.contact.UserId);
-
-      console.log('ContactName : ' + this.contact.ContactName);
-      console.log('ContactMobile : ' + this.contact.ContactMobile);
-      console.log('ContactEmail : ' + this.contact.ContactEmail);
       
       this.showLoader();
       this.contactProvider.addContact(this.contact).then((result) => {
-        console.log('tjv...Calling loading.dismiss()');
+        
         this.loading.dismiss();
-        console.log(result);
         
         if(result === 0){
-          console.log('result === 0');
-          console.log('Contact exists!!!');
           this.showAlert('Contact exists!!!');
-          //this.navCtrl.setRoot(ContactsPage);
-          this.navCtrl.push(TabsPage);
+          this.navCtrl.setRoot(ContactsPage);
+          //this.navCtrl.push(TabsPage);
         }
         else{
-          console.log('result != 0');
           this.showAlert('Contact Added');
-          //this.navCtrl.setRoot(ContactsPage);
-          this.navCtrl.push(TabsPage);
+          this.navCtrl.setRoot(ContactsPage);
+          //this.navCtrl.push(TabsPage);
         }
       }, (err) => {
         this.loading.dismiss();
@@ -71,6 +67,48 @@ export class ContactsPage {
       });
     }
   }
+
+  onAddNewContact(){
+    
+    this.addNewContact = true;
+    this.contactSearch = false;
+  }
+
+  updateContacts() {
+    
+    this.addNewContact = false;
+    this.contactSearch = true;
+
+    let userId = this.loginProvider.UserId;
+    
+        
+    this.loading = this.loadingCtrl.create({
+      content: 'Fetching Contacts...'
+    });
+
+    this.loading.present().then(()=>{
+      
+      this.contactProvider.getContactsDataForUser(userId).then(result => {
+
+        let allContacts: any = this.contactProvider.getAllContactsForUser(result);
+               
+        let requiredContactsData: any = this.contactProvider.getRequiredContactsFromAllContacts(allContacts, this.queryText);
+        
+        this.contacts = requiredContactsData.contacts;
+        this.shownContactsCount = requiredContactsData.shownContactsCount;
+        console.log('this.shownContactsCount : ' + this.shownContactsCount);
+        
+        this.loading.dismiss();
+      });
+    });
+
+  }
+  
+  /*
+  private onAddNewContactFromPhone(){
+    console.log('tjv...Inside onAddNewContactFromPhone()');
+  }
+  */
 
   showLoader(){
     this.loading = this.loadingCtrl.create({

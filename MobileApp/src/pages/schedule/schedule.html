@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-navbar no-border-bottom>
     <button ion-button menuToggle>
@@ -46,9 +45,10 @@
       </ion-item-divider>
 
       <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [attr.track]="meeting.category" [hidden]="meeting.hide">
-              <button ion-item (click)="goToMeetingDetail(meeting)">
-                  <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
-                  <h3>{{meeting.title}}</h3>
+
+        <button ion-item (click)="goToMeetingDetail(meeting)">
+          <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
+          <h3>{{meeting.title}}</h3>
           <p>Time : {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}</p>
           <p>Venue : {{meeting.venue}}</p>
         </button>
@@ -82,7 +82,7 @@
   </ion-list>
 
   <ion-list-header [hidden]="shownMeetingsCount > 0">
-      No Sessions Found
+      No Meetings Found
   </ion-list-header>
 
   <!--

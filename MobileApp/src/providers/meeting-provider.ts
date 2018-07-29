@@ -6,8 +6,9 @@ import 'rxjs/add/observable/of';
 
 import { UserData } from './user-data';
 
-//let apiUrl = 'http://localhost:5000';
-let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
+let apiUrl = 'http://localhost:5000';
+
+//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class MeetingProvider {
@@ -173,9 +174,7 @@ export class MeetingProvider {
                  startTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].start_time),
                  endTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].end_time)
                 };
-     
-      //console.log('startTimeAMOrPMStr : ' + mtg.startTimeAMOrPMStr + ' endTimeAMOrPMStr : ' + mtg.endTimeAMOrPMStr );
-
+           
       if(meetingHashTable[key] == null)
       {
         meetingHashTable[key] = [];

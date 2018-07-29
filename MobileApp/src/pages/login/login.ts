@@ -34,20 +34,25 @@ export class LoginPage {
   
         this.feedbackProvider.PostData(LoginData,"/login").then((result) => {
         this.data = result;
-        if (this.data === 0) {
-          this.feedbackProvider.showAlert('Invalid user',"Login");
-        } else {
-          this.inputdataVal =this.data;
-          //alert(JSON.stringify(this.inputdataVal['login_id']));
-          this.loginProvider.UserId=this.inputdataVal['user_id'];
-          this.userData.login(this.login.username);
-          this.navCtrl.push(TabsPage);
-        }
+        this.login_method();
       }).catch(function (error) {
         this.feedbackProvider.showAlert(JSON.stringify(error),"Error");
       });
     }
 
+  }
+
+  private login_method() {
+    if (this.data === 0) {
+      this.feedbackProvider.showAlert('Invalid user', "Login");
+    }
+    else {
+      this.inputdataVal = this.data;
+      //alert(JSON.stringify(this.inputdataVal['login_id']));
+      this.loginProvider.UserId = this.inputdataVal['user_id'];
+      this.userData.login(this.login.username);
+      this.navCtrl.push(TabsPage);
+    }
   }
 
   onSignup() {
@@ -58,13 +63,27 @@ export class LoginPage {
     this.navCtrl.push(ForgotPasswordPage);
   }
 
-  onGLogin(form: NgForm) {
+  onGLogin() {
     this.submitted = true;
+    alert('entered');
+    
+    //let inputdata = "user_id=" + this.loginProvider.UserId;
+    //let inputdata = "user_id=1";
+    this.feedbackProvider.GetData("", "/google_login").then(data => {
+      this.inputdataVal = data;
+      alert('entered');
 
-    if (form.valid) {
+      this.login_method();
+    }).catch(function (error) {
+      alert(JSON.stringify(error));
+    });
+
+/*
+      if (form.valid) {
       this.userData.login(this.login.username);
       this.navCtrl.push(TabsPage);
     }
+    */
   }
 
   onTLogin(form: NgForm) {

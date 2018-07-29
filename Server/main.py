@@ -6,15 +6,26 @@ pyinstaller main.py
 import sqlite3
 import requests
 from datetime import datetime
-from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for
+from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
+from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
+from flask_dance.contrib.google import make_google_blueprint, google
 from  db_utilities import *
+from werkzeug.contrib.fixers import ProxyFix
+
+import os
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
+
+
+
 #from  login_with_social import *
 
 
 
 app = Flask(__name__,static_url_path = "", static_folder = "static")
-
+app.wsgi_app = ProxyFix(app.wsgi_app)
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = '3ttechs@gmail.com'
@@ -178,6 +189,7 @@ def add_new_user():
     user_name = d['user_name']
     phone_no  = d['phone_no']
     email  = d['email']
+    login_by  = 'CUSTOM'
 
     # Check for duplicate user
     data = run_select_query("select user_id from user where email='" + email+"'")
@@ -190,7 +202,7 @@ def add_new_user():
     if (len(data)>0):
         return '0', 200
 
-    query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
+    query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
     run_insert_query(query)
     user_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
     
@@ -242,8 +254,9 @@ def add_contact():
 
 
     if(duplicate_found==0):
+        login_by = 'CONTACTS'
         # Create user
-        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email) VALUES ('%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email)
+        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
         run_insert_query(query)
         contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
 
@@ -284,7 +297,6 @@ def update_user_profile():
     email  = d['email']        
 
     query = "UPDATE user SET login_id='%s',passwd='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,passwd,user_name,phone_no,email,user_id)
-    print(query)
     run_insert_query(query)
     return "Success", 200  
 
@@ -622,12 +634,104 @@ def add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time)
     return(json.dumps('Meeting added Successfully')), 200
     
 
+# Social Networking integrations
+
+app.config['SECRET_KEY'] = 'thisismysecret'
+twitter_blueprint = make_twitter_blueprint(api_key='', api_secret='')
+# twitter password : metooapp
+
+app.register_blueprint(twitter_blueprint, url_prefix='/twitter_login')
+'''
+@app.route("/twitter_login")
+def twitter_login():
+    if not twitter.authorized:
+        return redirect(url_for('twitter.login'))
+    account_info = twitter.get('account/settings.json')
+    if account_info.ok:
+        return '<h1>Your Twitter name is @{}</h1>'.format(account_info_json['screen_name'])
+
+    return '<h1>Request failed!'
+'''
+app.secret_key = 'thisismysecret'
+
+google_blueprint = make_google_blueprint( 
+    client_id="897538310482-8j8c29ttpb99pqn84kp8set2ca9ee6o9.apps.googleusercontent.com", 
+    client_secret="f62HUAJy7nNEmNCIMhMegWsP", 
+    #offline=True,
+    #reprompt_consent=True,
+    #redirect_url="/callback/google"
+    scope=["profile", "email"])
+app.register_blueprint(google_blueprint, url_prefix="/google_login")
+# http://localhost:5000/google_login/google/authorized
+# http://localhost:8100/tabs-page/conference-schedule/schedule/google/authorized
+#http://localhost:5000/google_login
+@app.route("/google_login")
+def google_login():
+    print('Here1...........')
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    print('Here2...........') 
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    print('Here3...........')
+    '''
+    # Returned output
+    {
+        'verified_email': True, 
+        'link': 'https://plus.google.com/+LakshmyNarayananAL', 
+        'given_name': 'Lakshmy', 
+        'name': 'Lakshmy Narayanan', 
+        'family_name': 'Narayanan', 
+        'id': '104401960997087965420', 
+        'locale': 'en', 
+        'email': 'lakshmynarayanan.al@gmail.com', 
+        'gender': 'male', 
+        'picture': 'https://lh6.googleusercontent.com/-0SklHY5vufU/AAAAAAAAAAI/AAAAAAAAJfY/9UJxB_yWm4A/photo.jpg'
+    }
+    '''
+    verified_email = resp.json()["verified_email"]
+    if(verified_email==False):
+        return '0', 200
+
+    user_name = resp.json()["name"]
+    email  = resp.json()["email"]
+    login_id = resp.json()["name"]
+    print(resp.json())
+
+    # first check whether this user is in user table
+    # if yes, allow him access
+    # if no, add him to user table and allow him access
+
+    # Check for duplicate user
+    data = run_select_query("select distinct user_id from user where email='" + email+"'")
+    duplicate_found = 0
+    if (len(data)>0):
+        user_id = data[0][0]
+        duplicate_found =1
+
+    if(duplicate_found==0):
+        passwd = '0'
+        phone_no  = '0' 
+        login_by ='GOOGLE'
+        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
+        run_insert_query(query)
+        user_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+
+    query = 'select user_id,login_id,user_name,phone_no,email,login_by from user where user_id = '+ str(user_id)
+
+    result = run_query(query)
+    if (len(result)<=0):
+        return '0', 200
+    return json.dumps(result[0]), 200
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin','*')
     response.headers.add('Access-Control-Allow-Headers','Origin,Accept,X-Requested-With,Content-Type')
     response.headers.add('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS')
     return response
+
+
 
 """
 Read the file passed as parameter as a properties file.
@@ -646,7 +750,7 @@ def load_properties(filepath, sep=':', comment_char='#'):
     return props
 
 if __name__ == '__main__':
-    props = load_properties('config_file.txt')
+    props = load_properties('config_file_local.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]
