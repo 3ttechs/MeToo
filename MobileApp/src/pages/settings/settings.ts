@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+//import { NgForm } from '@angular/forms';
 
 import { AlertController, NavController, ToastController } from 'ionic-angular';
-import { Http, Headers } from "@angular/http";
+//import { Http, Headers } from "@angular/http";
+import { DummyLoginProvider } from '../../providers/dummy-login-provider';
+import { FeedbackProvider } from '../../providers/feedback-provider';
+//import { SignupPage } from '../signup/signup';
+import { UserData } from '../../providers/user-data';
+import { UserOptions } from '../../interfaces/user-options';
+//import { LoginPage } from '../login/login';
 
-
-
-let apiUrl = 'http://localhost:5000';
+//let apiUrl = 'http://localhost:5000';
 //let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Component({
@@ -16,80 +20,74 @@ let apiUrl = 'http://localhost:5000';
 export class SettingsPage {
 
   submitted: boolean = false;
-  supportMessage: string;
+  newPasswd: string;
+  userDetails : any;
+  inputdataVal: any[0];
+  login_id : string;
+  user_name : string;
 
   constructor(
-    private http: Http,
+    //private http: Http,
     public navCtrl: NavController,
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private feedbackProvider: FeedbackProvider,
+    private loginProvider: DummyLoginProvider,
+    //private userOptions : UserOptions,
+    public userdata: UserData
   ) {
 
   }
-/*
-  ionViewDidEnter() {
-    let toast = this.toastCtrl.create({
-      message: 'This does not actually send a support request.',
-      duration: 3000
-    });
-    toast.present();
-  }*/
 
-  submit(form: NgForm) {
+  ionViewDidLoad() {
+ 
+  }
+  ionViewDidEnter() {
+    this.onGetUserDetails();
+    //toast.present();
+  }
+onGetUserDetails(){
+  let inputdata = "user_id="+this.loginProvider.UserId;
+  
+  this.feedbackProvider.GetData(inputdata, "/get_user_details/").then(data => {
+    this.inputdataVal = data;
+  }).catch(function (error) {
+    alert(JSON.stringify(error));
+  });
+  //console.log(this.userOptions.Name);
+  //console.log(this.userOptions.username);
+}
+
+/*
+onChangeParameters(form: NgForm){
+
     this.submitted = true;
 
     if (form.valid) {
-      //this.supportMessage = '';
-      //this.submitted = false;
-      //this.showLoader();
-      this.addGeneralComment(this.supportMessage).then((result) => {
-        console.log('Balaji...Completed posting');
-        //this.loading.dismiss();
-        //console.log(result);
-        //console.log('Balaji...Posting Completed');
-        if(result == "Success"){
-          //console.log('result === 0');
-          console.log('Comment Posting Completed!!!');
-          //this.showAlert('Contact exists!!!');
-          //this.navCtrl.setRoot(ContactsPage);
-          this.supportMessage = "";
-          this.navCtrl.push(SettingsPage);
-        }
-        else{
-          //console.log('result != 0');
-          //this.showAlert('Contact Added');
-          //this.navCtrl.setRoot(ContactsPage);
-          this.navCtrl.push(SettingsPage);
-        }
-        //console.log(result);
-      }, (err) => {
-        //console.log('Balaji...Posting Not Completed');
-        console.log(err);
-        //this.loading.dismiss();
-        //this.presentToast(err);
-      });
-      //oast.present();
-    }
-  }
-
-
-  addGeneralComment(supportMessage){
     return new Promise((resolve,reject) => {
       let headers = new Headers();
       
       headers.append('Accept', 'application/json');
       headers.append('Content-Type', 'application/json');
-      let user_id = 2 // harcoded need to change to global variable USER_ID or global method
+      let user_id = this.loginProvider.UserId;
+      let newPasswd = "test@123" ;
+    
+      let login_id = this.userDetails.login_id;
+      let passwd = newPasswd;
+      let user_name  = this.userDetails.user_name;
+      let phone_no  = this.userDetails.phone_no;
+      let email  = this.userDetails.email;
+
       //let postParams = JSON.stringify({user_id:user_id, comment:this.supportMessage})
-     
-      let postParams = {user_id: user_id, comment: this.supportMessage}
-      console.log(supportMessage);
+      let postParams = {user_id: user_id, login_id: login_id, passwd: passwd, user_name: user_name, phone_no:phone_no,email:email }
+      
       console.log(postParams);
       
-      this.http.post(apiUrl+'/add_general_comments', postParams, {headers: headers})
+      this.http.post(apiUrl+'/update_user_profile', postParams, {headers: headers})
         .subscribe(res => {
           resolve(res.text());
-          console.log('Balaji..Getting into Success loop after posting');
+          
+          console.log('Balaji..Getting into Success loop after posting password');
         }, (err) => {
           //console.log(err);
           //console.log('Balaji..Getting into error loop after posting');
@@ -97,6 +95,8 @@ export class SettingsPage {
         });
     })
   }
+}
+*/
   /*
   showLoader(){
     this.loading = this.loadingCtrl.create({
@@ -109,14 +109,16 @@ export class SettingsPage {
   // without submitting first, ask if they meant to leave the page
   ionViewCanLeave(): boolean | Promise<boolean> {
     // If the support message is empty we should just navigate
+    /*
     if (!this.supportMessage || this.supportMessage.trim().length === 0) {
       return true;
     }
+    */
 
     return new Promise((resolve: any, reject: any) => {
       let alert = this.alertCtrl.create({
         title: 'Leave this page?',
-        message: 'Are you sure you want to leave this page? Your support message will not be submitted.'
+        message: 'Are you sure you want to leave this page?'
       });
       alert.addButton({ text: 'Stay', handler: reject });
       alert.addButton({ text: 'Leave', role: 'cancel', handler: resolve });
