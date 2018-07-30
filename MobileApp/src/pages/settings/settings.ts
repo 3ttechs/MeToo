@@ -7,7 +7,7 @@ import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 import { FeedbackProvider } from '../../providers/feedback-provider';
 //import { SignupPage } from '../signup/signup';
 import { UserData } from '../../providers/user-data';
-import { UserOptions } from '../../interfaces/user-options';
+//import { UserOptions } from '../../interfaces/user-options';
 //import { LoginPage } from '../login/login';
 
 //let apiUrl = 'http://localhost:5000';
@@ -107,14 +107,10 @@ onChangeParameters(form: NgForm){
   */
   // If the user enters text in the support question and then navigates
   // without submitting first, ask if they meant to leave the page
+/*
   ionViewCanLeave(): boolean | Promise<boolean> {
     // If the support message is empty we should just navigate
-    /*
-    if (!this.supportMessage || this.supportMessage.trim().length === 0) {
-      return true;
-    }
-    */
-
+    
     return new Promise((resolve: any, reject: any) => {
       let alert = this.alertCtrl.create({
         title: 'Leave this page?',
@@ -126,4 +122,5 @@ onChangeParameters(form: NgForm){
       alert.present();
     });
   }
+  */
 }

@@ -17,11 +17,11 @@
           <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
 
             <ion-card class="session-card">
-              <ion-card-header>
+              <div *ngIf=" pendingFeedback.isOrganiser == 'Yes'">
+                <ion-icon large item-right color="primary" name="ribbon"></ion-icon>
+              </div>
+            <ion-card-header>
                 <h2>Title : {{pendingFeedback.meetingTitle}}</h2>
-                <div *ngIf=" pendingFeedback.isOrganiser == 'Yes'">
-                  <ion-icon name="school"></ion-icon>
-                </div>
                 <h2>Date : {{pendingFeedback.meetingStartDate}}</h2>
                 <h2>Venue : {{pendingFeedback.meetingVenue}}</h2>
               </ion-card-header>

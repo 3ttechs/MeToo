@@ -65,13 +65,13 @@ export class LoginPage {
 
   onGLogin() {
     this.submitted = true;
-    alert('entered');
+    //alert('entered');
     
     //let inputdata = "user_id=" + this.loginProvider.UserId;
     //let inputdata = "user_id=1";
     this.feedbackProvider.GetData("", "/google_login").then(data => {
       this.inputdataVal = data;
-      alert('entered');
+      //alert('entered');
 
       this.login_method();
     }).catch(function (error) {
