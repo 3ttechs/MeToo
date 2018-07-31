@@ -13,7 +13,7 @@
 		<ion-list no-lines>
 			<ion-item>
 				<ion-label stacked color="primary">Username</ion-label>
-				<ion-input [(ngModel)]="login.username" name="username" placeholder="9448373533"  type="text" #username="ngModel" spellcheck="false" autocapitalize="off"
+				<ion-input [(ngModel)]="login.username" name="username" placeholder="Preferably your email ID"  type="text" #username="ngModel" spellcheck="false" autocapitalize="off"
 					required>
 				</ion-input>
 			</ion-item>
@@ -23,7 +23,7 @@
 
 			<ion-item>
 				<ion-label stacked color="primary">Password</ion-label>
-				<ion-input [(ngModel)]="login.password" name="password" placeholder="*********"  type="password" #password="ngModel" required>
+				<ion-input [(ngModel)]="login.password" name="password" placeholder="Enter password"  type="password" #password="ngModel" required>
 				</ion-input>
 			</ion-item>
 			<p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
@@ -53,7 +53,6 @@
 		<p ion-text style="text-align: center;" >Or Login with </p>
 		
 <ion-grid style="align-items: center;">
-
 	<ion-row >
 		<ion-col col-4 >
 		<button  ion-fab color="google" (click)="onGLogin()"><ion-icon name="logo-googleplus"></ion-icon></button>

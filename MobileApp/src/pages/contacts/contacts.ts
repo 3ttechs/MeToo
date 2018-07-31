@@ -112,7 +112,7 @@ export class ContactsPage {
 
   showLoader(){
     this.loading = this.loadingCtrl.create({
-        content: 'Adding contact...'
+       // content: 'Adding contact...'
     });
     this.loading.present();
   }

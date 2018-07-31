@@ -170,6 +170,18 @@ def add_general_comments():
     return "Success", 200   
 
 
+def add_notification():
+    # when_to_send, message, user_id
+    # add meeting, organiser & participants
+    # delete meeting, organiser & participants
+    # accept and Decline, organiser & one participant
+    # feedback given, organiser & one participant
+    # asking for feedback, organiser & participants, mail is required   
+    return "", 200
+
+
+
+
 ''' 
 {
   "login_id": "Lakshmy",
@@ -192,6 +204,7 @@ def add_new_user():
     login_by  = 'CUSTOM'
 
     # Check for duplicate user
+    # TODO: Send the email to user in case of duplicate
     data = run_select_query("select user_id from user where email='" + email+"'")
     if (len(data)>0):
         return '0', 200
@@ -201,6 +214,7 @@ def add_new_user():
     data = run_select_query("select user_id from user where phone_no='" + phone_no+"'")
     if (len(data)>0):
         return '0', 200
+
 
     query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
     run_insert_query(query)

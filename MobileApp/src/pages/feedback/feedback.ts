@@ -83,7 +83,7 @@ export class FeedbackPage {
         if(result === 1){
           console.log('result === Success');
           
-          this.showAlert('Feedback Added');
+          //this.showAlert('Feedback Added');
           this.navCtrl.push(TabsPage);
         }
         else{
@@ -100,7 +100,7 @@ export class FeedbackPage {
 
   showLoader(){
     this.loading = this.loadingCtrl.create({
-        content: 'Adding feedback...'
+        //content: 'Adding feedback...'
     });
     this.loading.present();
   }

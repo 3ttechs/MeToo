@@ -25,7 +25,7 @@ export class SignupPage {
     if (form.valid) {
       if (this.signup.Confirmpassword === this.signup.password) {
         let AddNewUserBody = JSON.stringify({
-          login_id: this.signup.Name, passwd: this.signup.password, user_name: this.signup.username, phone_no: this.signup.PhoneNumber, email: this.signup.Email
+          login_id: this.signup.username, passwd: this.signup.password, user_name: this.signup.Name, phone_no: this.signup.PhoneNumber, email: this.signup.Email
         });
         this.feedbackProvider.PostData(
           AddNewUserBody, "/add_new_user"
