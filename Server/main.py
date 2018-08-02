@@ -57,6 +57,8 @@ def home():
 #http://localhost:5000/get_contacts_list  
 #http://localhost:5000/get_notifications_list 
 #http://localhost:5000/add_contact
+#http://localhost:5000/delete_contact
+
 #http://localhost:5000/add_new_user 
 #http://localhost:5000/add_contact 
 #http://localhost:5000/update_user_profile 
@@ -233,6 +235,16 @@ def add_new_user():
 
     return str(user_id), 200   
 
+#http://localhost:5000/delete_contact/user_id=6,contact_id=6 
+@app.route('/delete_contact/user_id=<user_id>,contact_id=<contact_id>', methods=['GET'])
+def delete_contact(user_id,contact_id):
+    
+    query = "DELETE FROM contact WHERE user_id = %s and contact_id=%s" % (user_id, contact_id)
+    run_insert_query(query)
+
+    return "Success", 200
+
+
 ''' 
 {
   "user_id": 1,  
@@ -377,14 +389,6 @@ def update_meeting_response(meeting_id, attendee_id,response):
     # TODO: send mail to all
     return "Success", 200    
 
-#http://localhost:5000/delete_meeting/meeting_id=1
-@app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
-def delete_meeting(meeting_id):
-    response = "DELETE"
-    query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
-    run_insert_query(query)
-    #  TODO: send mail to all
-    return "Success", 200   
 
 #http://localhost:5000/login
 # body : {"login_id": "b","passwd":"b"}
@@ -403,7 +407,7 @@ def login():
     return json.dumps(result[0]), 200
 
 def get_user_name(user_id):
-    query = 'select distinct user_name from user where user_id  ='+ user_id
+    query = 'select distinct user_name from user where user_id  ='+ str(user_id)
     data = run_query(query)
     return data[0]['user_name']
 
@@ -463,6 +467,10 @@ def get_meeting_attendees(user_id,meeting_id):
             result[i]['Is_Organiser'] ='No'            
     return json.dumps(result), 200
 
+
+
+
+
 #http://localhost:5000/get_meeting_attendees_feedback/user_id=1,meeting_id=1
 @app.route('/get_meeting_attendees_feedback/user_id=<user_id>,meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_attendees_feedback(user_id,meeting_id):
@@ -477,6 +485,33 @@ def get_meeting_attendees_feedback(user_id,meeting_id):
         else:
             result[i]['Is_Organiser'] ='No'     
     return json.dumps(run_query(query)), 200
+
+#http://localhost:5000/delete_meeting/meeting_id=1
+@app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
+def delete_meeting(meeting_id):
+    response = "DELETE"
+    query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
+    run_insert_query(query)
+
+    query = "select * from meeting  WHERE meeting_id=%s" % (meeting_id)
+    result = run_query(query)[0]
+    
+    to = result['email_list']
+    subject = "MeToo Update"
+    body = "Welcome to MeToo\n\nMeeting deleted\n"
+    body+= "Title: "+ result['title'] +"\n"
+    body+= "Organiser: "+ get_user_name(result['organiser_id'])  +"\n" 
+    body+= "Category: "+ result['category']+"\n"
+    body+= "Venue: "+ result['venue']+"\n"
+    body+= "Notes: "+ result['notes']+"\n"
+    body+= "Start: "+ result['start_date']+" " + result['start_time']+"\n"
+    body+= "End: "+ result['end_date']+" " + result['end_time']+"\n"
+    body+= "Attendees: "+",".join(to)+"\n"
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
+    msg.body = body
+    mail.send(msg)    
+
+    return "Success", 200   
 
 ''' 
 {
@@ -499,6 +534,7 @@ def add_meeting():
     print(request.data)
     d = json.loads(request.data)
 
+
     organiser_id = d['organiser_id']
     title = d['title']
     category=data = d['category']
@@ -512,6 +548,7 @@ def add_meeting():
     #attendee_count = len(d['attendee_ids'])
     attendee_ids = d['attendee_ids']
     response ='ACTIVE'
+    organiser_name = get_user_name(organiser_id)
 
     # processing input list to get integer array 
     attendee_ids_str = attendee_ids[0]
@@ -596,13 +633,21 @@ def add_meeting():
     query = 'select distinct email from user where user_id in ('+ attendee_id_str +')'
     result_list = run_query(query)
     email_ids=[]
+    email_id_str=''
+
     for result in result_list:
         email_ids.append(result['email'])
+        email_id_str+=str(result['email'])+','
+    email_id_str = email_id_str[:-1]
 
-    to = email_ids
+    query = "UPDATE meeting SET email_list='%s' WHERE meeting_id=%d" % (email_id_str,meeting_id)
+    run_insert_query(query)
+
+    to = email_id_str
     subject = "New meeting from MeToo"
     body = "Welcome to MeToo\n\nNew Meeting created\n"
     body+= "Title: "+title+"\n"
+    body+= "Organiser: "+ organiser_name +"\n"
     body+= "Category: "+category+"\n"
     body+= "Venue: "+venue+"\n"
     body+= "Notes: "+notes+"\n"
@@ -764,7 +809,7 @@ def load_properties(filepath, sep=':', comment_char='#'):
     return props
 
 if __name__ == '__main__':
-    props = load_properties('config_file.txt')
+    props = load_properties('config_file_local.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]
