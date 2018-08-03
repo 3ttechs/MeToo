@@ -5,8 +5,7 @@ from flask import Flask, request,json,send_from_directory,Response,render_templa
 from flask_mail import Mail, Message
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from flask_dance.contrib.google import make_google_blueprint, google
-from  db_utilities import *
-from  db_utilities import get_user_name, add_notification, mail
+from  global_params import *
 
 def google_login():
     print('Here1...........')

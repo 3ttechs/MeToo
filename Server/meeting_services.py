@@ -2,23 +2,23 @@ import sqlite3, os, requests
 from datetime import datetime
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
-from  db_utilities import *
-from  db_utilities import get_user_name, add_notification, mail
+from  global_params import *
+#from  global_params import get_user_name, add_notification, mail
 
 
 ''' 
 {
-  "organiser_id": 1,
-  "title": "Sample meeting",
-  "category": "Business",
-  "venue": "Office",
-  "notes": "Sample notes",
-  "start_date": "2018-07-08",
-  "end_date": "2018-07-08",
-  "start_time": "10:00",
-  "end_time": "11:00",
-  "attendee_ids": [ '2,3']
-}
+  "organiser_id":1,
+  "title":"a",
+  "category":"Personal",
+  "venue":"a",
+  "notes":"a",
+  "start_date":"2018-8-3",
+  "end_date":"2018-8-3",
+  "start_time":"16:47",
+  "end_time":"17:47",
+  "attendee_ids":["6,5,3"]
+  }
 
 '''
 def add_meeting():
@@ -136,7 +136,7 @@ def add_meeting():
     query = "UPDATE meeting SET email_list='%s' WHERE meeting_id=%d" % (email_id_str,meeting_id)
     run_insert_query(query)
 
-    to = email_id_str
+    to = email_id_str.split(',')
     subject = "New meeting from MeToo"
     body = "Welcome to MeToo\n\nNew Meeting created\n"
     body+= "Title: "+title+"\n"
@@ -185,8 +185,6 @@ def add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time)
 
 
 def get_meeting_list(user_id):
-    user_name = get_user_name(user_id)
-
     query = 'select distinct meeting_id from attendee where attendee_id = "'+ user_id +'"'
     result_list = run_query(query)
     meeting_ids=[]
@@ -197,7 +195,7 @@ def get_meeting_list(user_id):
     query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
     result = run_query(query)
     for i in range(len(result)):
-        result[i]['organiser_name'] = user_name
+        result[i]['organiser_name'] = get_user_name(result[i]['organiser_id'])
         if(str(result[i]['organiser_id'])==user_id):
             result[i]['Is_Organiser'] ='Yes'
         else:
@@ -210,10 +208,10 @@ def get_meeting_list(user_id):
         if(start>current):
             result[i]['Is_Past'] ='No'
         else:
-            result[i]['Is_Past'] ='Yes'            
+            result[i]['Is_Past'] ='Yes'
+
     if (len(result)<=0):
         return '0', 200    
-
     return json.dumps(result), 200
 
 def get_meeting_details(meeting_id):
@@ -255,7 +253,7 @@ def delete_meeting(meeting_id):
 
     #add_notification(attendee_id_str, meeting_id, "Meeting "+result['title']+" deleted", now.strftime("%Y-%m-%d"), now.strftime("%H:%M"))
 
-    return "Success", 200   
+    return " Success", 200   
 
 def update_meeting_response(meeting_id, attendee_id,response):
     query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)

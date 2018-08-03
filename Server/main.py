@@ -12,9 +12,9 @@ from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from flask_dance.contrib.google import make_google_blueprint, google
 from meeting_services import *
 from user_services import *
-from  feedback_services import *
-from  social_services import *
-from  db_utilities import *
+from feedback_services import *
+from social_services import *
+from global_params import *
 
 #from  login_with_social import *
 
@@ -51,6 +51,20 @@ def add_new_user_method():    return(add_new_user())
 @app.route('/login', methods=['POST'])
 def login_method():    return(login())
 
+
+''' 
+{
+  "user_id": 1,  
+  "contact_name": "Lakshmy", 
+  "phone_no": "9988776655",
+  "email": "g@h.com"
+}
+'''
+# If User already exist, use the contact_id
+#http://localhost:5000/add_contact
+@app.route('/add_contact', methods=['POST'])
+def add_contact_method(): return(add_contact())
+
 ''' 
 {
   "user_id": 1,
@@ -61,22 +75,6 @@ def login_method():    return(login())
   "email": "g@h.com"
 }
 '''
-
-# If User already exist, use the contact_id
-#http://localhost:5000/add_contact
-@app.route('/add_contact', methods=['POST'])
-def add_contact_method(): return(add_contact())
-
-
-''' 
-{
-  "user_id": 1,  
-  "contact_name": "Lakshmy", 
-  "phone_no": "9988776655",
-  "email": "g@h.com"
-}
-'''
-
 #http://localhost:5000/update_user_profile
 @app.route('/update_user_profile', methods=['POST'])
 def update_user_profile_method():    return(update_user_profile())
@@ -85,11 +83,11 @@ def update_user_profile_method():    return(update_user_profile())
 @app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
 def get_user_details_method(user_id): return(get_user_details(user_id))
 
-#http://localhost:5000/forgot_password/login_id='b'
+#http://localhost:5000/forgot_password/login_id='Lakshmy'
 @app.route('/forgot_password/login_id=<login_id>', methods=['GET'])
 def forgot_password_by_login_id_method(login_id): return(forgot_password_by_login_id(login_id))
 
-#http://localhost:5000/forgot_password/email='c@d.com'
+#http://localhost:5000/forgot_password/email='lakshmynarayanan.al@gmail.com'
 @app.route('/forgot_password/email=<email>', methods=['GET'])
 def forgot_password_by_email_method(email): return(forgot_password_by_email(email))
 
@@ -106,6 +104,27 @@ def delete_contact_method(user_id,contact_id): return(delete_contact(user_id,con
                              MEETING SERVICES
 -------------------------------------------------------------------------------
 '''
+''' 
+
+
+{
+  "organiser_id":1,
+  "title":"a",
+  "category":"Personal",
+  "venue":"a",
+  "notes":"a",
+  "start_date":"2018-8-3",
+  "end_date":"2018-8-3",
+  "start_time":"16:47",
+  "end_time":"17:47",
+  "attendee_ids":["6,5,3"]
+  }
+
+
+'''
+#http://localhost:5000/add_meeting
+@app.route('/add_meeting', methods=['POST'])
+def add_meeting_method(): return(add_meeting())
 
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
@@ -124,18 +143,16 @@ def get_meeting_attendees_method(user_id,meeting_id): return(get_meeting_attende
 def get_meeting_attendees_feedback_method(user_id,meeting_id):    return(get_meeting_attendees_feedback(user_id,meeting_id))
 
 #http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=GIVEN or DECLINE
-@app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['GET'])
+@app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['POST'])
 def update_meeting_response_method (meeting_id, attendee_id,response):    return(update_meeting_response(meeting_id, attendee_id,response))
 
-#http://localhost:5000/delete_meeting/meeting_id=1
+#http://localhost:5000/delete_meeting/meeting_id=2
 @app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
 def delete_meeting_method(meeting_id):    return(delete_meeting(meeting_id))
 
-#http://localhost:5000/add_meeting
-@app.route('/add_meeting', methods=['POST'])
-def add_meeting_method(): return(add_meeting())
 
-#http://localhost:5000/add_meeting_validation/organiser_id=1,start_date='2018-07-08',start_time='10:00',end_date='2018-6-25',end_time='11:00'
+
+#http://localhost:5000/add_meeting_validation/organiser_id=1,start_date=2018-8-3,start_time=16:47,end_date=2018-8-3,end_time=17:47
 @app.route('/add_meeting_validation/organiser_id=<organiser_id>,start_date=<start_date>,start_time=<start_time>,end_date=<end_date>,end_time=<end_time>', methods=['GET'])
 def add_meeting_validation_method(organiser_id,start_date,start_time,end_date,end_time):    return(add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time))
     
@@ -146,10 +163,6 @@ def add_meeting_validation_method(organiser_id,start_date,start_time,end_date,en
 -------------------------------------------------------------------------------
 '''
 
-#http://localhost:5000/ask_for_feedback/user_id=1
-@app.route('/ask_for_feedback/user_id=<user_id>', methods=['GET'])
-def ask_for_feedback_method(user_id): return(ask_for_feedback(user_id))
-
 ''' 
 {
   "feedback_id": 1,
@@ -159,12 +172,9 @@ def ask_for_feedback_method(user_id): return(ask_for_feedback(user_id))
 }
 
 '''
-
 #http://localhost:5000/add_feedback
 @app.route('/add_feedback', methods=['POST'])
 def add_feedback_method(): return(add_feedback())
-
-
 
 ''' 
 {
@@ -177,13 +187,6 @@ def add_feedback_method(): return(add_feedback())
 @app.route("/send_metoo_mail", methods=['POST'])
 def send_metoo_mail_method(): return(send_metoo_mail())
 
-
-#http://localhost:5000/get_notifications_list/user_id=1
-@app.route('/get_notifications_list/user_id=<user_id>', methods=['GET'])
-def get_notifications_list_method(user_id): return(get_notifications_list(user_id))
-
-
-    
 ''' 
 {
   "user_id": 1,  
@@ -194,14 +197,21 @@ def get_notifications_list_method(user_id): return(get_notifications_list(user_i
 @app.route('/add_general_comments', methods=['POST'])
 def add_general_comments_method(): return(add_general_comments())
 
+#http://localhost:5000/ask_for_feedback/user_id=1
+@app.route('/ask_for_feedback/user_id=<user_id>', methods=['GET'])
+def ask_for_feedback_method(user_id): return(ask_for_feedback(user_id))
+
+#http://localhost:5000/get_notifications_list/user_id=1
+@app.route('/get_notifications_list/user_id=<user_id>', methods=['GET'])
+def get_notifications_list_method(user_id): return(get_notifications_list(user_id))
+    
+
 
 '''
 -------------------------------------------------------------------------------
                              SOCIAL SERVICES
 -------------------------------------------------------------------------------
 '''
-
-
 # http://localhost:5000/google_login/google/authorized
 # http://localhost:8100/tabs-page/conference-schedule/schedule/google/authorized
 #http://localhost:5000/google_login
@@ -214,7 +224,6 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers','Origin,Accept,X-Requested-With,Content-Type')
     response.headers.add('Access-Control-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS')
     return response
-
 
 if __name__ == '__main__':
     props = load_properties('config_file_local.txt')

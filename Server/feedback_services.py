@@ -2,15 +2,13 @@ import sqlite3, os, requests
 from datetime import datetime
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
-from  db_utilities import *
-from  db_utilities import get_user_name, add_notification, mail
+from  global_params import *
 
 
 def get_meeting_attendees_feedback(user_id,meeting_id):
     query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
     query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
-    print(query)
     result = run_query(query)
     for i in range(len(result)):
         if(str(result[i]['attendee_id'])==user_id):

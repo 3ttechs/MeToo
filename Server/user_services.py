@@ -2,8 +2,7 @@ import sqlite3, os, requests
 from datetime import datetime
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
-from  db_utilities import *
-from  db_utilities import get_user_name, add_notification, mail
+from  global_params import *
 
 def get_user_details(user_id):
     query = 'select user_id,login_id,user_name,phone_no,email from user where user_id  ='+ user_id
@@ -14,7 +13,6 @@ def get_user_details(user_id):
 
 def forgot_password_by_login_id(login_id):
     query = 'select * from user where login_id  ='+ login_id
-    print(query)
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
