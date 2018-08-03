@@ -1,8 +1,16 @@
 import { NavController, ModalController, AlertController } from 'ionic-angular/index';
 import { Component } from "@angular/core";
 import * as moment from 'moment';
+import { FeedbackProvider } from '../../providers/feedback-provider'; 
+import { DummyLoginProvider } from '../../providers/dummy-login-provider';
+
+
+export interface Config {
+	technologies: string;
+}
 @Component({
     templateUrl: "meeting.html"
+    
 })
 export class MeetingPage { 
     eventSource = [];
@@ -40,68 +48,77 @@ export class MeetingPage {
             }
         }
     };
+    
+    inputdataVal: any;
 
     constructor(public navCtrl: NavController, private modalCtrl: ModalController
-        ,private alertCtrl: AlertController
+        ,private alertCtrl: AlertController,private feedbackProvider: FeedbackProvider,
+        private loginProvider: DummyLoginProvider
     ) {
+        console.log('constructor call');
+        this.eventSource = this.createRandomEvents();
+        console.log('constructor ');
     }
+    
 
     addEvent() {
+        try {
         let modal = this.modalCtrl.create('EventModalPage', { selectedDay: this.selectedDay });
         modal.present();
-       /*
-       
-        try {
-            
+        // modal.onDidDismiss(data => {
+        //     if (data) {
+        //         let eventData = data;
 
+        //         eventData.startTime = new Date(data.startTime);
+        //         eventData.endTime = new Date(data.endTime);
+
+        //         let events = this.eventSource;
+        //         events.push(eventData);
+        //         this.eventSource = [];
+        //         setTimeout(() => {
+        //             this.eventSource = events;
+        //         });
+        //     }
+        // });
+        //this.eventSource = this.createRandomEvents();
         modal.onDidDismiss(addMeeting => {
-            
             if (addMeeting) {
                 let eventData = addMeeting;
-                alert('Chandra - addEvent')
-               // alert(new Date(JSON.parse(addMeeting).start_date.toString()));
-               // alert(JSON.parse(addMeeting).end_time.toString());
-              //  alert(JSON.parse(eventData));
+                alert(addMeeting.startTime);
                 eventData.startTime = new Date(addMeeting.startTime);
                 eventData.endTime = new Date(addMeeting.endTime);
-               eventData.startTime = new Date(JSON.parse(addMeeting).start_date.toString());                                              
-               eventData.endTime = new Date(JSON.parse(addMeeting).end_date.toString());
-
-               eventData.startTime = JSON.parse(addMeeting).start_time.toString();
-               eventData.startTime =JSON.parse(addMeeting).end_time.toString();
-               
-               
-               alert('aaa');
-               
-
-                alert(eventData.start_time);
-                
+                alert('chandra -- eventSource');
                 let events = this.eventSource;
-                alert(this.eventSource.length);
                 events.push(eventData);
+
                 this.eventSource = [];
+                alert(this.eventSource.length);
                 setTimeout(() => {
                     this.eventSource = events;
+                    console.log(events);
+                    alert(this.eventSource.length);
                 }); 
             }
         }); 
     } catch (error) {
-        console.log(error);
-            
+            console.log('My Error' + error);
     }
-    */
+    this.eventSource = this.createRandomEvents();
     }
 
-    onEventSelected(event) {
-        let start = moment(event.startTime).format('LLLL');
-        let end = moment(event.endTime).format('LLLL');       
+    onEventSelected(addMeeting) {
+        try{
+        let start = moment(addMeeting.startTime).format('LLLL');
+        let end = moment(addMeeting.endTime).format('LLLL');       
         let alert = this.alertCtrl.create({
-            title: '' + event.title,
+            title: 'Details' ,
             subTitle: 'From: ' + start + '<br>To: ' + end,
             buttons: ['OK']
         })
         alert.present();
-       // alert('onEventSelected');
+    } catch (error) {
+          console.log(error);
+    }
     } 
 
     loadEvents() {
@@ -110,87 +127,136 @@ export class MeetingPage {
     }
 
     onViewTitleChanged(title) {
-        //alert('onViewTitleChanged');
+       
         this.viewTitle = title;
     }
 
     changeMode(mode) {
-       // alert('changeMode');
+       
         this.calendar.mode = mode;
     }
 
     today() {
-      //  alert('today');
+      
         this.calendar.currentDate = new Date();
     }
 
     onTimeSelected(ev) {
-     // alert('onTimeSelected');
+        try{
+      //alert('onTimeSelected');
         console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
             (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
+        } catch (error) {
+            console.log(error);
+      }
+  
     }
     
 
     onCurrentDateChanged(event: Date) {
-       // alert('onCurrentDateChanged');
-      this.selectedDay = new Date(Date.UTC(event.getUTCFullYear(), event.getUTCMonth(), event.getUTCDate()));;
+try{
+   // alert('onCurrentDateChanged');
+      this.selectedDay = new Date(Date.UTC(event.getUTCFullYear(), event.getUTCMonth(), event.getUTCDate()));
         event.setDate;
+        console.log("onCurrentDateChanged event.setDate : "+event.setDate);
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         event.setHours(0, 0, 0, 0);
         this.isToday = today.getTime() === event.getTime();
+        
+        console.log("onCurrentDateChanged : "+this.isToday);
        // this.isToday  = today.getTime();
+    } catch (error) {
+        console.log(error);
+  }
+
     }
 
 
     createRandomEvents() {
-        //alert('createRandomEvents');
-        var events = [];
-        
-        for (var i = 0; i < 50; i += 1) {
-            var date = new Date();
-            var eventType = Math.floor(Math.random() * 2);
-            var startDay = Math.floor(Math.random() * 90) - 45;
-            var endDay = Math.floor(Math.random() * 2) + startDay;
+       var events = [];
+         let inputdata="user_id="+this.loginProvider.UserId;
+         //let inputdata = "user_id=1";
+         this.feedbackProvider.GetData(inputdata, "/get_meeting_list/").then(data => {
+           this.inputdataVal = data;
+           
+
+        for (var i = 0; i < JSON.parse(JSON.stringify(this.inputdataVal)).length; i += 1) {
+
+            var date = new Date(JSON.parse(JSON.stringify(data))[i].start_date);
+            var eventType =1;// Math.floor(Math.random() * 2);
+            var startDay =date.getUTCDate();// Math.floor(Math.random() * 90) - 45;
+            var endDay =date.getUTCDate();// Math.floor(Math.random() * 2) + startDay;
             var startTime;
             var endTime;
             if (eventType === 0) {
-                startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
+                //startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
+                startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(),16,30);
+                console.log("Staer Time -- Chandra"+startTime);
+                console.log(JSON.parse(JSON.stringify(data))[i].end_time);
                 if (endDay === startDay) {
                     endDay += 1;
                 }
-                endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
+                console.log("endDay -- Chandra : "+endDay);
+                console.log("startDay -- Chandra : "+startDay);
+                console.log("startTime -- Chandra : "+JSON.parse(JSON.stringify(data))[i].start_time);
+                console.log("EndTime -- Chandra : "+JSON.parse(JSON.stringify(data))[i].end_time);
+                //endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
+                endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(),15,30);
+                console.log("end Time -- Chandra : "+endTime);
                 events.push({
-                    title: 'All Day - ' + i,
+                    //title: 'All Day - ' + i,
+                    title: JSON.parse(JSON.stringify(data))[i].title,
                     startTime: startTime,
                     endTime: endTime,
-                    allDay: true
+                    color: "Business"
+                    //,allDay: true
                 });
             } else {
-                var startMinute = Math.floor(Math.random() * 24 * 60);
-                var endMinute = Math.floor(Math.random() * 180) + startMinute;
-                startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
-                endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
+                //var startMinute = Math.floor(Math.random() * 24 * 60);
+                //var endMinute = Math.floor(Math.random() * 180) + startMinute;
+                //startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
+                //endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
+                var startTimeVal=JSON.parse(JSON.stringify(data))[i].start_time;
+                var endTimeVal=JSON.parse(JSON.stringify(data))[i].end_time;
+                startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() , Number(startTimeVal.substring(0,2)),Number(startTimeVal.substring(3,5)));
+                endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), Number(endTimeVal.substring(0,2)),Number(endTimeVal.substring(3,5)));
+                
+                console.log("EndTime -- Chandra : "+JSON.parse(JSON.stringify(data))[i].start_time);
+                console.log( Number(startTimeVal.substring(0,2)));
+                console.log( Number(startTimeVal.substring(3,5)));
+                console.log("EndTime -- Chandra : "+JSON.parse(JSON.stringify(data))[i].end_time);
+
                 events.push({
-                    title: 'Event - ' + i,
+                    //title: 'Event - ChandraRao - ' + i,
+                    title:JSON.parse(JSON.stringify(data))[i].title,
                     startTime: startTime,
                     endTime: endTime,
-                    allDay: false
+                    subTitle:JSON.parse(JSON.stringify(data))[i].notes +" - "+JSON.parse(JSON.stringify(data))[i].category
+                    //,allDay: false
                 });
             }
         }
-        return events;
+    }).catch(function (error) {
+        alert(JSON.stringify(error));
+       });
+        return events;   
     }
 
     onRangeChanged(ev) {
         //alert('onRangeChanged');
+        try{
         console.log('range changed: startTime: ' + ev.startTime + ', endTime: ' + ev.endTime);
+    } catch (error) {
+        console.log(error);
+  }
+
     }
 
 
 
     markDisabled = (date: Date) => {
-       // alert('markDisabled');
+        alert('markDisabled');
         var current = new Date();
         current.setHours(0, 0, 0);
         return date < current;
