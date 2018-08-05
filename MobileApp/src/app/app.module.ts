@@ -36,6 +36,20 @@ import { NgCalendarModule  } from 'ionic2-calendar';
 import { Ionic2RatingModule } from 'ionic2-rating';
 import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
 
+import {GooglePlus} from '@ionic-native/google-plus';
+import {AngularFireModule} from 'angularfire2';
+import firebase from 'firebase';
+//import {AngularFireAuthModule} from 'angularfire2/auth';
+
+export const firebaseConfig ={
+  apiKey: "AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00",
+  authDomain: "rising-timing-211502.firebaseapp.com",
+  databaseURL: "https://rising-timing-211502.firebaseio.com",
+  projectId: "rising-timing-211502",
+  storageBucket: "rising-timing-211502.appspot.com",
+  messagingSenderId: "743549657335"
+}
+firebase.initializeApp(firebaseConfig)
 
 @NgModule({
   declarations: [
@@ -55,13 +69,15 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
     SettingsPage,
     NotificationPage,
     ContactsPage,
-    ForgotPasswordPage
+    ForgotPasswordPage,
   ],
   imports: [
     NgCalendarModule,
     BrowserModule,
     HttpModule,
     Ionic2RatingModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    //AngularFireAuthModule,
     IonicModule.forRoot(ConferenceApp, {}, {
       links: [
         { component: TabsPage, name: 'TabsPage', segment: 'tabs-page' },
@@ -113,7 +129,8 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
     FeedbackProvider,
     UserData,
     InAppBrowser,
-    SplashScreen
+    SplashScreen,
+    GooglePlus
   ]
 })
 export class AppModule { }

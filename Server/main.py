@@ -142,15 +142,19 @@ def get_meeting_attendees_method(user_id,meeting_id): return(get_meeting_attende
 @app.route('/get_meeting_attendees_feedback/user_id=<user_id>,meeting_id=<meeting_id>', methods=['GET'])
 def get_meeting_attendees_feedback_method(user_id,meeting_id):    return(get_meeting_attendees_feedback(user_id,meeting_id))
 
-#http://localhost:5000/update_meeting_response/meeting_id=1,attendee_id=1,response=GIVEN or DECLINE
-@app.route('/update_meeting_response/meeting_id=<meeting_id>,attendee_id=<attendee_id>,response=<response>', methods=['POST'])
-def update_meeting_response_method (meeting_id, attendee_id,response):    return(update_meeting_response(meeting_id, attendee_id,response))
+{
+  "meeting_id":1,
+  "attendee_id":1,
+  "response":"GIVEN" # or "DECLINE"
+}
+
+#http://localhost:5000/update_meeting_response
+@app.route('/update_meeting_response', methods=['POST'])
+def update_meeting_response_method ():    return(update_meeting_response())
 
 #http://localhost:5000/delete_meeting/meeting_id=2
 @app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
 def delete_meeting_method(meeting_id):    return(delete_meeting(meeting_id))
-
-
 
 #http://localhost:5000/add_meeting_validation/organiser_id=1,start_date=2018-8-3,start_time=16:47,end_date=2018-8-3,end_time=17:47
 @app.route('/add_meeting_validation/organiser_id=<organiser_id>,start_date=<start_date>,start_time=<start_time>,end_date=<end_date>,end_time=<end_time>', methods=['GET'])
@@ -214,9 +218,10 @@ def get_notifications_list_method(user_id): return(get_notifications_list(user_i
 '''
 # http://localhost:5000/google_login/google/authorized
 # http://localhost:8100/tabs-page/conference-schedule/schedule/google/authorized
-#http://localhost:5000/google_login
-@app.route("/google_login")
-def google_login_method():    return(google_login())
+#http://localhost:5000/google_login/email=3ttechs@gmail.com
+# body : {"login_id": "b","user_name":"b"}
+@app.route('/google_login', methods=['POST'])
+def google_login_method():  return(google_login())
 
 @app.after_request
 def after_request(response):

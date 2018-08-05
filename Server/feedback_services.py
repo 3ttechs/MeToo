@@ -4,10 +4,14 @@ from flask import Flask, request,json,send_from_directory,Response,render_templa
 from flask_mail import Mail, Message
 from  global_params import *
 
+# organiser_response : ACTIVE / CANCEL
+# attendee_response : NOT_GIVEN / ACCEPT / DECLINE
+# feedback_response : NOT_GIVEN / GIVEN / DECLINE
+
 
 def get_meeting_attendees_feedback(user_id,meeting_id):
-    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.response, feedback.note '
-    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.feedback_response, feedback.note '
+    query += 'from (select attendee_id, feedback_id from attendee where attendee_response in("ACCEPT","DECLINE") and meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
     result = run_query(query)
     for i in range(len(result)):
@@ -42,12 +46,12 @@ def ask_for_feedback(user_id):
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)
 
-    query = 'select meeting.meeting_id,meeting.category,meeting.title,meeting.venue,meeting.start_date,meeting.start_time,meeting.end_date,meeting.end_time,meeting.notes as meeting_notes,meeting.response as meeting_response, '
-    query += 'feedback.attendee_id, user.user_name as attendee_name,user.phone_no, user.email,attendee.response as attendee_response, '
-    query += 'feedback.feedback_id,feedback.star_rating,feedback.note,feedback.response as feedback_response '
-    query += 'from feedback,meeting, user, attendee '
+    query = 'select meeting.meeting_id,meeting.category,meeting.title,meeting.venue,meeting.start_date,meeting.start_time,meeting.end_date,meeting.end_time,meeting.notes as meeting_notes,meeting.organiser_response, '
+    query += 'feedback.attendee_id, user.user_name as attendee_name,user.phone_no, user.email,attendee.attendee_response, '
+    query += 'feedback.feedback_id,feedback.star_rating,feedback.note,feedback.feedback_response '
+    query += 'from feedback, meeting, user, attendee '
     query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
-    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.response='NOT_GIVEN' and meeting_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
 
     result = run_query(query)
     if (len(result)<=0):
@@ -65,7 +69,7 @@ def ask_for_feedback(user_id):
 {
   "feedback_id": 1,
   "star_rating": 5,
-  "response": "ACCEPT",  # options are ACCEPT or DECLINE
+  "feedback_response": "GIVEN",  # options are GIVEN or DECLINE
   "note": "Response note"
 }
 
@@ -74,9 +78,9 @@ def add_feedback():
     d = json.loads(request.data)
     feedback_id = d['feedback_id']
     star_rating = d['star_rating']
-    response = d['response'] 
+    feedback_response = d['feedback_response'] 
     note  = d['note']
 
-    query = "UPDATE feedback SET star_rating=%d,response='%s',note='%s' WHERE feedback_id=%s" % (star_rating,response,note,feedback_id)
+    query = "UPDATE feedback SET star_rating=%d,feedback_response='%s',note='%s' WHERE feedback_id=%s" % (star_rating,feedback_response,note,feedback_id)
     run_insert_query(query)
     return "1", 200   

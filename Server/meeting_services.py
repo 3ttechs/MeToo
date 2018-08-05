@@ -3,7 +3,11 @@ from datetime import datetime
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
 from  global_params import *
-#from  global_params import get_user_name, add_notification, mail
+
+# organiser_response : ACTIVE / CANCEL
+# attendee_response : NOT_GIVEN / ACCEPT / DECLINE
+# feedback_response : NOT_GIVEN / GIVEN / DECLINE
+
 
 
 ''' 
@@ -38,7 +42,7 @@ def add_meeting():
     end_time = d['end_time']
     #attendee_count = len(d['attendee_ids'])
     attendee_ids = d['attendee_ids']
-    response ='ACTIVE'
+    organiser_response ='ACTIVE'
     organiser_name = get_user_name(organiser_id)
 
     # processing input list to get integer array 
@@ -77,7 +81,7 @@ def add_meeting():
     query = "select meeting_id from meeting where  ( \
             datetime('"+start_date+"', '"+start_time+"') < datetime(end_date, end_time) and \
             datetime('"+end_date+"', '"+end_time+"') > datetime(start_date, start_time)) and \
-            organiser_id = "+str(organiser_id)+" and response = 'ACTIVE' "
+            organiser_id = "+str(organiser_id)+" and organiser_response = 'ACTIVE' "
     result_list = run_query(query)
     if(len(result_list)>0):
         data = {
@@ -90,9 +94,9 @@ def add_meeting():
  
     # Now create meeting 
     query = "INSERT INTO meeting \
-    (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,response) \
+    (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,organiser_response) \
     VALUES (%d,'%s','%s','%s','%s','%s','%s','%s','%s','%s' )"% \
-    (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,response)
+    (organiser_id, title,  category,venue,notes,start_date,end_date,start_time,end_time,organiser_response)
     run_insert_query(query)
     meeting_id = run_select_query('SELECT MAX(meeting_id) FROM meeting')[0][0]
     attendee_ids.append(organiser_id)
@@ -103,16 +107,16 @@ def add_meeting():
     for attendee_id in attendee_ids:
         attendee_id_str+=str(attendee_id)+','
 
-        response = 'NOT_GIVEN'
-        query = "INSERT INTO feedback (meeting_id,attendee_id,response) VALUES (%d,%d,'%s')"% (meeting_id,attendee_id,response)
+        feedback_response = 'NOT_GIVEN'
+        query = "INSERT INTO feedback (meeting_id,attendee_id,feedback_response) VALUES (%d,%d,'%s')"% (meeting_id,attendee_id,feedback_response)
         run_insert_query(query)
         feedback_id = run_select_query('SELECT MAX(feedback_id) FROM feedback')[0][0]
 
-        response = 'ACCEPT'
+        attendee_response = 'NOT_GIVEN'
         query = "INSERT INTO attendee \
-        (meeting_id, attendee_id,  feedback_id, response) \
+        (meeting_id, attendee_id,  feedback_id, attendee_response) \
         VALUES (%d,%d,%d,'%s')"% \
-        (meeting_id, attendee_id,  feedback_id,response)
+        (meeting_id, attendee_id,  feedback_id,attendee_response)
         run_insert_query(query)
 
     data = {
@@ -144,7 +148,7 @@ def add_meeting():
     body+= "Category: "+category+"\n"
     body+= "Venue: "+venue+"\n"
     body+= "Notes: "+notes+"\n"
-    body+= "All_day: "+str(all_day)+"\n"
+    #body+= "All_day: "+str(all_day)+"\n"
     body+= "Start: "+start_date+" " +start_time+"\n"
     body+= "End: "+end_date+" " +end_time+"\n"
     body+= "Attendees: "+",".join(to)+"\n"
@@ -175,7 +179,7 @@ def add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time)
     query = "select meeting_id from meeting where  ( \
             datetime('"+start_date+"', '"+start_time+"') < datetime(end_date, end_time) and \
             datetime('"+end_date+"', '"+end_time+"') > datetime(start_date, start_time)) and \
-            organiser_id = "+str(organiser_id)+" and response = 'ACTIVE' "
+            organiser_id = "+str(organiser_id)+" and organiser_response = 'ACTIVE' "
     result_list = run_query(query)
     if(len(result_list)>0):
         print('Overlapping Meeting found')
@@ -192,10 +196,12 @@ def get_meeting_list(user_id):
         meeting_ids.append(result['meeting_id'])
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
-    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) order by start_date, start_time'
+    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) and organiser_response = "ACTIVE" order by start_date, start_time'
     result = run_query(query)
     for i in range(len(result)):
         result[i]['organiser_name'] = get_user_name(result[i]['organiser_id'])
+        result[i]['attendee_response'] = get_attendee_response(user_id)
+        
         if(str(result[i]['organiser_id'])==user_id):
             result[i]['Is_Organiser'] ='Yes'
         else:
@@ -221,8 +227,8 @@ def get_meeting_details(meeting_id):
 
 
 def delete_meeting(meeting_id):
-    response = "DELETE"
-    query = "UPDATE meeting SET response='%s'  WHERE meeting_id=%s" % (response, meeting_id)
+    organiser_response = "CANCEL"
+    query = "UPDATE meeting SET organiser_response='%s'  WHERE meeting_id=%s" % (organiser_response, meeting_id)
     run_insert_query(query)
 
     query = "select * from meeting  WHERE meeting_id=%s" % (meeting_id)
@@ -254,11 +260,25 @@ def delete_meeting(meeting_id):
     #add_notification(attendee_id_str, meeting_id, "Meeting "+result['title']+" deleted", now.strftime("%Y-%m-%d"), now.strftime("%H:%M"))
 
     return " Success", 200   
+'''
+{
+  "meeting_id":1,
+  "attendee_id":1,
+  "attendee_response":"ACCEPT" # ACCEPT / DECLINE
+}
+'''
 
-def update_meeting_response(meeting_id, attendee_id,response):
-    query = "UPDATE attendee SET response='%s'  WHERE meeting_id=%s and attendee_id=%s" % (response, meeting_id, attendee_id)
+def update_meeting_response():
+
+    d = json.loads(request.data)
+    meeting_id = d['meeting_id']
+    attendee_id = d['attendee_id']
+    attendee_response = d['attendee_response']
+
+    query = "UPDATE attendee SET attendee_response='%s' WHERE meeting_id=%s and attendee_id=%s" % (attendee_response, meeting_id, attendee_id)
     run_insert_query(query)
 
+    # Send mail to attendees
     query = "select * from meeting  WHERE meeting_id=%s" % (meeting_id)
     result = run_query(query)[0]
     organiser_id = result['organiser_id']

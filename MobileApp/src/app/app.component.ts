@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { Events, MenuController, Nav, Platform } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage } from '@ionic/storage';
+
+
 import { LoginPage } from '../pages/login/login';
 //import { MapPage } from '../pages/map/map';
 import { SignupPage } from '../pages/signup/signup';
@@ -13,9 +15,11 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { VisionPage } from '../pages/vision/vision';
 import { SettingsPage } from '../pages/settings/settings';
 //import { NotificationPage } from '../pages/notification/notification';
+import { ContactsPage } from '../pages/contacts/contacts';
+
 import { MeetingProvider } from '../providers/meeting-provider';
 import { UserData } from '../providers/user-data';
-import { ContactsPage } from '../pages/contacts/contacts';
+
 
 
 

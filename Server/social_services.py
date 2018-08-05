@@ -8,36 +8,14 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from  global_params import *
 
 def google_login():
-    print('Here1...........')
-    if not google.authorized:
-        return redirect(url_for("google.login"))
-    print('Here2...........') 
-    resp = google.get("/oauth2/v2/userinfo")
-    assert resp.ok, resp.text
-    print('Here3...........')
-    '''
-    # Returned output
-    {
-        'verified_email': True, 
-        'link': 'https://plus.google.com/+LakshmyNarayananAL', 
-        'given_name': 'Lakshmy', 
-        'name': 'Lakshmy Narayanan', 
-        'family_name': 'Narayanan', 
-        'id': '104401960997087965420', 
-        'locale': 'en', 
-        'email': 'lakshmynarayanan.al@gmail.com', 
-        'gender': 'male', 
-        'picture': 'https://lh6.googleusercontent.com/-0SklHY5vufU/AAAAAAAAAAI/AAAAAAAAJfY/9UJxB_yWm4A/photo.jpg'
-    }
-    '''
-    verified_email = resp.json()["verified_email"]
-    if(verified_email==False):
-        return '0', 200
-
-    user_name = resp.json()["name"]
-    email  = resp.json()["email"]
-    login_id = resp.json()["name"]
-    print(resp.json())
+    print('Entered google_login service')
+    d = json.loads(request.data)
+    login_id = d['login_id']
+    user_name = d['user_name']
+    login_by  = 'GOOGLE'
+    email = d['login_id']
+    passwd = '0'
+    phone_no  = '0' 
 
     # first check whether this user is in user table
     # if yes, allow him access
@@ -51,10 +29,7 @@ def google_login():
         duplicate_found =1
 
     if(duplicate_found==0):
-        passwd = '0'
-        phone_no  = '0' 
-        login_by ='GOOGLE'
-        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
+        query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id, passwd, user_name, phone_no, email, login_by)
         run_insert_query(query)
         user_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
 

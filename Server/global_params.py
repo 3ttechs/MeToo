@@ -6,12 +6,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from flask_dance.contrib.google import make_google_blueprint, google
 
-
-
-
 dbfile ='MeToo.db'
-
-
 
 def run_select_query(query):
     #print ("Select Query : "+query)
@@ -67,6 +62,12 @@ def get_user_name(user_id):
     query = 'select distinct user_name from user where user_id  ='+ str(user_id)
     data = run_query(query)
     return data[0]['user_name']
+
+def get_attendee_response(user_id):
+    query = 'select attendee_response from attendee where attendee_id  ='+ str(user_id)
+    data = run_query(query)
+    return data[0]['attendee_response']
+
 
 def add_notification(user_id_list, meeting_id, note, notification_date, notification_time):
     print('* '+meeting_id)
