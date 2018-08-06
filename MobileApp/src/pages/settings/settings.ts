@@ -10,8 +10,6 @@ import { UserData } from '../../providers/user-data';
 //import { UserOptions } from '../../interfaces/user-options';
 //import { LoginPage } from '../login/login';
 
-//let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Component({
   selector: 'page-settings',

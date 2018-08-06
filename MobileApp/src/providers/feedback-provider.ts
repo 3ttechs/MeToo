@@ -43,7 +43,7 @@ export class FeedbackProvider {
       headers.append('Content-Type', 'application/json');
 
       let postParams = {feedback_id: feedback.feedbackId, star_rating: feedback.starRating,
-                        response: feedback.response, note: feedback.note};
+                        feedback_response: feedback.response, note: feedback.note};
 
       console.log(postParams);
       

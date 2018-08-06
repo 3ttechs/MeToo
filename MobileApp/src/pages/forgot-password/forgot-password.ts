@@ -20,7 +20,6 @@ export class ForgotPasswordPage {
     ionViewDidLoad() {
       console.log('ionViewDidLoad ForgotPasswordPage');
     }
-    //http://localhost:5000/forgot_password/login_id='b'
     //{"email": "c@d.com", "login_id": "b", "passwd": "b", "phone_no": 2, "user_id": 2, "user_name": "b"}
     onSendEmail() {
       if (this.forgotPwd.LoginId === "") {
