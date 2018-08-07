@@ -200,12 +200,14 @@ def get_meeting_list(user_id):
     result = run_query(query)
     for i in range(len(result)):
         result[i]['organiser_name'] = get_user_name(result[i]['organiser_id'])
-        result[i]['attendee_response'] = get_attendee_response(user_id)
         
         if(str(result[i]['organiser_id'])==user_id):
             result[i]['Is_Organiser'] ='Yes'
+            result[i]['attendee_response'] = 'ACCEPT'
+
         else:
             result[i]['Is_Organiser'] ='No' 
+            result[i]['attendee_response'] = get_attendee_response(user_id,result[i]['meeting_id'])
                         
         start_date = result[i]['start_date']
         start_time = result[i]['start_time']

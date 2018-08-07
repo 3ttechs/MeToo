@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 
 import { UserData } from './user-data';
+import { UtilityProvider } from './utility-provider';
 
 //let apiUrl = 'http://localhost:5000';
 let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
@@ -16,7 +17,8 @@ export class MeetingProvider {
   private categories: string[] = ['Business', 'Personal'];
 
   private debug: any = false;
-  constructor(public http: Http, public user: UserData) { }
+  constructor(public http: Http, public user: UserData,
+    private utility: UtilityProvider) { }
 
   load(): any {
     if (this.data) {
@@ -164,14 +166,19 @@ export class MeetingProvider {
     for(let i=0; i<allMeetings.length; i++)
     {
       let key = allMeetings[i].start_date;
-
+      
+      //tjv modify the below few lines after Lakshmy introduces attendeeResponse and organiserResponse
+      
+      //console.log('...>>>id : ' + allMeetings[i].meeting_id + ' attendeeResponse : ' + allMeetings[i].attendee_response);
       let mtg = {id : allMeetings[i].meeting_id, title : allMeetings[i].title, venue : allMeetings[i].venue,
                  startDate : allMeetings[i].start_date, startTime : allMeetings[i].start_time, endTime : allMeetings[i].end_time,
                  category : allMeetings[i].category, notes : allMeetings[i].notes, 
                  organiserId : allMeetings[i].organiser_id, organiserName : allMeetings[i].organiser_name,
                  isPast : allMeetings[i].Is_Past, isOrganiser : allMeetings[i].Is_Organiser,
                  startTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].start_time),
-                 endTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].end_time)
+                 endTimeStr : this.getTimeInAMOrPMStr(allMeetings[i].end_time),
+                 organiserResponse : allMeetings[i].organiser_response ,
+                 attendeeResponse : allMeetings[i].attendee_response
                 };
            
       if(meetingHashTable[key] == null)
@@ -266,7 +273,7 @@ export class MeetingProvider {
   }
 
   filterMeeting(meeting: any, queryWords: string[], excludeCategories: any[], segment: string) {
-    
+    console.log('tjv...Inside filter()...meeting.organiserResponse : ' + meeting.organiserResponse);
     let matchesQueryText = false;
     if (queryWords.length) {
       // of any query word is in the meeting title than it passes the query test
@@ -300,8 +307,7 @@ export class MeetingProvider {
     }
 
     // all tests must be true if it should not be hidden
-    //meeting.hide = !(matchesQueryText && matchesCategory && matchesSegment);
-    if(matchesQueryText && matchesCategory && matchesSegment)
+    if(meeting.organiserResponse === 'ACTIVE' && matchesQueryText && matchesCategory && matchesSegment)
     {
       meeting.hide  = false; //show meeting
     }
@@ -329,6 +335,26 @@ export class MeetingProvider {
     return this.load().map((data: any) => {
       return data.map;
     });
+  }
+
+  updateAttendeeMeetingResponse(meetingId: number, attendeeId: number, attendeeResponse: string){
+    console.log('tjv...Inside updateMeetingResponse()');
+    return new Promise((resolve,reject) => {
+
+      let postParams = {meeting_id: meetingId, attendee_id: attendeeId, attendee_response: attendeeResponse};
+      
+      console.log(postParams);
+      
+      this.http.post(apiUrl+'/update_meeting_response', postParams, this.utility.getHeaderOptions())
+        .subscribe(res => {
+          //resolve(res.json());
+          resolve(res.text());
+          console.log(res.text());
+        }, (err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
   }
 
 }

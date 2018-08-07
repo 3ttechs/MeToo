@@ -43,12 +43,14 @@ export class MeetingDetailPage {
         this.attendees = [];
         let i: number = 0;
         attendeesData.forEach(attendeeData => {
-                              
+                            
+          console.log('starRating : ' + attendeeData['feedback.star_rating']);
           let attendee: any = {
-            attendeeName : attendeeData.attendee_name,
-            attendeeEmail : attendeeData['user.email'],
-            attendeePhoneNo : attendeeData['user.phone_no'],
-            attendeeFeedback : attendeeData['feedback.note']
+            name : attendeeData.attendee_name,
+            email : attendeeData['user.email'],
+            phoneNo : attendeeData['user.phone_no'],
+            feedback : attendeeData['feedback.note'],
+            starRating : attendeeData['feedback.star_rating']
           };
           
           this.attendees[i] = attendee;

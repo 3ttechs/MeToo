@@ -49,9 +49,12 @@
 
         <button ion-item (click)="goToMeetingDetail(meeting)">
           <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
-          <h3>{{meeting.title}}</h3>
-          <p>Time : {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}</p>
-          <p>Venue : {{meeting.venue}}</p>
+          <ion-icon small item-right color="#999999" name="checkmark" *ngIf="meeting.attendeeResponse === 'ACCEPT'"></ion-icon>
+          <ion-icon small item-right color="#999999" name="close" *ngIf="meeting.attendeeResponse === 'DECLINE'"></ion-icon>
+          <ion-icon small item-right color="#999999" name="help" *ngIf="meeting.attendeeResponse === 'NOT_GIVEN'"></ion-icon>
+          <h2>Title: {{meeting.title}}</h2>
+          <p>Time: {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}</p>
+          <p>Venue: {{meeting.venue}}</p>
         </button>
 
         <ion-item-options>
@@ -64,11 +67,12 @@
             Delete
           </button>
           
-          <button ion-button color="secondary" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No'">
+          <button ion-button color="secondary" (click)="respondToMeetingInvitation(meeting.id, 'ACCEPT')" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No' && (meeting.attendeeResponse ==='DECLINE' || meeting.attendeeResponse ==='NOT_GIVEN')">
             <ion-icon name="checkmark"></ion-icon>
             Accept
           </button>
-          <button ion-button color="danger" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No'">
+
+          <button ion-button color="danger" (click)="respondToMeetingInvitation(meeting.id, 'DECLINE')" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'No' && (meeting.attendeeResponse ==='ACCEPT' || meeting.attendeeResponse ==='NOT_GIVEN')">
             <ion-icon name="close"></ion-icon>
             Decline
           </button>

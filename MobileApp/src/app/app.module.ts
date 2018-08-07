@@ -29,6 +29,8 @@ import { ContactProvider } from '../providers/contact-provider';
 import { DummyLoginProvider } from '../providers/dummy-login-provider';
 import { MeetingProvider } from '../providers/meeting-provider';
 import { FeedbackProvider } from '../providers/feedback-provider';
+import { UtilityProvider } from '../providers/utility-provider';
+
 
 import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
@@ -130,6 +132,7 @@ firebase.initializeApp(firebaseConfig)
     UserData,
     InAppBrowser,
     SplashScreen,
+    UtilityProvider,
     GooglePlus
   ]
 })

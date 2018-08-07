@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NavController } from 'ionic-angular';
-import { LoadingController, AlertController, ToastController } from 'ionic-angular';
+import { LoadingController, AlertController, List, ToastController, Refresher } from 'ionic-angular';
 
 import { ContactProvider } from '../../providers/contact-provider';
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
@@ -15,6 +15,8 @@ import { Contact } from '../../interfaces/contact';
 })
 export class ContactsPage {
   
+  @ViewChild('contactList', { read: List }) contactList: List;
+
   private loading: any;
   private contact: Contact = {UserId: 0, ContactName: "", ContactMobile:0, ContactEmail:"" };
   private submitted = false;
@@ -23,6 +25,7 @@ export class ContactsPage {
   private contactSearch: Boolean = true;
 
   private queryText: string = '';
+  private allContacts: any = [];
   private contacts: any = [];
   private shownContactsCount: number = 0;
   
@@ -35,7 +38,7 @@ export class ContactsPage {
 
   ionViewDidLoad() {
     
-    this.updateContacts();
+    this.updateContactsOnDidLoad();
   }
 
   onAddContact(form: NgForm) {
@@ -74,14 +77,13 @@ export class ContactsPage {
     this.contactSearch = false;
   }
 
-  updateContacts() {
+  updateContactsOnDidLoad() {
     
     this.addNewContact = false;
     this.contactSearch = true;
 
     let userId = this.loginProvider.UserId;
     
-        
     this.loading = this.loadingCtrl.create({
       content: 'Fetching Contacts...'
     });
@@ -90,26 +92,89 @@ export class ContactsPage {
       
       this.contactProvider.getContactsDataForUser(userId).then(result => {
 
-        let allContacts: any = this.contactProvider.getAllContactsForUser(result);
+        this.allContacts = this.contactProvider.getAllContactsForUser(result);
                
-        let requiredContactsData: any = this.contactProvider.getRequiredContactsFromAllContacts(allContacts, this.queryText);
+        let requiredContactsData: any = this.contactProvider.getRequiredContactsFromAllContacts(this.allContacts, this.queryText);
         
         this.contacts = requiredContactsData.contacts;
         this.shownContactsCount = requiredContactsData.shownContactsCount;
-        console.log('this.shownContactsCount : ' + this.shownContactsCount);
-        
+                
         this.loading.dismiss();
       });
     });
 
   }
-  
+
+  doRefresh(refresher: Refresher) {
+    let userId = this.loginProvider.UserId;
+    
+    this.contactProvider.callGetContactListService(userId).subscribe((data: any) => {
+      
+      this.allContacts = this.contactProvider.getAllContactsForUser(data.json());
+                  
+      let requiredContactsData: any = this.contactProvider.getRequiredContactsFromAllContacts(this.allContacts, this.queryText);
+          
+      this.contacts = requiredContactsData.contacts;
+      this.shownContactsCount = requiredContactsData.shownContactsCount;
+      
+      setTimeout(() => {
+
+        refresher.complete();
+
+        const toast = this.toastCtrl.create({
+          message: 'Contacts have been updated.',
+          duration: 3000
+        });
+        toast.present();
+        
+      }, 1000);
+    });
+  }
+
+  updateContacts() {
+    // Close any open sliding items when the schedule updates
+    this.contactList && this.contactList.closeSlidingItems();
+    
+    let requiredContactsData: any = this.contactProvider.getRequiredContactsFromAllContacts(this.allContacts, this.queryText);
+        
+    this.contacts = requiredContactsData.contacts;
+    this.shownContactsCount = requiredContactsData.shownContactsCount;
+  }
+
   /*
   private onAddNewContactFromPhone(){
     console.log('tjv...Inside onAddNewContactFromPhone()');
   }
   */
+/*
+  private deleteContact(contact: any) {
+    console.log('tjv...Inside deleteContact()');
 
+    this.showLoader();
+    this.contactProvider.deleteContact(contact).then((result) => {
+      console.log('tjv...Calling loading.dismiss()');
+      this.loading.dismiss();
+      console.log(result);
+      
+      if(result === 1){
+        console.log('result === Success');
+        
+        this.showAlert('Feedback Added');
+        //this.navCtrl.push(TabsPage);
+      }
+      else{
+        console.log('result != 0');
+        this.showAlert('Feedback NOT Added');
+        //this.navCtrl.push(TabsPage);
+      }
+      
+    }, (err) => {
+      this.loading.dismiss();
+      this.presentToast(err);
+    });
+
+  }
+*/
   showLoader(){
     this.loading = this.loadingCtrl.create({
        // content: 'Adding contact...'

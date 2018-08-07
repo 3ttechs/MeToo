@@ -6,72 +6,47 @@
     <ion-title>Feedback</ion-title>
   </ion-navbar>
 </ion-header>
+<ion-content>
+ 
+    <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:100%;height:100%;">
 
-<ion-content class="outer-content session-list">
-  <ion-list>
-    <ion-grid fixed>
-      <ion-row align-items-stretch>
-        
-        <ion-item *ngFor="let pendingFeedback of pendingFeedbackArray">
-          
-          <ion-col col-12 col-md-6 align-self-stretch align-self-center  approxItemHeight="457px">
-
-            <ion-card class="session-card">
-              <div *ngIf=" pendingFeedback.isOrganiser == 'Yes'">
-                <ion-icon large item-right color="primary" name="ribbon"></ion-icon>
+            <button ion-item full icon-only color='light'>
+                    <ion-icon item-right  large  color="primary" name="ribbon" *ngIf=" pendingFeedback.isOrganiser == 'Yes'"></ion-icon>
+                  <h3>Title: {{pendingFeedback.meetingTitle}}</h3>
+                  <h3>Organiser: ***</h3>
+                  <h3>Date: {{pendingFeedback.meetingStartDate}}, 00:00 AM</h3>
+                <h3>Venue: {{pendingFeedback.meetingVenue}}</h3>
+              </button>  
+      
+        <ion-list>
+      
+        <rating [(ngModel)]="pendingFeedback.starRating" name="rate" title="Rating"
+          readOnly="false"
+          max="5"
+          emptyStarIconName="star-outline"
+          halfStarIconName="star-half"
+          starIconName="star"
+          nullable="false"
+        >
+        </rating>   
+      
+          <ion-item>
+              <ion-textarea color='primary' placeholder="Enter your feedback" [(ngModel)]="pendingFeedback.note" name="contactName"></ion-textarea>
+          </ion-item>
+        <ion-item>
+            <div class="row"> 
+              <div class="col">
+                <button ion-button type="Submit" (click)="submitFeedback(pendingFeedback)">Submit Feedback</button>  
               </div>
-            <ion-card-header>
-                <h2>Title : {{pendingFeedback.meetingTitle}}</h2>
-                <h2>Date : {{pendingFeedback.meetingStartDate}}</h2>
-                <h2>Venue : {{pendingFeedback.meetingVenue}}</h2>
-              </ion-card-header>
-  
-              <ion-card-content class="outer-content">
-                  
-                  <form #feedbackForm="ngForm" novalidate>
-                    <ion-list no-lines>
-                      
-                      <ion-item>
-                          <div>Not interested to give feedback
-                          <input type="checkbox" checked>
-                        </div>
-                      </ion-item>
-                      <ion-item>
-                          <div>Rating</div>
-                          <rating [(ngModel)]="pendingFeedback.starRating" name="rate" title="Rating"
-                            readOnly="false"
-                            max="5"
-                            emptyStarIconName="star-outline"
-                            halfStarIconName="star-half"
-                            starIconName="star"
-                            nullable="false"
-                          >
-                          </rating>     
-                      </ion-item>
-
-                      <ion-item>
-                        <ion-textarea placeholder="Enter your feedback" [(ngModel)]="pendingFeedback.note" name="contactName"></ion-textarea>
-                      </ion-item>
-
-                      <ion-item>
-                        <button ion-button type="submit" (click)="submitFeedback(pendingFeedback)">Submit</button>
-                      </ion-item>
-                    </ion-list>
-                      
-                  </form>
-                  
-              </ion-card-content>
-              
-            </ion-card>
-          </ion-col>
-        
-        </ion-item>
-
+              <div class="col"> 
+                <button ion-button color='light' type="submit" (click)="submitFeedback(pendingFeedback)">Not Interested</button>
+              </div> 
+            </div>
 
           
-      </ion-row>
-    </ion-grid>
-  </ion-list>
+          
+        </ion-item>
+            </ion-list>
+
+      </ion-card>
 </ion-content>
-
-

@@ -1,22 +1,53 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="meeting">{{meeting.title}}</ion-title>
+    <ion-title *ngIf="meeting">Meeting Details</ion-title>
   </ion-navbar>
+
+  <ion-grid padding>
+  <div *ngIf="meeting" >      
+      <button ion-item full icon-only color='light'>
+          <ion-icon small item-left name="home"></ion-icon>
+          <h3>{{meeting.title}}</h3>
+        </button>  
+
+        <button ion-item full icon-only color='light'>
+            <ion-icon small item-left name="home"></ion-icon>
+            <h3>{{meeting.organiserName}}</h3>
+          </button>  
+
+          <button ion-item full icon-only color='light'>
+            <ion-icon  small item-left name="home"></ion-icon>
+            <h3>{{meeting.startDate}}, {{meeting.startTime}} - {{meeting.endTime}}</h3>
+          </button>  
+
+          <button ion-item full icon-only color='light'>
+            <ion-icon  small item-left name="home"></ion-icon>
+          <h3>{{meeting.venue}}</h3>
+        </button>  
+        <button ion-button full icon-only color='primary'>
+          Attendees and Feedback
+        </button> 
+  </div>
+</ion-grid>
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="meeting">
-    <h2>Organizer: {{meeting.organiserName}}</h2>
-      <p>Date:  {{meeting.startDate}}</p>
-      <p>Time: {{meeting.startTime}} - {{meeting.endTime}} </p>
-      <p>Venue: {{meeting.venue}}</p>
-      <p>{{meeting.notes}}</p>
-      <BR>
-      <BR>
+<ion-list>
+    <ion-grid fixed>
+    <ion-item *ngFor="let attendee of attendees">
+      <ion-avatar item-start>
+        <img src="../../assets/img/appicon_o.png">
+      </ion-avatar>
+      <h2>{{attendee.name}}</h2>
+      <h3>{{attendee.email}}</h3>
+      <h3>{{attendee.phoneNo}}</h3>
+      <h3>Rating: {{attendee.starRating}}</h3>
+      <p>Feedback: {{attendee.feedback}}</p>
+    </ion-item>
+  </ion-grid>
+</ion-list>
 
-    <h2>Attendees and Feedback</h2>
-
-  </div>
+<!--
 
   <ion-content class="outer-content session-list">
     <ion-list>
@@ -28,10 +59,10 @@
         <ion-card class="session-card">
 
           <ion-card-header>
-          <button ion-item detail-none>{{attendee.attendeeName}} </button>
+          <button ion-item detail-none>{{attendee.name}} </button>
           
-          <p> Email : {{attendee.attendeeEmail}}</p>
-          <p> Phone : {{attendee.attendeePhoneNo}}</p>
+          <p> Email : {{attendee.email}}</p>
+          <p> Phone : {{attendee.phoneNo}}</p>
           
           </ion-card-header>
     
@@ -39,8 +70,8 @@
           <ion-list>
             <ion-item>
               <div>Rating</div>
-              <rating  name="rate" title="Rating"
-                readOnly="false"
+              <rating [(ngModel)]="attendee.starRating" name="rate" title="Rating"
+                readOnly="true"
                 max="5"
                 emptyStarIconName="star-outline"
                 halfStarIconName="star-half"
@@ -50,7 +81,7 @@
               </rating>     
             </ion-item>
             <ion-item>
-              <h3>Feedback : {{attendee.attendeeFeedback}}</h3>
+              <h3>Feedback : {{attendee.feedback}}</h3>
             </ion-item>
           </ion-list>
           </ion-card-content>
@@ -61,6 +92,7 @@
       </ion-row>
     </ion-grid>
   </ion-list>
+  -->
 
   <ion-fab bottom left #fab>
       <button ion-fab><ion-icon name="share"></ion-icon></button>

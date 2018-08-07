@@ -15,8 +15,12 @@
 </ion-header>
 
 <ion-content padding>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   
-  <ion-list *ngIf="addNewContact === false && this.contactSearch === true">
+  <ion-list #contactList *ngIf="addNewContact === false && this.contactSearch === true">
  
     <ion-item-sliding *ngFor="let contact of contacts; let i = index" [hidden]="contact.hide">
       
@@ -29,17 +33,19 @@
           <ion-icon name="construct"></ion-icon>
           Edit
         </button>
+        <!--
+        <button ion-button color="danger" (click)="deleteContact()">
+        -->
         <button ion-button color="danger" > 
           <ion-icon name="trash"></ion-icon>
           Delete
         </button>
       </ion-item-options>
     </ion-item-sliding>
-
-    
   </ion-list>
-  <ion-list-header [hidden]="shownContactsCount > 0">
-      No Contacts Found
+  
+  <ion-list-header [hidden]="addNewContact === true ||shownContactsCount > 0">
+    No Contacts Found
   </ion-list-header>
 
   <!--SHOW FORM IF ADD NEW CONTACT IS CLICKED  -->  

@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { Http, Headers } from "@angular/http";
 
 import { Contact } from '../interfaces/contact';
+import { UtilityProvider } from './utility-provider';
 
 //let apiUrl = 'http://localhost:5000';
 let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
@@ -18,7 +19,8 @@ export class ContactProvider {
   constructor(
     private http: Http,
     public events: Events,
-    public storage: Storage
+    public storage: Storage,
+    private utility: UtilityProvider
   ) {}
 
   addContact(contact: Contact){
@@ -45,16 +47,42 @@ export class ContactProvider {
     })
   }
 
-  public getContactsDataForUser(userId){
-    return new Promise((resolve,reject) =>{
-      this.http.get(apiUrl + '/get_contacts_list/user_id=' + userId)
-        .subscribe(res=>{
+  /*
+  deleteContact(contact: any){
+    return new Promise((resolve,reject) => {
+      let headers = new Headers();
+      
+      headers.append('Accept', 'application/json');
+      headers.append('Content-Type', 'application/json');
+
+      //let postParams = {feedback_id: feedback.feedbackId, star_rating: feedback.starRating,
+       //                 response: feedback.response, note: feedback.note};
+
+       let postParams = {};
+      console.log(postParams);
+      
+      this.http.post(apiUrl+'/add_feedback', postParams, {headers: headers})
+        .subscribe(res => {
           resolve(res.json());
-        },(err) => {
+          //resolve(res.text());
+        }, (err) => {
           console.log(err);
           reject(err);
         });
     })
+  }
+  */
+  public getContactsDataForUser(userId){
+    let callingMethodName: string = '/get_contacts_list/';
+    let inputData: string = 'user_id=' + userId;
+
+    return this.utility.getData(inputData, callingMethodName);
+  }
+
+  public callGetContactListService(userId): any{
+    let callingMethodName: string = '/get_contacts_list/';
+    let inputData: string = 'user_id=' + userId;
+    return this.utility.callService(inputData, callingMethodName);
   }
 
   public getAllContactsForUser(allContactsResult: any){

@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 
-import { AlertController, App, FabContainer, List, ModalController, NavController, ToastController, LoadingController, Refresher } from 'ionic-angular';
+import { AlertController, App, List, ModalController, NavController, ToastController, LoadingController, Refresher } from 'ionic-angular';
 
 import { MeetingProvider  } from '../../providers/meeting-provider';
 import { UserData } from '../../providers/user-data';
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
+import { UtilityProvider } from '../../providers/utility-provider';
 
 import { MeetingDetailPage } from '../meeting-detail/meeting-detail';
 import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
@@ -38,7 +39,8 @@ export class SchedulePage {
     public toastCtrl: ToastController,
     public meetingProvider: MeetingProvider,
     public user: UserData,
-    private loginProvider: DummyLoginProvider
+    private loginProvider: DummyLoginProvider,
+    private utility: UtilityProvider
   ) {console.log('tjv...Inside constructor()');}
 
   ionViewDidLoad() {
@@ -62,6 +64,7 @@ export class SchedulePage {
       this.meetingProvider.getMeetingListForUser(userId).then(result => {
         
         this.allMeetings = result;
+        //console.log(JSON.stringify(this.allMeetings));
         let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
         let meetingGroups: any = meetingGroupsData.groups;
         
@@ -106,26 +109,13 @@ export class SchedulePage {
     this.navCtrl.push(MeetingDetailPage, meeting);
   }
 
-
-  openSocial(network: string, fab: FabContainer) {
-    console.log('tjv...Inside openSocial()');
-    let loading = this.loadingCtrl.create({
-      content: `Posting to ${network}`,
-      duration: (Math.random() * 1000) + 500
-    });
-    loading.onWillDismiss(() => {
-      fab.close();
-    });
-    loading.present();
-  }
-
   doRefresh(refresher: Refresher) {
     let userId = this.loginProvider.UserId;
     
     console.log('tjv...Inside doRefresh()...userId : ' + userId);
     this.meetingProvider.callGetMeetingListService(userId).subscribe((data: any) => {
 
-      //let allMeetings: any = data.json();
+      
       this.allMeetings = data.json();
             
       let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
@@ -137,7 +127,6 @@ export class SchedulePage {
     
       setTimeout(() => {
 
-        //if(flag === 1) refresher.complete();
         refresher.complete();
 
         const toast = this.toastCtrl.create({
@@ -146,8 +135,37 @@ export class SchedulePage {
         });
         toast.present();
 
-        
       }, 1000);
     });
+  }
+
+  respondToMeetingInvitation(meetingId: number, attendeeResponse: string){
+    console.log('tjv...Inside respondToMeetingInvitation()...attendeeResponse : ' + attendeeResponse);
+    let userId = this.loginProvider.UserId;
+    let attendeeId = userId;
+
+    //this.utility.showLoader('Adding response...');
+    this.meetingProvider.updateAttendeeMeetingResponse(meetingId, attendeeId, attendeeResponse).then((result) => {
+      console.log('tjv...Calling loading.dismiss()');
+      this.utility.dismissLoader();
+      console.log(result);
+      
+      if(result === 'Success'){
+        console.log('result === Success');
+        
+        this.utility.showAlert(attendeeResponse, 'Meeting');
+        //this.navCtrl.push(TabsPage);
+      }
+      else{
+        console.log('result != 0');
+        this.utility.showAlert('Response not added', 'Meeting');
+        //this.navCtrl.push(TabsPage);
+      }
+      
+    }, (err) => {
+      this.utility.dismissLoader();
+      this.utility.presentToast(err);
+    });
+
   }
 }

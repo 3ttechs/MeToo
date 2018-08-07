@@ -63,8 +63,8 @@ def get_user_name(user_id):
     data = run_query(query)
     return data[0]['user_name']
 
-def get_attendee_response(user_id):
-    query = 'select attendee_response from attendee where attendee_id  ='+ str(user_id)
+def get_attendee_response(user_id,meeting_id):
+    query = 'select attendee_response from attendee where meeting_id ='+str(meeting_id) +' and attendee_id  ='+ str(user_id) 
     data = run_query(query)
     return data[0]['attendee_response']
 
