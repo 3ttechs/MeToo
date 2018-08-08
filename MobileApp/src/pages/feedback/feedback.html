@@ -8,7 +8,7 @@
 </ion-header>
 <ion-content>
  
-    <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:100%;height:100%;">
+    <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:95%;height:95%;">
 
             <button ion-item full icon-only color='light'>
                     <ion-icon item-right  large  color="primary" name="ribbon" *ngIf=" pendingFeedback.isOrganiser == 'Yes'"></ion-icon>
@@ -31,22 +31,26 @@
         </rating>   
       
           <ion-item>
-              <ion-textarea color='primary' placeholder="Enter your feedback" [(ngModel)]="pendingFeedback.note" name="contactName"></ion-textarea>
-          </ion-item>
-        <ion-item>
-            <div class="row"> 
-              <div class="col">
-                <button ion-button type="Submit" (click)="submitFeedback(pendingFeedback)">Submit Feedback</button>  
-              </div>
-              <div class="col"> 
-                <button ion-button color='light' type="submit" (click)="submitFeedback(pendingFeedback)">Not Interested</button>
-              </div> 
-            </div>
+              <ion-textarea rows="15" color='primary' placeholder="Enter your feedback" [(ngModel)]="pendingFeedback.note" name="contactName">
 
-          
-          
-        </ion-item>
+              </ion-textarea>
+          </ion-item>
             </ion-list>
+
+            <ion-item>
+                <div class="row"> 
+                  <div class="col">
+                    <button ion-button type="Submit" (click)="submitFeedback(pendingFeedback)">Submit Feedback</button>  
+                  </div>
+                  <div class="col"> 
+                    <button ion-button color='light' type="submit" (click)="submitFeedback(pendingFeedback)">Not Interested</button>
+                  </div> 
+                </div>
+    
+              
+              
+            </ion-item>
+    
 
       </ion-card>
 </ion-content>

@@ -36,7 +36,7 @@ export class FeedbackPage {
     console.log('userId : ' + userId);
 
     this.loading = this.loadingCtrl.create({
-      content: 'Fetching Pending Feedback...'
+      //content: 'Fetching Pending Feedback...'
     });
 
     this.loading.present().then(()=>{
@@ -100,7 +100,7 @@ export class FeedbackPage {
 
   showLoader(){
     this.loading = this.loadingCtrl.create({
-        content: 'Adding feedback...'
+        //content: 'Adding feedback...'
     });
     this.loading.present();
   }

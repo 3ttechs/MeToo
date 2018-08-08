@@ -231,7 +231,7 @@ def after_request(response):
     return response
 
 if __name__ == '__main__':
-    props = load_properties('config_file.txt')
+    props = load_properties('config_file_local.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]
