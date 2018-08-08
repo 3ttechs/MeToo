@@ -8,7 +8,7 @@
 </ion-header>
 <ion-content>
  
-    <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:95%;height:95%;">
+    <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:95%;">
 
             <button ion-item full icon-only color='light'>
                     <ion-icon item-right  large  color="primary" name="ribbon" *ngIf=" pendingFeedback.isOrganiser == 'Yes'"></ion-icon>

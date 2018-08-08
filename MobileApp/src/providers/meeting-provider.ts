@@ -7,8 +7,8 @@ import 'rxjs/add/observable/of';
 import { UserData } from './user-data';
 import { UtilityProvider } from './utility-provider';
 
-let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
+//let apiUrl = 'http://localhost:5000';
+let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class MeetingProvider {
