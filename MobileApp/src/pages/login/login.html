@@ -2,16 +2,31 @@
 
 <ion-header>
 	<ion-navbar hideBackButton="true">
-		<ion-title>Login</ion-title>
+		<ion-title>MeToo</ion-title>
 	</ion-navbar>
 </ion-header>
 
-<ion-content> 
-	<div class="logo">
-		<img src="assets/img/appicon.png" alt="MeToo logo" >
-	</div>
+<ion-content > 
+
+
 
 	<form #loginForm="ngForm" novalidate>
+
+			<ion-grid>
+					<ion-row >
+							<ion-col  col-8></ion-col>
+						<ion-col col-8>
+								<div >
+										<img src="assets/img/appicon.png" alt="MeToo logo">
+									</div>
+			
+						</ion-col>
+						<ion-col  col-8></ion-col>
+					</ion-row>
+					</ion-grid>
+
+
+			
 		<ion-list no-lines>
 			<ion-item>
 				<ion-label stacked  color="primary">Username</ion-label>
@@ -45,15 +60,10 @@
 			<ion-col></ion-col>
 		</ion-row>
 		</ion-grid>
-
-
-
-
-
 	</form>
-
+<!--
 		<p ion-text style="text-align: center;" >Or Login with </p>
-		
+	-->	
 <ion-grid style="align-items: center;">
 	<ion-row >
 		<ion-col col-4 >
@@ -66,7 +76,6 @@
 		<button ion-fab color="facebook" (click)="onFBLogin(loginForm)"><ion-icon name="logo-facebook"></ion-icon></button>
 		</ion-col>
 	</ion-row>
-
 	</ion-grid>
 <ion-grid>
 				
@@ -77,6 +86,4 @@
 	</ion-row>
 
 </ion-grid>
-
-
 </ion-content>

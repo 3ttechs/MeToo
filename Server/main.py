@@ -156,6 +156,20 @@ def update_meeting_response_method ():    return(update_meeting_response())
 @app.route('/delete_meeting/meeting_id=<meeting_id>', methods=['GET'])
 def delete_meeting_method(meeting_id):    return(delete_meeting(meeting_id))
 
+'''
+{
+  "meeting_id": 1,
+  "title": "My Title",
+  "venue": "My Venue",
+  "notes": "My Notes" 
+}
+'''
+
+#http://localhost:5000/update_meeting
+@app.route('/update_meeting', methods=['POST'])
+def update_meeting_method():    return(update_meeting())
+
+
 #http://localhost:5000/add_meeting_validation/organiser_id=1,start_date=2018-8-3,start_time=16:47,end_date=2018-8-3,end_time=17:47
 @app.route('/add_meeting_validation/organiser_id=<organiser_id>,start_date=<start_date>,start_time=<start_time>,end_date=<end_date>,end_time=<end_time>', methods=['GET'])
 def add_meeting_validation_method(organiser_id,start_date,start_time,end_date,end_time):    return(add_meeting_validation(organiser_id,start_date,start_time,end_date,end_time))
@@ -231,7 +245,7 @@ def after_request(response):
     return response
 
 if __name__ == '__main__':
-    props = load_properties('config_file.txt')
+    props = load_properties('config_file_local.txt')
     for prop in props:
         if(prop=='main_server_host'): main_server_host =props[prop]
         if(prop=='main_server_port'): main_server_port =props[prop]

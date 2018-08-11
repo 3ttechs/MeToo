@@ -321,3 +321,45 @@ def get_meeting_attendees(user_id,meeting_id):
             result[i]['Is_Organiser'] ='No'            
     return json.dumps(result), 200
 
+
+
+'''
+{
+  "meeting_id": 1,
+  "title": 'My Title',
+  "venue": "My Venue",
+  "notes": "My Notes" 
+}
+'''
+
+def update_meeting():
+    d = json.loads(request.data)
+    meeting_id = d['meeting_id']
+    title = d['title']
+    venue = d['venue']
+    notes = d['notes']
+
+    query = "UPDATE meeting SET title='%s', venue='%s', notes='%s' WHERE meeting_id=%s" % (title, venue, notes, meeting_id)
+    run_insert_query(query)
+
+    # Send mail to attendees
+    query = "select * from meeting  WHERE meeting_id=%s" % (meeting_id)
+    result = run_query(query)[0]
+    #organiser_id = result['organiser_id']
+
+    subject = "MeToo Update : Meeting "+result['title']+ " updated"
+    body = "Welcome to MeToo\n\nThe following meeting is deleted\n"
+    body+= "Title: "+ result['title'] +"\n"
+    body+= "Organiser: "+ get_user_name(result['organiser_id'])  +"\n" 
+    body+= "Category: "+ result['category']+"\n"
+    body+= "Venue: "+ result['venue']+"\n"
+    body+= "Notes: "+ result['notes']+"\n"
+    body+= "Start: "+ result['start_date']+" " + result['start_time']+"\n"
+    body+= "End: "+ result['end_date']+" " + result['end_time']+"\n"
+
+    to = result['email_list'].split(',')
+    msg = Message(subject, sender = '3ttechs@gmail.com', recipients = to)
+    msg.body = body
+    mail.send(msg)    
+    
+    return "Success", 200    

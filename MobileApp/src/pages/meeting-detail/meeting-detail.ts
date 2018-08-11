@@ -32,7 +32,7 @@ export class MeetingDetailPage {
   showAttendees(userId: number, meetingId: number) {
   
     this.loading = this.loadingCtrl.create({
-      content: 'Fetching Attendees...'
+     // content: 'Fetching Attendees...'
     });
 
     this.loading.present().then(()=>{
@@ -43,14 +43,18 @@ export class MeetingDetailPage {
         this.attendees = [];
         let i: number = 0;
         attendeesData.forEach(attendeeData => {
-                            
           console.log('starRating : ' + attendeeData['feedback.star_rating']);
+          // need to stringify
           let attendee: any = {
             name : attendeeData.attendee_name,
-            email : attendeeData['user.email'],
-            phoneNo : attendeeData['user.phone_no'],
-            feedback : attendeeData['feedback.note'],
-            starRating : attendeeData['feedback.star_rating']
+            //email : attendeeData['user.email'],
+            //phoneNo : attendeeData['user.phone_no'],
+            //feedback : attendeeData['feedback.note'],
+            //starRating : attendeeData['feedback.star_rating']
+            email : attendeeData.email,
+            phoneNo : attendeeData.phone_no,
+            feedback : attendeeData.note,
+            starRating : attendeeData.star_rating           
           };
           
           this.attendees[i] = attendee;
