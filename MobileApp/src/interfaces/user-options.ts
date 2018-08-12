@@ -30,3 +30,19 @@ export interface AddMeeting {
   AddContact:string[],
   email: string[]
 }
+
+export interface UserProfile {
+  UserID: string,
+  LoginID: string,
+  UserName:string,
+  Password: string,
+  Confirmpassword: string,
+  NewPassword: string,
+  Email: string,
+  PhoneNumber: Number
+  //EmailNotification: Boolean,
+  //BusinessColor: string,
+  //PersonalColor: string
+  //AddContact:string[],
+  //email: string[]
+}

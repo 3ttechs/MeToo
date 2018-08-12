@@ -55,7 +55,7 @@ export class ContactsPage {
         this.loading.dismiss();
         
         if(result === 0){
-          this.showAlert('Contact exists!!!');
+          this.showAlert('Contact exists !');
           this.navCtrl.setRoot(ContactsPage);
           //this.navCtrl.push(TabsPage);
         }

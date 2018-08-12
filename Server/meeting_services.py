@@ -11,6 +11,7 @@ from  global_params import *
 
 
 ''' 
+
 {
   "organiser_id":1,
   "title":"a",
@@ -28,7 +29,6 @@ from  global_params import *
 def add_meeting():
     print(request.data)
     d = json.loads(request.data)
-
 
     organiser_id = d['organiser_id']
     title = d['title']
@@ -196,7 +196,7 @@ def get_meeting_list(user_id):
         meeting_ids.append(result['meeting_id'])
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
-    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) and organiser_response = "ACTIVE" order by start_date, start_time'
+    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) and organiser_response = "ACTIVE" order by datetime(start_date), datetime(start_time)'
     result = run_query(query)
     for i in range(len(result)):
         result[i]['organiser_name'] = get_user_name(result[i]['organiser_id'])
@@ -261,7 +261,7 @@ def delete_meeting(meeting_id):
 
     #add_notification(attendee_id_str, meeting_id, "Meeting "+result['title']+" deleted", now.strftime("%Y-%m-%d"), now.strftime("%H:%M"))
 
-    return " Success", 200   
+    return "Success", 200   
 '''
 {
   "meeting_id":1,
@@ -326,7 +326,7 @@ def get_meeting_attendees(user_id,meeting_id):
 '''
 {
   "meeting_id": 1,
-  "title": 'My Title',
+  "title": "My Title",
   "venue": "My Venue",
   "notes": "My Notes" 
 }

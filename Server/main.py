@@ -237,6 +237,28 @@ def get_notifications_list_method(user_id): return(get_notifications_list(user_i
 @app.route('/google_login', methods=['POST'])
 def google_login_method():  return(google_login())
 
+#http://localhost:5000/send_notification
+@app.route('/send_notification', methods=['GET'])
+def send_notification_method():  
+    from pyfcm import FCMNotification
+    # https://console.firebase.google.com/u/0/project/rising-timing-211502/settings/cloudmessaging/android:io.ionic.conferenceapp
+    push_service = FCMNotification(api_key="AAAArR8DYPc:APA91bGSo4F9nDSCLv3iECImRj0pRK-zWfIsl_WlOJxy8rUqFWrSwRzWAvpLUrQ2QF1bLKNWZLnE898s7Jz-_nY5prq2nWTLmNhQkBLgWPB1te1G02xmrmmjTG2WV6j1LhMGr3r7JS7qRDNHnLgScTbRFYx-tET4LA")
+    # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
+    registration_id = "DgJjbmgqXYaUYCszPdt5DzJAf0i2"
+    #registration_id ="rising-timing-211502"
+    #registration_id ="AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00"
+    #registration_id = "863448035765798"    
+    #registration_id = "863448035765806"    
+    #registration_id = "33356b0b062301e3"
+
+    message_title = "Uber update"
+    message_body = "Hi john, your customized news for today is ready"
+    result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
+    print (result)
+
+
+
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin','*')

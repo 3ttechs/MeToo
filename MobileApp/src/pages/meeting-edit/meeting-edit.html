@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title *ngIf="meeting">{{meeting.title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="outer-content session-list">
+
+  <form #meetingEditForm="ngForm" novalidate>
+    
+    <ion-list no-lines>
+      <ion-item>
+        <ion-label stacked color="primary">Title</ion-label>
+        
+        <ion-input [(ngModel)]="meetingEdit.Title" name="title" type="text" placeholder="Enter meeting title" #title="ngModel" spellcheck="false" autocapitalize="off"
+          required>
+        </ion-input>
+      </ion-item>
+        
+      <p ion-text [hidden]="title.valid || submitted == false" color="danger" padding-left>
+        Title is required
+      </p>
+
+      <ion-item>
+        <ion-label stacked color="primary">Notes</ion-label>
+          
+        <ion-input [(ngModel)]="meetingEdit.Notes" name="notes" type="text" placeholder="Enter meeting notes" #notes="ngModel" spellcheck="false" autocapitalize="off"
+          required>
+        </ion-input>
+      </ion-item>
+              
+      <p ion-text [hidden]="notes.valid || submitted == false" color="danger" padding-left>
+        Notes is required
+      </p>
+            
+      <ion-item>
+        <ion-label stacked color="primary">Location</ion-label>
+          
+        <ion-input [(ngModel)]="meetingEdit.Venue" name="venue" type="text" placeholder="Enter meeting location" #venue="ngModel" spellcheck="false" autocapitalize="off"
+          required>
+        </ion-input>
+      </ion-item>
+          
+      <p ion-text [hidden]="venue.valid || submitted == false" color="danger" padding-left>
+        Location is required
+      </p>
+    </ion-list>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col></ion-col>
+        <ion-col col-8>
+            <button ion-button round  type="submit" block (click)="onModifyMeeting(meetingEditForm)" type="submit">Modify Meeting</button>
+        </ion-col>
+        <ion-col></ion-col>
+      </ion-row>
+    </ion-grid>
+  
+  </form>
+  <!--
+  <ion-list-header [hidden]="attendeesCount === 0">
+      Attendees
+  </ion-list-header>
+
+  <ion-list-header [hidden]="attendeesCount > 0">
+      No Attendees
+  </ion-list-header>
+
+  <ion-list>
+      <ion-item *ngFor="let attendee of attendees">
+        {{attendee.name}}
+      </ion-item>
+  </ion-list>
+  -->
+</ion-content>

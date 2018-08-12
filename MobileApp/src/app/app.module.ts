@@ -12,7 +12,6 @@ import { SchedulePage } from '../pages/schedule/schedule';
 import { MeetingPage } from '../pages/meeting/meeting';
 import { EventModalPage } from '../pages/event-modal/event-modal';
 
-
 import { ScheduleFilterPage } from '../pages/schedule-filter/schedule-filter';
 import { MeetingDetailPage } from '../pages/meeting-detail/meeting-detail';
 import { SignupPage } from '../pages/signup/signup';
@@ -21,6 +20,7 @@ import { TabsPage } from '../pages/tabs-page/tabs-page';
 import { TutorialPage } from '../pages/tutorial/tutorial';
 import { VisionPage } from '../pages/vision/vision';
 import { SettingsPage } from '../pages/settings/settings';
+import { MeetingEditPage } from '../pages/meeting-edit/meeting-edit';
 
 import { NotificationPage } from '../pages/notification/notification';
 import { ContactsPage } from '../pages/contacts/contacts';
@@ -31,7 +31,6 @@ import { MeetingProvider } from '../providers/meeting-provider';
 import { FeedbackProvider } from '../providers/feedback-provider';
 import { UtilityProvider } from '../providers/utility-provider';
 
-
 import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
 
@@ -41,6 +40,8 @@ import {ForgotPasswordPage} from '../pages/forgot-password/forgot-password'
 import {GooglePlus} from '@ionic-native/google-plus';
 import {AngularFireModule} from 'angularfire2';
 import firebase from 'firebase';
+import { Device } from '@ionic-native/device';
+
 //import {AngularFireAuthModule} from 'angularfire2/auth';
 
 export const firebaseConfig ={
@@ -72,6 +73,7 @@ firebase.initializeApp(firebaseConfig)
     NotificationPage,
     ContactsPage,
     ForgotPasswordPage,
+    MeetingEditPage,
   ],
   imports: [
     NgCalendarModule,
@@ -97,7 +99,8 @@ firebase.initializeApp(firebaseConfig)
         { component: ContactsPage, name: 'ContactsPage', segment: 'contacts' },
 
         { component: LoginPage, name: 'LoginPage', segment: 'login' },
-        { component: SignupPage, name: 'SignupPage', segment: 'signup' }
+        { component: SignupPage, name: 'SignupPage', segment: 'signup' },
+        { component: MeetingEditPage, name: 'MeetingEdit', segment: 'meetingEdit/:meetingId' }
             
       ]
     }),
@@ -121,7 +124,8 @@ firebase.initializeApp(firebaseConfig)
     SettingsPage,
     NotificationPage,
     ContactsPage,  
-    ForgotPasswordPage 
+    ForgotPasswordPage,
+    MeetingEditPage 
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -133,7 +137,8 @@ firebase.initializeApp(firebaseConfig)
     InAppBrowser,
     SplashScreen,
     UtilityProvider,
-    GooglePlus
+    GooglePlus,
+    Device
   ]
 })
 export class AppModule { }

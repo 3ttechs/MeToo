@@ -12,6 +12,7 @@ import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 import {GooglePlus} from '@ionic-native/google-plus';
 //import {AngularFireModule} from 'angularfire2';
 import firebase from 'firebase';
+import { Device } from '@ionic-native/device';
 
 @Component({
   selector: 'page-user',
@@ -23,17 +24,16 @@ export class LoginPage {
   login: UserOptions = { username: '', password: '', Confirmpassword: '', Email: '',PhoneNumber: '',Name: '' };
   submitted = false;
   data: any;
-  constructor( public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
+  constructor( private device: Device, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider) { }
   
   onLogin(form: NgForm) {
     // Added by ChandraRao
     this.submitted = true;
-
     if (form.valid) {
       let LoginData = JSON.stringify({
-        login_id: this.login.username,passwd: this.login.password
+        login_id: this.login.username, passwd: this.login.password, uuid: this.device.uuid
       });
   
         this.feedbackProvider.PostData(LoginData,"/login").then((result) => {

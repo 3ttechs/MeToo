@@ -7,21 +7,25 @@ import { Http, Headers } from "@angular/http";
 import { Contact } from '../interfaces/contact';
 import { UtilityProvider } from './utility-provider';
 
-let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class ContactProvider {
   _favorites: string[] = [];
   HAS_LOGGED_IN = 'hasLoggedIn';
   HAS_SEEN_TUTORIAL = 'hasSeenTutorial';
+  apiUrl: string;
 
   constructor(
     private http: Http,
     public events: Events,
     public storage: Storage,
+
     private utility: UtilityProvider
-  ) {}
+  ) {
+    this.apiUrl =this.utility.apiUrl; 
+
+
+  }
 
   addContact(contact: Contact){
     
@@ -37,7 +41,7 @@ export class ContactProvider {
 
       console.log(postParams);
       
-      this.http.post(apiUrl+'/add_contact', postParams, {headers: headers})
+      this.http.post(this.apiUrl+'/add_contact', postParams, {headers: headers})
         .subscribe(res => {
           resolve(res.json());
         }, (err) => {

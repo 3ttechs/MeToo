@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Headers,Http, RequestOptions } from '@angular/http';
 import { AlertController } from 'ionic-angular';
+import { UtilityProvider } from '../providers/utility-provider';
 
-let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Injectable()
 export class FeedbackProvider {
+  apiUrl: string;
   
-  constructor(public http: Http,public alertCtrl: AlertController) { }
+  constructor(public http: Http,public alertCtrl: AlertController, private utility: UtilityProvider) { 
+    this.apiUrl =this.utility.apiUrl; 
+  }
 
   public getAttendeesFeedbackForMeeting(userId: number, meetingId: number){
     console.log('Calling get_meeting_attendees_feedback with 2 arguments...user_id : ' + userId + ' meetingId : ' + meetingId);
     return new Promise((resolve,reject) =>{
-      this.http.get(apiUrl + '/get_meeting_attendees_feedback/user_id='+userId+ ',meeting_id=' + meetingId)
+      this.http.get(this.apiUrl + '/get_meeting_attendees_feedback/user_id='+userId+ ',meeting_id=' + meetingId)
         .subscribe(res=>{
           resolve(res.json());
         },(err) => {
@@ -25,7 +27,7 @@ export class FeedbackProvider {
 
   public getPendingFeedbackListForUser(userId: number){
     return new Promise((resolve,reject) =>{
-      this.http.get(apiUrl + '/ask_for_feedback/user_id=' + userId)
+      this.http.get(this.apiUrl + '/ask_for_feedback/user_id=' + userId)
         .subscribe(res=>{
           resolve(res.json());
         },(err) => {
@@ -47,7 +49,7 @@ export class FeedbackProvider {
 
       console.log(postParams);
       
-      this.http.post(apiUrl+'/add_feedback', postParams, {headers: headers})
+      this.http.post(this.apiUrl+'/add_feedback', postParams, {headers: headers})
         .subscribe(res => {
           resolve(res.json());
           //resolve(res.text());
@@ -72,7 +74,7 @@ export class FeedbackProvider {
     //alert(apiUrl+CallingMethodName+InsertData);
     let loginBody = InsertData;
     return new Promise(resolve => {
-      this.http.post(apiUrl+CallingMethodName, loginBody, this.HeaderOptionsValues())
+      this.http.post(this.apiUrl+CallingMethodName, loginBody, this.HeaderOptionsValues())
         .subscribe(res => resolve(res.json()))
     });
   }
@@ -81,10 +83,20 @@ export class FeedbackProvider {
   GetData(InputData: string,CallingMethodName: string ) {
     //alert(apiUrl+CallingMethodName+InputData);
     return new Promise(resolve => {
-      this.http.get(apiUrl+CallingMethodName+InputData)
+      this.http.get(this.apiUrl+CallingMethodName+InputData)
       .subscribe(res => resolve(res.json()))
     })
   }
+
+    // this method is used for save data and return Success Text 
+    PostDataT(InsertData: string, CallingMethodName: string) {
+      //alert(apiUrl+CallingMethodName+InsertData);
+      let loginBody = InsertData;
+      return new Promise(resolve => {
+        this.http.post(this.apiUrl+CallingMethodName, loginBody, this.HeaderOptionsValues())
+          .subscribe(res => resolve(res.text()))
+      });
+    }
 
       // this is for ionic alert box
       showAlert(Message:string,Title:string) {

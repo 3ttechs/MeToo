@@ -31,7 +31,7 @@
 
 <ion-content>
 
-  <ion-refresher (ionRefresh)="doRefresh($event)">
+  <ion-refresher (ionRefresh)="doRefresh($event, 0)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
@@ -41,14 +41,13 @@
 
       <ion-item-divider item-md-divider-color sticky >
         <ion-label color="primary">
-          <B>{{group.startDate}}</B>
+          <B>{{group.startDate | date: 'dd/MM/yyyy' }}</B>
         </ion-label>
       </ion-item-divider>
 
       <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [attr.track]="meeting.category" [hidden]="meeting.hide">
 
         <button ion-item (click)="goToMeetingDetail(meeting)">
-          
           <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
           <ion-icon small item-right color='secondary' name="checkmark-circle-outline" *ngIf="meeting.attendeeResponse === 'ACCEPT'"></ion-icon>
           <ion-icon small item-right color='danger' name="close-circle" *ngIf="meeting.attendeeResponse === 'DECLINE'"></ion-icon>
@@ -59,11 +58,11 @@
         </button>
 
         <ion-item-options>
-          <button ion-button color="primary" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
+          <button ion-button color="primary" (click)="editMeeting(meeting)" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
               <ion-icon name="construct"></ion-icon>
               Edit
           </button>
-          <button ion-button color="danger" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
+          <button ion-button color="danger" (click)="deleteMeeting(meeting.id)" *ngIf="meeting.isPast === 'No' && meeting.isOrganiser === 'Yes'">
             <ion-icon name="trash"></ion-icon>
             Delete
           </button>
@@ -90,8 +89,7 @@
   <ion-list-header [hidden]="shownMeetingsCount > 0">
       No Meetings Found
   </ion-list-header>
-
-  
+ 
   
 
 </ion-content>

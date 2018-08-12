@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-//import { NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 
 import { AlertController, NavController, ToastController } from 'ionic-angular';
 //import { Http, Headers } from "@angular/http";
@@ -9,7 +9,7 @@ import { FeedbackProvider } from '../../providers/feedback-provider';
 import { UserData } from '../../providers/user-data';
 //import { UserOptions } from '../../interfaces/user-options';
 //import { LoginPage } from '../login/login';
-
+import { UserProfile } from '../../interfaces/user-options';
 
 @Component({
   selector: 'page-settings',
@@ -19,11 +19,14 @@ export class SettingsPage {
 
   submitted: boolean = false;
   newPasswd: string;
-  userDetails : any;
+  //userDetails : any;
   inputdataVal: any[0];
   login_id : string;
   user_name : string;
-
+  changeSettings : boolean = false;
+  //Name:string, Password: string,   Confirmpassword: string,   NewPassword : string,   Email: string,  PhoneNumber: string,
+  
+  private userDetails: UserProfile = {UserID: "", LoginID: "", UserName: "", Password: "", Confirmpassword:"", NewPassword:"", Email:"", PhoneNumber:0 };
   constructor(
     //private http: Http,
     public navCtrl: NavController,
@@ -40,61 +43,92 @@ export class SettingsPage {
   ionViewDidLoad() {
  
   }
+
   ionViewDidEnter() {
     this.onGetUserDetails();
     //toast.present();
   }
-onGetUserDetails(){
-  let inputdata = "user_id="+this.loginProvider.UserId;
-  
-  this.feedbackProvider.GetData(inputdata, "/get_user_details/").then(data => {
-    this.inputdataVal = data;
-  }).catch(function (error) {
-    alert(JSON.stringify(error));
-  });
-  //console.log(this.userOptions.Name);
-  //console.log(this.userOptions.username);
-}
 
-/*
-onChangeParameters(form: NgForm){
-
-    this.submitted = true;
-
-    if (form.valid) {
-    return new Promise((resolve,reject) => {
-      let headers = new Headers();
-      
-      headers.append('Accept', 'application/json');
-      headers.append('Content-Type', 'application/json');
-      let user_id = this.loginProvider.UserId;
-      let newPasswd = "test@123" ;
+  onGetUserDetails(){
+    let inputdata = "user_id="+this.loginProvider.UserId;
     
-      let login_id = this.userDetails.login_id;
-      let passwd = newPasswd;
-      let user_name  = this.userDetails.user_name;
-      let phone_no  = this.userDetails.phone_no;
-      let email  = this.userDetails.email;
-
-      //let postParams = JSON.stringify({user_id:user_id, comment:this.supportMessage})
-      let postParams = {user_id: user_id, login_id: login_id, passwd: passwd, user_name: user_name, phone_no:phone_no,email:email }
-      
-      console.log(postParams);
-      
-      this.http.post(apiUrl+'/update_user_profile', postParams, {headers: headers})
-        .subscribe(res => {
-          resolve(res.text());
-          
-          console.log('Balaji..Getting into Success loop after posting password');
-        }, (err) => {
-          //console.log(err);
-          //console.log('Balaji..Getting into error loop after posting');
-          reject(err);
-        });
-    })
+    this.feedbackProvider.GetData(inputdata, "/get_user_details/").then(data => {
+      this.inputdataVal = data;
+    }).catch(function (error) {
+      alert(JSON.stringify(error));
+    });
+    //console.log(this.userOptions.Name);
+    //console.log(this.userOptions.username);
   }
-}
-*/
+
+  onChangeParameters(){
+
+    this.changeSettings = true;
+  }
+
+  ChangeParameters(form: NgForm){
+
+      this.submitted = true;
+      
+      if (form.valid) {
+      return new Promise((resolve, reject) => {
+        let headers = new Headers();
+        console.log(resolve);
+        console.log(reject);
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/json');
+        let user_id = this.loginProvider.UserId;
+     
+        this.userDetails.UserName = this.inputdataVal.user_name;
+        this.userDetails.LoginID = this.inputdataVal.login_id;
+        this.userDetails.NewPassword = this.inputdataVal.Password;
+        let login_id = this.userDetails.LoginID;
+        let passwd = this.userDetails.NewPassword;
+        let user_name  = this.userDetails.UserName;
+        let phone_no  = this.inputdataVal.phone_no;
+        let email  = this.inputdataVal.email;
+
+        /*{
+          "user_id": 1,
+          "login_id": "Lakshmy",
+          "passwd": "LaKsHmY",
+          "user_name": "Lakshmy", 
+          "phone_no": "9988776655",
+          "email": "g@h.com"
+        }*/
+      
+        let postParams = JSON.stringify({user_id: user_id, login_id: login_id, passwd: passwd, user_name: user_name, phone_no:phone_no,email:email })
+        
+        console.log(postParams);
+        this.feedbackProvider.PostDataT(postParams, '/update_user_profile').then((result) => {
+      
+          //this.inputdataVal = result;
+          if(result === 0){
+            this.showAlert('Not Updated  !');
+            this.navCtrl.setRoot(SettingsPage);
+          
+          }
+          else{
+            this.showAlert('Updated');
+            this.navCtrl.setRoot(SettingsPage);
+            
+          }
+        },(err) =>{
+          alert(JSON.stringify(err));
+          });
+          
+      })
+    }
+  }
+
+  showAlert(msg) {
+    let alert = this.alertCtrl.create({
+      subTitle: msg,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
   /*
   showLoader(){
     this.loading = this.loadingCtrl.create({

@@ -3,11 +3,8 @@ import { NgForm } from '@angular/forms';
 
 import { AlertController, NavController, ToastController } from 'ionic-angular';
 import { Http, Headers } from "@angular/http";
+import { UtilityProvider } from '../../providers/utility-provider';
 
-
-
-let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
 
 @Component({
   selector: 'page-vision',
@@ -17,14 +14,16 @@ export class VisionPage {
 
   submitted: boolean = false;
   supportMessage: string;
+  apiUrl: string;
 
   constructor(
     private http: Http,
     public navCtrl: NavController,
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private utility: UtilityProvider
   ) {
-
+    this.apiUrl = this.utility.apiUrl; 
   }
 /*
   ionViewDidEnter() {
@@ -49,7 +48,7 @@ export class VisionPage {
         //console.log('Balaji...Posting Completed');
         if(result == "Success"){
           //console.log('result === 0');
-          console.log('Comment Posting Completed!!!');
+          console.log('Comment Posting Completed!');
           //this.showAlert('Contact exists!!!');
           //this.navCtrl.setRoot(ContactsPage);
           this.supportMessage = "";
@@ -86,7 +85,7 @@ export class VisionPage {
       console.log(supportMessage);
       console.log(postParams);
       
-      this.http.post(apiUrl+'/add_general_comments', postParams, {headers: headers})
+      this.http.post(this.apiUrl+'/add_general_comments', postParams, {headers: headers})
         .subscribe(res => {
           resolve(res.text());
           console.log('Balaji..Getting into Success loop after posting');

@@ -128,8 +128,9 @@ def update_user_profile():
 
 # body : {"login_id": "b","passwd":"b"}
 def login():
-    #print(request.data)
+    print(request.data)
     d = json.loads(request.data)
+    print(d)
     login_id = d['login_id']
     passwd = d['passwd']
 
@@ -179,6 +180,8 @@ def add_contact():
         query = "INSERT INTO user (login_id,passwd,user_name,phone_no,email,login_by) VALUES ('%s','%s','%s','%s','%s','%s')"% (login_id,passwd,user_name,phone_no,email,login_by)
         run_insert_query(query)
         contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
+
+        
 
     # check for duplicate contact
     duplicate_found =0    

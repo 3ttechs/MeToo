@@ -8,6 +8,7 @@ import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 import { UtilityProvider } from '../../providers/utility-provider';
 
 import { MeetingDetailPage } from '../meeting-detail/meeting-detail';
+import { MeetingEditPage } from '../meeting-edit/meeting-edit';
 import { ScheduleFilterPage } from '../schedule-filter/schedule-filter';
 
 @Component({
@@ -84,7 +85,6 @@ export class SchedulePage {
     //let userId = this.loginProvider.UserId;
     console.log('this.allMeetings.length : ' + this.allMeetings.length);
         
-        
     let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
     let meetingGroups: any = meetingGroupsData.groups;
     
@@ -109,13 +109,11 @@ export class SchedulePage {
     this.navCtrl.push(MeetingDetailPage, meeting);
   }
 
-  doRefresh(refresher: Refresher) {
+  doRefresh(refresher: Refresher, flag: number) {
     let userId = this.loginProvider.UserId;
     
-    console.log('tjv...Inside doRefresh()...userId : ' + userId);
     this.meetingProvider.callGetMeetingListService(userId).subscribe((data: any) => {
 
-      
       this.allMeetings = data.json();
             
       let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
@@ -127,8 +125,8 @@ export class SchedulePage {
     
       setTimeout(() => {
 
-        refresher.complete();
-
+        if(flag === 0) refresher.complete();
+        
         const toast = this.toastCtrl.create({
           message: 'Meetings have been updated.',
           duration: 3000
@@ -139,6 +137,10 @@ export class SchedulePage {
     });
   }
 
+  doRefreshExplicitly(refresher: Refresher, flag: number) {
+    this.doRefresh(refresher, flag);
+  }
+
   respondToMeetingInvitation(meetingId: number, attendeeResponse: string){
     console.log('tjv...Inside respondToMeetingInvitation()...attendeeResponse : ' + attendeeResponse);
     let userId = this.loginProvider.UserId;
@@ -147,13 +149,15 @@ export class SchedulePage {
     //this.utility.showLoader('Adding response...');
     this.meetingProvider.updateAttendeeMeetingResponse(meetingId, attendeeId, attendeeResponse).then((result) => {
       console.log('tjv...Calling loading.dismiss()');
-      this.utility.dismissLoader();
+      //this.utility.dismissLoader();
       console.log(result);
       
       if(result === 'Success'){
         console.log('result === Success');
         
         this.utility.showAlert(attendeeResponse, 'Meeting');
+        
+        this.doRefreshExplicitly(null, 1);
         //this.navCtrl.push(TabsPage);
       }
       else{
@@ -163,9 +167,34 @@ export class SchedulePage {
       }
       
     }, (err) => {
-      this.utility.dismissLoader();
+      //this.utility.dismissLoader();
       this.utility.presentToast(err);
     });
 
+  }
+
+  deleteMeeting(meetingId: number){
+
+    this.meetingProvider.deleteMeeting(meetingId).then((result) => {
+      
+      if(result === 'Success'){
+        console.log('result === Success');
+        this.utility.showAlert('Meeting deleted', 'Meeting');
+        this.doRefreshExplicitly(null, 1);
+      }
+      else{
+        console.log('result != Success');
+        this.utility.showAlert('Meeting not deleted', 'Meeting');
+      }
+      
+    }, (err) => {
+      this.utility.presentToast(err);
+    });
+
+  }
+
+  editMeeting(meeting: any) {
+    console.log('tjv...editMeeting()...meeting :.... ');
+    this.navCtrl.push(MeetingEditPage, meeting);
   }
 }

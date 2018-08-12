@@ -7,18 +7,18 @@ import 'rxjs/add/observable/of';
 import { UserData } from './user-data';
 import { UtilityProvider } from './utility-provider';
 
-let apiUrl = 'http://localhost:5000';
-//let apiUrl ='http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
-
 @Injectable()
 export class MeetingProvider {
   data: any;
+  apiUrl: string;
 
   private categories: string[] = ['Business', 'Personal'];
 
   private debug: any = false;
   constructor(public http: Http, public user: UserData,
-    private utility: UtilityProvider) { }
+    private utility: UtilityProvider) { 
+      this.apiUrl =this.utility.apiUrl; 
+    }
 
   load(): any {
     if (this.data) {
@@ -115,7 +115,7 @@ export class MeetingProvider {
   
   public getMeetingListForUser(userId){
     return new Promise((resolve,reject) =>{
-      this.http.get(apiUrl + '/get_meeting_list/user_id=' + userId)
+      this.http.get(this.apiUrl + '/get_meeting_list/user_id=' + userId)
         .subscribe(res=>{
           resolve(res.json());
         },(err) => {
@@ -126,7 +126,7 @@ export class MeetingProvider {
   }
 
   callGetMeetingListService(userId): any{
-    return this.http.get(apiUrl + '/get_meeting_list/user_id=' + userId);
+    return this.http.get(this.apiUrl + '/get_meeting_list/user_id=' + userId);
   }
 
   private getTimeInAMOrPMStr(timeStr: string): string {
@@ -345,7 +345,7 @@ export class MeetingProvider {
       
       console.log(postParams);
       
-      this.http.post(apiUrl+'/update_meeting_response', postParams, this.utility.getHeaderOptions())
+      this.http.post(this.apiUrl+'/update_meeting_response', postParams, this.utility.getHeaderOptions())
         .subscribe(res => {
           //resolve(res.json());
           resolve(res.text());
@@ -356,5 +356,45 @@ export class MeetingProvider {
         });
     })
   }
+
+  modifyMeeting(meetingEdit: any, meetingId: number){
+    console.log('tjv...Inside updateMeetingResponse()');
+    return new Promise((resolve,reject) => {
+
+      let postParams = {meeting_id: meetingId, title: meetingEdit.Title, venue: meetingEdit.Venue, notes: meetingEdit.Notes};
+      
+      console.log(postParams);
+      
+      this.http.post(this.apiUrl+'/update_meeting', postParams, this.utility.getHeaderOptions())
+        .subscribe(res => {
+          resolve(res.text());
+          console.log(res.text());
+        }, (err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
+  }
+
+
+ public deleteMeeting(meetingId){
+  return new Promise((resolve,reject) =>{
+    this.http.get(this.apiUrl + '/delete_meeting/meeting_id=' + meetingId)
+      .subscribe(res=>{
+        //resolve(res.json());
+        resolve(res.text());
+      },(err) => {
+        console.log(err);
+        reject(err);
+      });
+  })
+}
+
+public getAttendeesOfMeeting(userId, meetingId){
+  let callingMethodName: string = '/get_meeting_attendees/';
+  let inputData: string = 'user_id=' + userId + ',meeting_id=' + meetingId;
+
+  return this.utility.getData(inputData, callingMethodName);
+}
 
 }
