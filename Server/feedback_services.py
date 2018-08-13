@@ -6,7 +6,7 @@ from  global_params import *
 
 # organiser_response : ACTIVE / CANCEL
 # attendee_response : NOT_GIVEN / ACCEPT / DECLINE
-# feedback_response : NOT_GIVEN / GIVEN / DECLINE
+# feedback_response : NOT_GIVEN / GIVEN / DECLINE (used for Not Attended..)
 
 
 def get_meeting_attendees_feedback(user_id,meeting_id):

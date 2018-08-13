@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class DummyLoginProvider {
  
    public UserId: number ; 
+   public FeedbackStatus: number;
 
   constructor() {}
 

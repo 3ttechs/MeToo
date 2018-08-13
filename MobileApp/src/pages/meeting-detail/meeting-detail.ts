@@ -67,10 +67,12 @@ export class MeetingDetailPage {
     });
 
   }
+  // <a href="whatsapp://send?text=The text to share!" data-action="share/whatsapp/share">Share via Whatsapp</a>
 
   openSocial(network: string, fab: FabContainer) {
     let loading = this.loadingCtrl.create({
       content: `Posting to ${network}`,
+      
       duration: (Math.random() * 1000) + 500
     });
     loading.onWillDismiss(() => {
