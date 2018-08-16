@@ -79,6 +79,20 @@ def add_contact_method(): return(add_contact())
 @app.route('/update_user_profile', methods=['POST'])
 def update_user_profile_method():    return(update_user_profile())
 
+''' 
+{
+  "user_id": 1,
+  "email_notify": 1,
+  "app_notify": 1,
+  "business_category_color": "#ff0000", 
+  "personal_category_color": "#00ff00",
+}
+'''
+#http://localhost:5000/add_update_settings
+@app.route('/add_update_settings', methods=['POST'])
+def add_update_settings_method(): return(add_update_settings())
+
+
 #http://localhost:5000/get_user_details/user_id=1
 @app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
 def get_user_details_method(user_id): return(get_user_details(user_id))

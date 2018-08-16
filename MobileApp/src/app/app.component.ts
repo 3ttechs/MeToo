@@ -124,6 +124,7 @@ export class ConferenceApp {
 
     if (page.logsOut === true) {
       // Give the menu time to close before changing to logged out
+      this.storage.clear();
       this.nav.push(LoginPage);
       this.userData.logout();
     }

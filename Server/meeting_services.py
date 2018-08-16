@@ -196,7 +196,7 @@ def get_meeting_list(user_id):
         meeting_ids.append(result['meeting_id'])
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
-    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) and organiser_response = "ACTIVE" order by datetime(start_date), datetime(start_time)'
+    query = 'select * from meeting where meeting_id in ('+meeting_ids_str+' ) and organiser_response = "ACTIVE" order by start_date, start_time '
     result = run_query(query)
     for i in range(len(result)):
         result[i]['organiser_name'] = get_user_name(result[i]['organiser_id'])
@@ -310,8 +310,8 @@ def update_meeting_response():
     return "Success", 200    
 
 def get_meeting_attendees(user_id,meeting_id):
-    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email '
-    query += 'from (select attendee_id, feedback_id from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, a.attendee_response as attendee_response '
+    query += 'from (select attendee_id, feedback_id, attendee_response from attendee where meeting_id = '+ meeting_id+' order by attendee_id) a, user '
     query += 'where user.user_id = a.attendee_id '
     result = run_query(query)
     for i in range(len(result)):

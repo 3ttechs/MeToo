@@ -99,7 +99,8 @@ export class LoginPage {
       this.inputdataVal = this.data;
       //alert(JSON.stringify(this.inputdataVal['login_id']));
       this.loginProvider.UserId = this.inputdataVal['user_id'];
-      this.loginProvider.FeedbackStatus = 1;
+      // TODO: Feedback status by Lakshmy
+      this.loginProvider.FeedbackStatus = 0;
       this.userData.login(this.login.username);
       if(this.loginProvider.FeedbackStatus==0)
       {

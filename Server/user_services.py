@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 from  global_params import *
 
 def get_user_details(user_id):
-    query = 'select user_id,login_id,user_name,phone_no,email from user where user_id  ='+ user_id
+    query = 'select user_id,login_id,user_name,phone_no,email,login_by from user where user_id  ='+ user_id
     data = run_query(query)
     if (len(data)<=0):
         return '0', 200
@@ -122,8 +122,38 @@ def update_user_profile():
     phone_no  = d['phone_no']
     email  = d['email']        
 
-    query = "UPDATE user SET login_id='%s',passwd='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,passwd,user_name,phone_no,email,user_id)
+    if passwd=='':
+        query = "UPDATE user SET login_id='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,user_name,phone_no,email,user_id)
+    else:
+        query = "UPDATE user SET login_id='%s',passwd='%s',user_name='%s',phone_no='%s',email='%s' WHERE user_id=%d" % (login_id,passwd,user_name,phone_no,email,user_id)
     run_insert_query(query)
+    return "Success", 200  
+
+''' 
+{
+  "user_id": 1,
+  "email_notify": 1,
+  "app_notify": 1,
+  "business_category_color": "#ff0000", 
+  "personal_category_color": "#00ff00"
+}
+'''
+def add_update_settings():
+    d = json.loads(request.data)
+    user_id = d['user_id']
+    email_notify = d['email_notify']
+    app_notify = d['app_notify']
+    business_category_color  = d['business_category_color']
+    personal_category_color  = d['personal_category_color']
+
+    query = 'select user_id from settings where user_id = ' +str(user_id)
+    data = run_select_query(query)
+    if (len(data)>0):
+        query = "UPDATE settings SET email_notify=%d,app_notify=%d,business_category_color='%s', personal_category_color='%s' WHERE user_id=%d" % (email_notify,app_notify,business_category_color,personal_category_color,user_id)
+        run_query(query)
+    else:
+        query = "Insert into settings (user_id,email_notify,app_notify,business_category_color,personal_category_color) VALUES (%d,%d,%d,'%s','%s')"% (user_id,email_notify,app_notify,business_category_color,personal_category_color)
+        run_insert_query(query)
     return "Success", 200  
 
 # body : {"login_id": "b","passwd":"b"}
@@ -181,7 +211,6 @@ def add_contact():
         run_insert_query(query)
         contact_id = run_select_query('SELECT MAX(user_id) FROM user')[0][0]
 
-        
 
     # check for duplicate contact
     duplicate_found =0    
@@ -197,8 +226,7 @@ def add_contact():
     else:
         return "0", 200
 
-def delete_contact(user_id,contact_id):
-    
+def delete_contact(user_id,contact_id):    
     query = "DELETE FROM contact WHERE user_id = %s and contact_id=%s" % (user_id, contact_id)
     run_insert_query(query)
 
