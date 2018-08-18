@@ -229,6 +229,11 @@ def send_metoo_mail_method(): return(send_metoo_mail())
 @app.route('/add_general_comments', methods=['POST'])
 def add_general_comments_method(): return(add_general_comments())
 
+#http://localhost:5000/get_feedback_count/user_id=1
+@app.route('/get_feedback_count/user_id=<user_id>', methods=['GET'])
+def get_feedback_count_method(user_id): return(get_feedback_count(user_id))
+
+
 #http://localhost:5000/ask_for_feedback/user_id=1
 @app.route('/ask_for_feedback/user_id=<user_id>', methods=['GET'])
 def ask_for_feedback_method(user_id): return(ask_for_feedback(user_id))

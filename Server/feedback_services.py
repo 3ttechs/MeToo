@@ -36,6 +36,23 @@ def add_general_comments():
     run_insert_query(query)
     return "Success", 200   
 
+def get_feedback_count(user_id):
+    # get the list of meetings end_time before current time, where feedback not given
+    query = 'select distinct meeting_id from attendee where attendee_id = "'+ user_id +'"'
+    result_list = run_query(query)
+    meeting_ids=[]
+    for result in result_list:
+        meeting_ids.append(result['meeting_id'])
+    
+    meeting_ids_str = ','.join(str(e) for e in meeting_ids)
+
+    query = 'select feedback.feedback_id from feedback, meeting, user, attendee '
+    query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now'))  "
+
+    result = run_query(query)
+    return json.dumps(len(result)), 200
+
 def ask_for_feedback(user_id):
     # get the list of meetings end_time before current time, where feedback not given
     query = 'select distinct meeting_id from attendee where attendee_id = "'+ user_id +'"'
