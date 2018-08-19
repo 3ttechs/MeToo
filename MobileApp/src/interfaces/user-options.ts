@@ -8,6 +8,12 @@ export interface UserOptions {
   Name:string
 }
 
+export interface contactsFromMobile {  // ChandraRao
+  name: string,
+  email: string,
+  phone: string,
+  UserId:number
+}
 
 export interface contacts {
   name: string,

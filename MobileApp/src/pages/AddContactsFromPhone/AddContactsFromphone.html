@@ -1,0 +1,44 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Add Contacts from phone</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content padding>
+            <ion-list no-lines>
+                <ion-item>
+            <button ion-button round (click)="DisplayPhoneContacts()" type="submit" block>Get Phone Contact</button>
+          </ion-item>
+          
+            <BR><BR><BR>
+
+            
+                <ion-item>
+                    <ion-label stacked  color="primary">Username</ion-label>
+                    <ion-input [(ngModel)]="contFromPhone.name"  name="username" placeholder="Name"  type="text" spellcheck="false" autocapitalize="off"
+                        >
+                    </ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                    <ion-label stacked  color="primary">MobileNo</ion-label>
+                    <ion-input [(ngModel)]="contFromPhone.phone"  name="MobileNo" placeholder="MobileNo"  type="text" spellcheck="false" autocapitalize="off"
+                        >
+                    </ion-input>
+                </ion-item>
+
+
+                <ion-item>
+                    <ion-label stacked  color="primary">EmailID</ion-label>
+                    <ion-input [(ngModel)]="contFromPhone.email" name="EmailID" placeholder="EmailID"  type="text"  spellcheck="false" autocapitalize="off"
+                        >
+                    </ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <button ion-button round (click)="onAddPhoneContacts()" type="submit" block>Add</button>
+                  </ion-item>
+
+                </ion-list>
+  </ion-content>

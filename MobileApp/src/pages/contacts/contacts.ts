@@ -7,6 +7,8 @@ import { ContactProvider } from '../../providers/contact-provider';
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 
 import { Contact } from '../../interfaces/contact';
+import {AddContactsFromphonePage} from '../AddContactsFromPhone/AddContactsFromphone';
+
 //import { TabsPage } from '../tabs-page/tabs-page';
 
 @Component({
@@ -141,11 +143,12 @@ export class ContactsPage {
     this.shownContactsCount = requiredContactsData.shownContactsCount;
   }
 
-  /*
-  private onAddNewContactFromPhone(){
+  
+  onAddNewContactFromPhone(){
     console.log('tjv...Inside onAddNewContactFromPhone()');
+    this.navCtrl.push(AddContactsFromphonePage);
   }
-  */
+  
 /*
   private deleteContact(contact: any) {
     console.log('tjv...Inside deleteContact()');

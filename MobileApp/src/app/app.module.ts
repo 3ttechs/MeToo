@@ -21,6 +21,7 @@ import { TutorialPage } from '../pages/tutorial/tutorial';
 import { VisionPage } from '../pages/vision/vision';
 import { SettingsPage } from '../pages/settings/settings';
 import { MeetingEditPage } from '../pages/meeting-edit/meeting-edit';
+import {AddContactsFromphonePage} from '../pages/AddContactsFromPhone/AddContactsFromphone';
 
 import { NotificationPage } from '../pages/notification/notification';
 import { ContactsPage } from '../pages/contacts/contacts';
@@ -74,6 +75,7 @@ firebase.initializeApp(firebaseConfig)
     ContactsPage,
     ForgotPasswordPage,
     MeetingEditPage,
+    AddContactsFromphonePage
   ],
   imports: [
     NgCalendarModule,
