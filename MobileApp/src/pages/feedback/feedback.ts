@@ -48,7 +48,7 @@ export class FeedbackPage {
         let feedBackArray: any = result;
         for(let i=0; i<feedBackArray.length; i++)
         {
-          console.log('meeting_id : ' + feedBackArray[i].meeting_id + '...' + feedBackArray[i].feedback_id + '...' + feedBackArray[i].title);
+          //console.log('meeting_id : ' + feedBackArray[i].meeting_id + '...' + feedBackArray[i].feedback_id + '...' + feedBackArray[i].title);
 
           let feedBack = {meetingId: feedBackArray[i].meeting_id,
                           meetingTitle: feedBackArray[i].title,
@@ -68,12 +68,13 @@ export class FeedbackPage {
     });
   }
 
-  submitFeedback(feedback: any) {
+  submitFeedback(feedback: any, response: string) {
     console.log('tjv...Submit clicked ...meetingId : ' + feedback.meetingId);
 
     console.log('tjv...this.pendingFeedbackArray : ' + JSON.stringify(this.pendingFeedbackArray));
 
-    feedback.response = 'GIVEN';
+    //feedback.response = 'GIVEN';
+    feedback.response = response;
     this.showLoader();
       this.feedbackProvider.addFeedback(feedback).then((result) => {
         console.log('tjv...Calling loading.dismiss()');

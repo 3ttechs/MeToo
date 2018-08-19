@@ -15,17 +15,29 @@
 		
 	<ion-list no-lines *ngIf="changeSettings === false" readonly="true">
 			<ion-item >
-				<ion-label ><b>Name			:</b>{{inputdataVal?.user_name}} </ion-label><br><br>
+				<ion-label ><b>Name			:</b></ion-label>
+				<ion-label >{{inputdataVal?.user_name}} </ion-label>
 			</ion-item> 
+
 			<ion-item >
-				<ion-label ><b>Login ID		:</b>{{inputdataVal?.login_id }}</ion-label><br><br>
+				<ion-label ><b>Login ID		:</b></ion-label>
+				<ion-label >{{inputdataVal?.login_id }}</ion-label>
 			</ion-item>
+
 			<ion-item >		
-				<ion-label ><b>Email		:</b>{{inputdataVal?.email || 'N/A'}}</ion-label><br><br>
+				<ion-label ><b>Email		:</b></ion-label>
+				<ion-label >{{inputdataVal?.email || 'N/A'}}</ion-label>
 			
 			</ion-item>
+
 			<ion-item>
-				<ion-label ><b>Phone		:</b>{{inputdataVal?.phone_no || 'N/A'}}</ion-label><br><br>
+				<ion-label ><b>Phone		:</b></ion-label>
+				<ion-label >{{inputdataVal?.phone_no || 'N/A'}}</ion-label>
+
+			</ion-item>
+			<ion-item>
+				<ion-label ><b>Login Method		:</b></ion-label>
+				<ion-label >{{inputdataVal?.login_by || 'N/A'}}</ion-label>
 
 			</ion-item> 
 			<!--ion-item>
@@ -36,39 +48,54 @@
 	</ion-list>
 	<form #settingsForm="ngForm" novalidate>
 		<ion-list no-lines *ngIf="changeSettings === true" >
+		<ion-item readonly="true">	
+			<!--{{inputdataVal?.login_id }}-->
+			<ion-label color ="dark">Login ID		:</ion-label>
+
+			<ion-input readonly="true" [(ngModel)]="inputdataVal.login_id" name="LoginID"  [ngModelOptions]="{standalone:true}"  
+			type="text" placeholder="Enter the login id" #LogidID="ngModel" spellcheck="false" required>
+			</ion-input>
+		</ion-item>
+
+		<ion-item readonly="true">	
+				
+			<ion-label color ="dark">Email ID		:</ion-label>
+			<ion-input readonly="true" color ="dark" [(ngModel)]="inputdataVal.email" name="Email"  [ngModelOptions]="{standalone:true}"  
+			type="text" placeholder="Enter the Email id" #EmailID="ngModel" spellcheck="false" required>
+			</ion-input>
+		</ion-item>
+
 		<ion-item >
-			<ion-label ><b>Name		:</b></ion-label> 
+			<ion-label color ="primary">Name		:</ion-label> 
 			<!-- [readonly]="changeSettings" "userDetails.UserName" [readonly]="changeSettings" readonly="true"-->
-			<ion-input [(ngModel)]="inputdataVal.user_name" name="UserName"  [ngModelOptions]="{standalone:true}"  type="text" placeholder="Enter the name" #UserName="ngModel" spellcheck="false" required>
+			<ion-input color ="primary" [(ngModel)]="inputdataVal.user_name" name="UserName"  [ngModelOptions]="{standalone:true}"  
+			type="text" placeholder="Enter the name" #UserName="ngModel" spellcheck="false" required>
 			</ion-input>
 		</ion-item>
-		<ion-item readonly="true">	
-		
-			<ion-label ><b>Login ID		:</b>{{inputdataVal?.login_id }}</ion-label>
-			<!--ion-input readonly="true" [(ngModel)]="inputdataVal.login_id" name="LoginID"  [ngModelOptions]="{standalone:true}"  type="text" placeholder="Enter the login id" #LogidID="ngModel" spellcheck="false" required>
-			</ion-input-->
-		</ion-item>
+
 		<ion-item>	
+				
+			<ion-label color ="primary">Phone Number		:</ion-label>
+			<ion-input color ="primary" [(ngModel)]="inputdataVal.phone_no" name="Phone"  [ngModelOptions]="{standalone:true}"  
+			type="number" placeholder="Enter the Phone number" #PhoneNumber="ngModel" spellcheck="false" 
+			pattern="^[0-9]{10}$" required>
+			</ion-input>
+		</ion-item>
+
+		<ion-item>
+                <ion-label color ="primary">Change Password</ion-label>
+                <ion-checkbox color ="primary" [(ngModel)]="changePwdFlag" (ionChange)="changePasswd($event.value)" name="changePasswd"  [ngModelOptions]="{standalone:true}"></ion-checkbox>
+        </ion-item>
+		<ion-item *ngIf="changePwdFlag===true">	
 		
-			<ion-label ><b>New Password		:</b></ion-label>
+			<ion-label color ="primary" >New Password		:</ion-label>
 			<!--name="password" placeholder="Enter password"  type="password"-->
-			<ion-input [(ngModel)]="inputdataVal.Password" name="NewPassword"  [ngModelOptions]="{standalone:true}"  type="password" placeholder="Enter password" #NewPassword="ngModel" spellcheck="false" required>
+			<ion-input color ="primary" [(ngModel)]="inputdataVal.Password" name="NewPassword"  [ngModelOptions]="{standalone:true}"  
+			type="password" placeholder="Enter password" #NewPassword="ngModel" spellcheck="false" required>
 			</ion-input>
 		</ion-item>
-		<ion-item readonly="true">	
-	
-			
-			<ion-label ><b>Email ID		:</b></ion-label>
-			<ion-input [(ngModel)]="inputdataVal.email" name="Email"  [ngModelOptions]="{standalone:true}"  type="text" placeholder="Enter the Email id" #EmailID="ngModel" spellcheck="false" required>
-			</ion-input>
-		</ion-item>
-		<ion-item>	
-	
-			
-			<ion-label ><b>Phone Number		:</b></ion-label>
-			<ion-input [(ngModel)]="inputdataVal.phone_no" name="Phone"  [ngModelOptions]="{standalone:true}"  type="number" placeholder="Enter the Phone number" #PhoneNumber="ngModel" spellcheck="false" required>
-			</ion-input>
-		</ion-item>
+		
+
 		<!--ion-item>	
 	
 			
@@ -98,18 +125,35 @@
 			
 					
 			
-				<ion-row >
-				   
-				  <ion-col col-8>
-					  <button ion-button round  type="submit" block (click)="ChangeParameters(settingsForm)" type="submit">Confirm
-	
-					  </button>
-				  </ion-col>
-				  
-				</ion-row>
+			<ion-row >
 				
-			</ion-grid>
+				<ion-col col-8>
+					<button ion-button round  type="submit" block (click)="ChangeParameters(settingsForm)" type="submit">Confirm
 
+					</button>
+				</ion-col>
+				
+			</ion-row>
+<!--
+			<ion-item>
+					<ion-label color ="primary">Email Notification: </ion-label>
+					<ion-toggle [(ngModel)]="isToggledEmail" (ionChange)="emailNotify()"></ion-toggle>
+			
+			</ion-item>
+			-->
+		</ion-grid>
+		<!--
+		<ion-item >
+				<ion-label>COLOR - BUSINESS</ion-label>
+				<ion-select [(ngModel)]="selectedColor">
+					<ion-option><button ion-button small color="primary"></button></ion-option>
+					<ion-option [ngStyle]="{ color: primary, backgroundColor: danger }">PRIMARY</ion-option>
+					<ion-option color="secondary"> #488aff</ion-option>
+					<ion-option color="danger">Danger Color</ion-option>
+					<ion-option color="facebook">Facebook Color</ion-option>
+				</ion-select>
+			</ion-item>
+			-->
 <br><br><br><br><br><br><br><br><br><br>
 		<ion-content padding>
 		

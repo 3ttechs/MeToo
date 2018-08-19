@@ -24,7 +24,7 @@ export class MeetingEditPage {
 
   private loading: any;
 
-  private meetingEdit: Meeting = {Title: "", Venue: "", Notes:"" };
+  private meetingEdit: Meeting = {Title: "", Venue: "", Notes:"", StartTimeStr: "", EndTimeStr: "", Category: "" };
   private submitted = false;
 
   constructor(
@@ -44,6 +44,10 @@ export class MeetingEditPage {
     this.meetingEdit.Venue = this.meeting.venue;
     this.meetingEdit.Notes = this.meeting.notes;
 
+    this.meetingEdit.StartTimeStr = this.meeting.startTimeStr;
+    this.meetingEdit.EndTimeStr = this.meeting.endTimeStr;
+    this.meetingEdit.Category = this.meeting.category;
+
     console.log('meeting.title : ' + this.meeting.title);
     this.showAttendees(userId, this.meeting.id);
   }
@@ -61,8 +65,7 @@ export class MeetingEditPage {
         let attendeesData: any = result;
         
         this.attendees = [];
-        this.attendeesCount = this.attendees.length;
-
+        
         let i: number = 0;
         attendeesData.forEach(attendeeData => {
                             
@@ -75,6 +78,9 @@ export class MeetingEditPage {
           this.attendees[i] = attendee;
           i = i+1;
         });
+
+        this.attendeesCount = this.attendees.length;
+        console.log('this.attendeesCount : ' + this.attendeesCount);
         
         this.loading.dismiss();
       });

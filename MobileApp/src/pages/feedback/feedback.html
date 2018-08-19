@@ -40,10 +40,10 @@
             <ion-item>
                 <div class="row"> 
                   <div class="col">
-                    <button ion-button type="Submit" (click)="submitFeedback(pendingFeedback)">Submit Feedback</button>  
+                    <button ion-button type="Submit" (click)="submitFeedback(pendingFeedback, 'GIVEN')">Submit Feedback</button>  
                   </div>
                   <div class="col"> 
-                    <button ion-button color='light' type="submit" (click)="submitFeedback(pendingFeedback)">Not Attended</button>
+                    <button ion-button color='light' type="submit" (click)="submitFeedback(pendingFeedback, 'DECLINE')">Not Attended</button>
                   </div> 
                 </div>
     

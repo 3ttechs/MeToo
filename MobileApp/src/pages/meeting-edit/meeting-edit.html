@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="meeting">{{meeting.title}}</ion-title>
+    <ion-title *ngIf="meeting">{{meeting.title}} {{meeting.startTimeStr}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -44,6 +44,30 @@
       <p ion-text [hidden]="venue.valid || submitted == false" color="danger" padding-left>
         Location is required
       </p>
+
+      <!--
+      <ion-item readOnly="true">
+        <ion-label stacked color="primary">Start Time</ion-label>
+        <ion-input readOnly="true" [(ngModel)]="meetingEdit.StartTimeStr" [ngModelOptions]="{standalone:true}" name="startTimeStr" type="text" placeholder="Start Time" #startTimeStr="ngModel" spellcheck="false" autocapitalize="off">
+        </ion-input>
+        
+      </ion-item>
+
+      <ion-item readOnly="true">
+        <ion-label stacked color="primary">End Time</ion-label>
+        <ion-input readOnly="true" [(ngModel)]="meetingEdit.EndTimeStr" [ngModelOptions]="{standalone:true}" name="endTimeStr" type="text" placeholder="End Time" #endTimeStr="ngModel" spellcheck="false" autocapitalize="off">
+        </ion-input>
+      </ion-item>
+
+      <ion-item readOnly="true">
+        <ion-label stacked color="primary">Category</ion-label>
+        <ion-input readOnly="true" [(ngModel)]="meetingEdit.Category" [ngModelOptions]="{standalone:true}" name="category" type="text" placeholder="Category" #category="ngModel" spellcheck="false" required>
+        </ion-input>
+        
+      </ion-item>
+    -->
+    
+
     </ion-list>
 
     <ion-grid>
@@ -57,13 +81,10 @@
     </ion-grid>
   
   </form>
-  <!--
-  <ion-list-header [hidden]="attendeesCount === 0">
-      Attendees
-  </ion-list-header>
 
-  <ion-list-header [hidden]="attendeesCount > 0">
-      No Attendees
+  
+  <ion-list-header>
+      Attendees
   </ion-list-header>
 
   <ion-list>
@@ -71,5 +92,5 @@
         {{attendee.name}}
       </ion-item>
   </ion-list>
-  -->
+
 </ion-content>

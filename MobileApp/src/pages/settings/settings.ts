@@ -24,9 +24,15 @@ export class SettingsPage {
   login_id : string;
   user_name : string;
   changeSettings : boolean = false;
+  changePwdFlag : boolean = false;
+  emailNotification : boolean = false;
+  isToggledEmail: boolean = false;
+  devFlag : boolean = true;
   //Name:string, Password: string,   Confirmpassword: string,   NewPassword : string,   Email: string,  PhoneNumber: string,
   
-  private userDetails: UserProfile = {UserID: "", LoginID: "", UserName: "", Password: "", Confirmpassword:"", NewPassword:"", Email:"", PhoneNumber:0 };
+  //private 
+  userDetails: UserProfile = {UserID: "", LoginID: "", UserName: "", Password: "", Confirmpassword:"", NewPassword:"", Email:"", PhoneNumber:0 };
+  //EmailNotification:"", ColorBusiness: "", ColorPersonal:""};
   constructor(
     //private http: Http,
     public navCtrl: NavController,
@@ -81,9 +87,20 @@ export class SettingsPage {
      
         this.userDetails.UserName = this.inputdataVal.user_name;
         this.userDetails.LoginID = this.inputdataVal.login_id;
-        this.userDetails.NewPassword = this.inputdataVal.Password;
+        //this.userDetails.NewPassword = this.inputdataVal.Password;
+       
+        //let passwd = this.inputdataVal.Password;
+        let passwd = "";
+        
+        
         let login_id = this.userDetails.LoginID;
-        let passwd = this.userDetails.NewPassword;
+
+        // Set new Passwd if changed
+        if (this.changePwdFlag === true) {
+          passwd = this.userDetails.NewPassword;
+          //console.log(passwd);
+        }
+        
         let user_name  = this.userDetails.UserName;
         let phone_no  = this.inputdataVal.phone_no;
         let email  = this.inputdataVal.email;
@@ -119,6 +136,50 @@ export class SettingsPage {
           
       })
     }
+  } 
+
+  changePasswd($event) {
+    console.log("Checkbox event below")
+    console.log($event)
+    this.changePwdFlag = $event;
+  }
+emailNotify(){
+  this.emailNotification = this.isToggledEmail;
+  console.log("Email Notification status")
+  console.log(this.emailNotification)
+
+}
+ changeUserSettings(){
+
+  //EmailNotification: Boolean,
+  //ColorBusiness: string,
+  //ColorPersonal: string
+   let emailNotif = this.emailNotification;
+   
+    // Update the Settings table for Email Nofication
+    let postParams = JSON.stringify({ EmailNotification:emailNotif, ColorBusiness:"", ColorPersonal:"" })
+        
+    console.log(postParams);
+    this.feedbackProvider.PostDataT(postParams, '/update_user_settings').then((result) => {
+      
+      //this.inputdataVal = result;
+      if(result === 0){
+        this.showAlert('Not Updated  !');
+        this.navCtrl.setRoot(SettingsPage);
+      
+      }
+      else{
+        this.showAlert('Updated');
+        this.navCtrl.setRoot(SettingsPage);
+        
+      }
+    },(err) =>{
+      alert(JSON.stringify(err));
+      });
+
+
+
+
   }
 
   showAlert(msg) {
