@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 import { UserData } from '../../providers/user-data';
 import { UserOptions } from '../../interfaces/user-options';
 import { TabsPage } from '../tabs-page/tabs-page';
@@ -26,10 +26,14 @@ export class LoginPage {
   login: UserOptions = { username: '', password: '', Confirmpassword: '', Email: '',PhoneNumber: '',Name: '' };
   submitted = false;
   data: any;
+  private loading: any;
+  private feedBackCountStr: any;
+  
   constructor( private device: Device, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider,
-    private storage: Storage) {
+    private storage: Storage,
+    private loadingCtrl: LoadingController) {
 
 
       console.log('constructor ');
@@ -102,6 +106,15 @@ export class LoginPage {
       // TODO: Feedback status by Lakshmy
       this.loginProvider.FeedbackStatus = 0;
       this.userData.login(this.login.username);
+
+      console.log('userid : ' + this.inputdataVal['user_id']);
+
+      this.getPendingFeedbackCountForUser(this.inputdataVal['user_id']);
+
+      /*
+      let pendingFeedbackCount = this.getPendingFeedbackCountForUser(this.inputdataVal['user_id']);
+      console.log('pendingFeedbackCount : ' + pendingFeedbackCount);
+
       if(this.loginProvider.FeedbackStatus==0)
       {
         this.navCtrl.push(TabsPage);
@@ -110,7 +123,39 @@ export class LoginPage {
       {
         this.navCtrl.push(FeedbackPage);
       }
+      */
+
     }
+  }
+
+  getPendingFeedbackCountForUser(userId: number) {
+    
+    this.loading = this.loadingCtrl.create({
+      content: 'Fetching Pending Feedback count...'
+    });
+
+    this.loading.present().then(()=>{
+      this.feedbackProvider.getPendingFeedbackCountForUser(userId).then(result => {
+
+        this.feedBackCountStr = result;
+        console.log('this.feedBackCountStr : ' + this.feedBackCountStr);
+        
+        this.loading.dismiss();
+
+        if(this.feedBackCountStr == 0)
+        {
+          console.log('TabsPage will be loaded');
+          this.navCtrl.push(TabsPage);
+        }
+        else
+        {
+          console.log('FeedbackPage will be loaded');
+          this.navCtrl.push(FeedbackPage);
+        }
+
+      });
+    });
+    
   }
 
   onSignup() {

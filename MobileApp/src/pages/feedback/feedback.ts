@@ -40,7 +40,6 @@ export class FeedbackPage {
     });
 
     this.loading.present().then(()=>{
-      console.log('tjv...Calling getPendingFeedbackListForUser()...userId : ' + userId);
       this.feedbackProvider.getPendingFeedbackListForUser(userId).then(result => {
         
         this.pendingFeedbackArray = [];
@@ -68,29 +67,40 @@ export class FeedbackPage {
     });
   }
 
+
   submitFeedback(feedback: any, response: string) {
     console.log('tjv...Submit clicked ...meetingId : ' + feedback.meetingId);
 
-    console.log('tjv...this.pendingFeedbackArray : ' + JSON.stringify(this.pendingFeedbackArray));
+    //console.log('tjv...this.pendingFeedbackArray : ' + JSON.stringify(this.pendingFeedbackArray));
 
     //feedback.response = 'GIVEN';
     feedback.response = response;
     this.showLoader();
       this.feedbackProvider.addFeedback(feedback).then((result) => {
-        console.log('tjv...Calling loading.dismiss()');
+        
         this.loading.dismiss();
         console.log(result);
         
         if(result === 1){
-          console.log('result === Success');
-          
+                    
           this.showAlert('Feedback Added');
-          this.navCtrl.push(TabsPage);
+          //this.navCtrl.push(TabsPage);
+
+          if(this.pendingFeedbackArray.length <= 1)
+          {
+            this.navCtrl.push(TabsPage);
+          }
+          else
+          {
+            console.log('FeedbackPage will be loaded');
+            this.navCtrl.push(FeedbackPage);
+          }
         }
         else{
           console.log('result != 0');
           this.showAlert('Feedback NOT Added');
-          this.navCtrl.push(TabsPage);
+          //this.navCtrl.push(TabsPage);
+          this.navCtrl.push(FeedbackPage);
         }
         
       }, (err) => {

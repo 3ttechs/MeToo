@@ -46,9 +46,20 @@ def get_feedback_count(user_id):
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)
 
+    
     query = 'select feedback.feedback_id from feedback, meeting, user, attendee '
     query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
-    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now'))  "
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = '"+user_id +"' and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now'))  "
+    #print(query)
+    
+    '''
+    query = 'select meeting.meeting_id,meeting.category,meeting.title,meeting.venue,meeting.start_date,meeting.start_time,meeting.end_date,meeting.end_time,meeting.notes as meeting_notes,meeting.organiser_response, '
+    query += 'feedback.attendee_id, user.user_name as attendee_name,user.phone_no, user.email,attendee.attendee_response, '
+    query += 'feedback.feedback_id,feedback.star_rating,feedback.note,feedback.feedback_response '
+    query += 'from feedback, meeting, user, attendee '
+    query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = '"+user_id +"' and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
+    '''
 
     result = run_query(query)
     return json.dumps(len(result)), 200
@@ -68,7 +79,7 @@ def ask_for_feedback(user_id):
     query += 'feedback.feedback_id,feedback.star_rating,feedback.note,feedback.feedback_response '
     query += 'from feedback, meeting, user, attendee '
     query += 'where meeting.meeting_id in ('+meeting_ids_str+') '
-    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
+    query += "and meeting.meeting_id = feedback.meeting_id and user.user_id = '"+user_id +"'  and user.user_id = feedback.attendee_id and attendee.feedback_id=feedback.feedback_id and feedback.feedback_response='NOT_GIVEN' and organiser_response='ACTIVE' and attendee_response='ACCEPT' and (date(start_date, start_time) < date('now')) order by start_date, start_time "
 
     result = run_query(query)
     if (len(result)<=0):

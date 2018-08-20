@@ -11,8 +11,8 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 export class UtilityProvider {
   
   private loading: any;
-  public apiUrl: string = 'http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
-  //public apiUrl: string = 'http://localhost:5000';
+  //public apiUrl: string = 'http://ec2-18-191-60-101.us-east-2.compute.amazonaws.com:5000';
+  public apiUrl: string = 'http://localhost:5000';
  
   constructor(
     private http: Http,

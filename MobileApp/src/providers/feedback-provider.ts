@@ -25,6 +25,18 @@ export class FeedbackProvider {
     })
   }
 
+  public getPendingFeedbackCountForUser(userId: number){
+    return new Promise((resolve,reject) =>{
+      this.http.get(this.apiUrl + '/get_feedback_count/user_id=' + userId)
+        .subscribe(res=>{
+          resolve(res.json());
+        },(err) => {
+          console.log(err);
+          reject(err);
+        });
+    }) 
+  }  
+
   public getPendingFeedbackListForUser(userId: number){
     return new Promise((resolve,reject) =>{
       this.http.get(this.apiUrl + '/ask_for_feedback/user_id=' + userId)
