@@ -7,22 +7,22 @@
   <ion-grid padding>
   <div *ngIf="meeting" >      
       <button ion-item full icon-only color='light'>
-          <ion-icon small item-left color='primary' name="information-circle"></ion-icon>
+          <ion-icon small item-left name="home"></ion-icon>
           <h3>{{meeting.title}}</h3>
         </button>  
 
         <button ion-item full icon-only color='light'>
-            <ion-icon small item-left color='primary' name="ribbon"></ion-icon>
+            <ion-icon small item-left name="home"></ion-icon>
             <h3>{{meeting.organiserName}}</h3>
           </button>  
 
           <button ion-item full icon-only color='light'>
-            <ion-icon  small item-left color='primary' name="calendar"></ion-icon>
+            <ion-icon  small item-left name="home"></ion-icon>
             <h3>{{meeting.startDate}}, {{meeting.startTime}} - {{meeting.endTime}}</h3>
           </button>  
 
           <button ion-item full icon-only color='light'>
-            <ion-icon  small item-left color='primary' name="locate"></ion-icon>
+            <ion-icon  small item-left name="home"></ion-icon>
           <h3>{{meeting.venue}}</h3>
         </button>  
         <button *ngIf="meeting.isPast === 'Yes'" ion-button full icon-only color='primary'>
@@ -103,13 +103,15 @@
   <ion-fab bottom left #fab>
       <button ion-fab><ion-icon name="share"></ion-icon></button>
       <ion-fab-list side="right">
-        <button ion-fab color="google" (click)="openSocial('Google+', fab)"><ion-icon name="logo-googleplus"></ion-icon></button>
-        <button ion-fab color="twitter" (click)="openSocial('Twitter', fab)"><ion-icon name="logo-twitter"></ion-icon></button>
-        <button ion-fab color="facebook" (click)="openSocial('Facebook', fab)"><ion-icon name="logo-facebook"></ion-icon></button>
-        <!--<button ion-fab color="whatsup" (click)="fnWhatsapp()"><ion-icon name="logo-facebook"></ion-icon></button>-->
-        <!--<button onclick="window.plugins.socialsharing.shareViaWhatsApp('Message via WhatsApp', null /* img */, null /* url */, function() {console.log('share ok')}, function(errormsg){alert(errormsg)})">msg via WhatsApp (with errcallback)</button>
-        <button href="whatsapp://send?text=The text to share!" data-action="share/whatsapp/share"><ion-icon name="logo-googleplus"></ion-icon></button>
-        -->
+        <button ion-fab color="google" (click)="fnGoogle()"><ion-icon name="logo-googleplus"></ion-icon></button>
+        <button ion-fab color="twitter" (click)="fntwitterapp()"><ion-icon name="logo-twitter"></ion-icon></button>
+        <button ion-fab color="facebook" (click)="fnFBapp()"><ion-icon name="logo-facebook"></ion-icon></button>
+        <button ion-fab color="secondary" (click)="fnWhatsapp()">
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </button>
+        <button ion-fab color="primary" (click)="fnSMSmsg()">
+          <ion-icon name="md-text"></ion-icon>
+        </button>
       </ion-fab-list>
     </ion-fab>
 </ion-content>

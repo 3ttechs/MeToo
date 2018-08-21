@@ -11,7 +11,6 @@ import { MapPage } from '../pages/map/map';
 import { SchedulePage } from '../pages/schedule/schedule';
 import { MeetingPage } from '../pages/meeting/meeting';
 import { EventModalPage } from '../pages/event-modal/event-modal';
-
 import { ScheduleFilterPage } from '../pages/schedule-filter/schedule-filter';
 import { MeetingDetailPage } from '../pages/meeting-detail/meeting-detail';
 import { SignupPage } from '../pages/signup/signup';
@@ -21,17 +20,17 @@ import { TutorialPage } from '../pages/tutorial/tutorial';
 import { VisionPage } from '../pages/vision/vision';
 import { SettingsPage } from '../pages/settings/settings';
 import { MeetingEditPage } from '../pages/meeting-edit/meeting-edit';
-import {AddContactsFromphonePage} from '../pages/AddContactsFromPhone/AddContactsFromphone';
-
+import { SocialSharing } from '@ionic-native/social-sharing';  // ChandraRao
 import { NotificationPage } from '../pages/notification/notification';
 import { ContactsPage } from '../pages/contacts/contacts';
+import {AddContactsFromphonePage} from '../pages/AddContactsFromPhone/AddContactsFromphone';
 
 import { ContactProvider } from '../providers/contact-provider';
 import { DummyLoginProvider } from '../providers/dummy-login-provider';
 import { MeetingProvider } from '../providers/meeting-provider';
 import { FeedbackProvider } from '../providers/feedback-provider';
 import { UtilityProvider } from '../providers/utility-provider';
-
+import {Contacts} from '@ionic-native/contacts';  // ChandraRao
 import { UserData } from '../providers/user-data';
 import { NgCalendarModule  } from 'ionic2-calendar';
 
@@ -127,7 +126,8 @@ firebase.initializeApp(firebaseConfig)
     NotificationPage,
     ContactsPage,  
     ForgotPasswordPage,
-    MeetingEditPage 
+    MeetingEditPage,
+    AddContactsFromphonePage
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -140,7 +140,9 @@ firebase.initializeApp(firebaseConfig)
     SplashScreen,
     UtilityProvider,
     GooglePlus,
-    Device
+    Device,
+    Contacts, // ChandraRao
+    SocialSharing // ChandraRao
   ]
 })
 export class AppModule { }
