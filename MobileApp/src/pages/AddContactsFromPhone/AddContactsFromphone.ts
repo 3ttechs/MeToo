@@ -31,7 +31,7 @@ export class AddContactsFromphonePage {
             if (pickSelectedContact.phoneNumbers === null) {
                 this.contFromPhone.phone="1234567890";
             } else {
-                this.contFromPhone.phone=JSON.stringify(pickSelectedContact.phoneNumbers[this.i].value).replace('"',"");
+                this.contFromPhone.phone=JSON.stringify(pickSelectedContact.phoneNumbers[this.i].value).replace('"','').replace('"','');
             }
             if (pickSelectedContact.name === null) {
                 this.contFromPhone.name="No Name";
@@ -39,7 +39,8 @@ export class AddContactsFromphonePage {
             this.contFromPhone.name=pickSelectedContact.displayName;
         }
             if (pickSelectedContact.emails === null) {
-                this.contFromPhone.email='noreplay@gmail.com';
+                //this.contFromPhone.email='noreplay@gmail.com';
+                this.contFromPhone.email=JSON.stringify(pickSelectedContact.phoneNumbers[this.i].value).replace('"','').replace('"','') +'@MeeToo.com';
             } else {
                 this.contFromPhone.email= JSON.stringify(pickSelectedContact.emails[this.i].value);
             }
@@ -73,9 +74,9 @@ export class AddContactsFromphonePage {
             this.feedbackProvider.PostData(AddContactsFromMobile, "/add_contact").then((result) => {
                 this.Mydata = result;
                 if (this.Mydata === 0) {
-                  this.feedbackProvider.showAlert('error', "Add Contact Details");
+                  this.feedbackProvider.showAlert('Already contact exists', "Error");
                 } else {
-                    this.feedbackProvider.showAlert('Added sucessfully', "Contact From phone");
+                    this.feedbackProvider.showAlert('Contact added sucessfully', "Message");
                     this.navCtrl.setRoot(ContactsPage);
                 }
               }).catch(function (error) {

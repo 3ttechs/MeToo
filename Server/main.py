@@ -262,10 +262,11 @@ def send_notification_method():
     # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
     #registration_id = "DgJjbmgqXYaUYCszPdt5DzJAf0i2"
     #registration_id ="rising-timing-211502"
-    registration_id ="AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00"
+    #registration_id ="AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00"
     #registration_id = "863448035765798"    
     #registration_id = "863448035765806"    
     #registration_id = "33356b0b062301e3"
+    registration_id = "7d51d344-295b-43bb-8662-480359093488"
 
     message_title = "Uber update"
     message_body = "Hi john, your customized news for today is ready"

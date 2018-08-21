@@ -25,6 +25,13 @@ export class MeetingDetailPage {
   private meeting: any;
   private attendees: any;
   public msgSentToMedia: String = '';
+
+  public  msgTitle: String = '';
+  public msgStartTime: String = '';
+  public msgEndTime: String = '';
+  public msgVenue: String = '';
+  public msgOrg: String = '';
+
   private loading: any;
 
   constructor(
@@ -54,9 +61,16 @@ export class MeetingDetailPage {
   SocialSharingData(MessageSentMediaType,  img, link) {
     try {
 
-      this.msgSentToMedia = 'Whats app Message ';
+      this.msgTitle = "Title : "+ this.meeting.title.toString();
+      this.msgStartTime="Start DateTime : "+ this.meeting.startDate.toString();
+      this.msgEndTime=this.meeting.startTime.toString();  // this is start time 
+      this.msgVenue="Venue : "+ this.meeting.venue.toString();
+      this.msgOrg="Organiser : "+ this.meeting.organiserName.toString();
 
-      if (MessageSentMediaType == 'w'){
+      this.msgSentToMedia = this.msgTitle.toString() + ', ' +this.msgStartTime.toString()+
+       ' - '+ this.msgEndTime.toString()+', '+this.msgVenue.toString() +','+this.msgOrg.toString() +'.';
+      
+      if (MessageSentMediaType == 'w'){ 
         window['plugins'].socialsharing
           .shareViaWhatsApp(this.msgSentToMedia.toString(), null, null);
         }
