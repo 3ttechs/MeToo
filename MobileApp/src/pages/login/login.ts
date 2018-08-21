@@ -12,9 +12,11 @@ import { DummyLoginProvider } from '../../providers/dummy-login-provider';
 import {GooglePlus} from '@ionic-native/google-plus';
 //import {AngularFireModule} from 'angularfire2';
 import firebase from 'firebase';
-import { Device } from '@ionic-native/device';
+//import { Device } from '@ionic-native/device';
 import { Storage } from '@ionic/storage';
 import { FeedbackPage } from '../feedback/feedback';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+
 
 @Component({
   selector: 'page-user',
@@ -28,13 +30,18 @@ export class LoginPage {
   data: any;
   private loading: any;
   private feedBackCountStr: any;
-  
-  constructor( private device: Device, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
+  private my_uuid: any;
+  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider,
     private storage: Storage,
     private loadingCtrl: LoadingController) {
 
+    this.uniqueDeviceID.get()
+    .then((uuid: any) => {
+      this.my_uuid = uuid;
+    })
+    .catch((error: any) => console.log(error));
 
       console.log('constructor ');
       this.storage.length().then((result) => {
@@ -76,7 +83,7 @@ export class LoginPage {
     this.submitted = true;
     if (form.valid) {
       let LoginData = JSON.stringify({
-        login_id: this.login.username, passwd: this.login.password, uuid: this.device.uuid
+        login_id: this.login.username, passwd: this.login.password, uuid: this.my_uuid
       });
   
         this.feedbackProvider.PostData(LoginData,"/login").then((result) => {

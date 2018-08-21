@@ -15,6 +15,7 @@ from user_services import *
 from feedback_services import *
 from social_services import *
 from global_params import *
+from pyfcm import FCMNotification
 
 #from  login_with_social import *
 
@@ -92,7 +93,6 @@ def update_user_profile_method():    return(update_user_profile())
 @app.route('/add_update_settings', methods=['POST'])
 def add_update_settings_method(): return(add_update_settings())
 
-
 #http://localhost:5000/get_user_details/user_id=1
 @app.route('/get_user_details/user_id=<user_id>', methods=['GET'])
 def get_user_details_method(user_id): return(get_user_details(user_id))
@@ -119,8 +119,6 @@ def delete_contact_method(user_id,contact_id): return(delete_contact(user_id,con
 -------------------------------------------------------------------------------
 '''
 ''' 
-
-
 {
   "organiser_id":1,
   "title":"a",
@@ -259,13 +257,12 @@ def google_login_method():  return(google_login())
 #http://localhost:5000/send_notification
 @app.route('/send_notification', methods=['GET'])
 def send_notification_method():  
-    from pyfcm import FCMNotification
     # https://console.firebase.google.com/u/0/project/rising-timing-211502/settings/cloudmessaging/android:io.ionic.conferenceapp
     push_service = FCMNotification(api_key="AAAArR8DYPc:APA91bGSo4F9nDSCLv3iECImRj0pRK-zWfIsl_WlOJxy8rUqFWrSwRzWAvpLUrQ2QF1bLKNWZLnE898s7Jz-_nY5prq2nWTLmNhQkBLgWPB1te1G02xmrmmjTG2WV6j1LhMGr3r7JS7qRDNHnLgScTbRFYx-tET4LA")
     # Your api-key can be gotten from:  https://console.firebase.google.com/project/<project-name>/settings/cloudmessaging
-    registration_id = "DgJjbmgqXYaUYCszPdt5DzJAf0i2"
+    #registration_id = "DgJjbmgqXYaUYCszPdt5DzJAf0i2"
     #registration_id ="rising-timing-211502"
-    #registration_id ="AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00"
+    registration_id ="AIzaSyCGrUjJflFZ1ZatMgnegq4kzrLPMYvRI00"
     #registration_id = "863448035765798"    
     #registration_id = "863448035765806"    
     #registration_id = "33356b0b062301e3"
@@ -292,3 +289,4 @@ if __name__ == '__main__':
         if(prop=='main_server_port'): main_server_port =props[prop]
 
     app.run(host=main_server_host, port=main_server_port)
+

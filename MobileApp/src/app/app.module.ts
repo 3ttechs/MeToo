@@ -41,6 +41,7 @@ import {GooglePlus} from '@ionic-native/google-plus';
 import {AngularFireModule} from 'angularfire2';
 import firebase from 'firebase';
 import { Device } from '@ionic-native/device';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 
 //import {AngularFireAuthModule} from 'angularfire2/auth';
 
@@ -141,6 +142,7 @@ firebase.initializeApp(firebaseConfig)
     UtilityProvider,
     GooglePlus,
     Device,
+    UniqueDeviceID,
     Contacts, // ChandraRao
     SocialSharing // ChandraRao
   ]
