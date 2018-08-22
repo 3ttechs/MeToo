@@ -7,28 +7,28 @@
   <ion-grid padding>
   <div *ngIf="meeting" >      
       <button ion-item full icon-only color='light'>
-          <ion-icon small item-left name="home"></ion-icon>
+          <ion-icon color='primary' item-left name="information-circle"></ion-icon>
           <h3>{{meeting.title}}</h3>
         </button>  
 
         <button ion-item full icon-only color='light'>
-            <ion-icon small item-left name="home"></ion-icon>
+            <ion-icon color='primary' item-left name="ribbon"></ion-icon>
             <h3>{{meeting.organiserName}}</h3>
           </button>  
 
           <button ion-item full icon-only color='light'>
-            <ion-icon  small item-left name="home"></ion-icon>
+            <ion-icon color='primary'  item-left name="calendar"></ion-icon>
             <h3>{{meeting.startDate}}, {{meeting.startTime}} - {{meeting.endTime}}</h3>
           </button>  
 
           <button ion-item full icon-only color='light'>
-            <ion-icon  small item-left name="home"></ion-icon>
+            <ion-icon color='primary'  item-left name="locate"></ion-icon>
           <h3>{{meeting.venue}}</h3>
         </button>  
         <button *ngIf="meeting.isPast === 'Yes'" ion-button full icon-only color='primary'>
           Attendees and Feedback
         </button>
-        <button *ngIf="meeting.isPast === 'No'" ion-button full icon-only color='primary'>
+        <button *ngIf="meeting.isPast === 'No'" ion-button full icon-only color='#aaaaaa'>
           Attendees and Meeting Response
         </button> 
   </div>
@@ -100,7 +100,7 @@
   </ion-list>
   -->
 
-  <ion-fab bottom left #fab>
+  <ion-fab bottom right #fab>
       <button ion-fab><ion-icon name="share"></ion-icon></button>
       <ion-fab-list side="right">
         <button ion-fab color="google" (click)="fnGoogle()"><ion-icon name="logo-googleplus"></ion-icon></button>
