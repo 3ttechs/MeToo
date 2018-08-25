@@ -184,7 +184,7 @@ export class MeetingDetailPage {
       let attendee: any;
 
       if (this.meeting.isPast === 'Yes') {
-        let feedbackResponse = attendeeData.feedback_response; //['feedback.feedback_response']
+        let feedbackResponse = ''; attendeeData.feedback_response; //['feedback.feedback_response']
         if (attendeeData.feedback_response === 'NOT_GIVEN')
           feedbackResponse = 'Not Given';
         else if (attendeeData.feedback_response === 'GIVEN')
