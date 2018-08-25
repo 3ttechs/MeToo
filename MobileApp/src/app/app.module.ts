@@ -43,6 +43,8 @@ import firebase from 'firebase';
 import { Device } from '@ionic-native/device';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 
+import { Facebook } from '@ionic-native/facebook';
+
 //import {AngularFireAuthModule} from 'angularfire2/auth';
 
 export const firebaseConfig ={
@@ -144,7 +146,8 @@ firebase.initializeApp(firebaseConfig)
     Device,
     UniqueDeviceID,
     Contacts, // ChandraRao
-    SocialSharing // ChandraRao
+    SocialSharing, // ChandraRao
+    Facebook
   ]
 })
 export class AppModule { }

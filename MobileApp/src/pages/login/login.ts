@@ -16,6 +16,7 @@ import firebase from 'firebase';
 import { Storage } from '@ionic/storage';
 import { FeedbackPage } from '../feedback/feedback';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+import { Facebook } from '@ionic-native/facebook';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class LoginPage {
   private loading: any;
   private feedBackCountStr: any;
   private my_uuid: any;
-  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData,
+  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider,
     private storage: Storage,
@@ -223,6 +224,44 @@ export class LoginPage {
   }
 
   onFBLogin(form: NgForm) {
+    // App_ID: 1042366875925525
+    // App_Secret: b7f65dbb1f82ba2c14e15b2fef99d479
+    // https://www.youtube.com/watch?v=_PGob2ypXJc
+
+    this.facebook.login(['email']).then(res=>{
+      const fc=firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
+      firebase.auth().signInWithCredential(fc).then(fs=>{
+        alert('LOGIN Succesful, User ID = '+fs.email)
+        let LoginData = JSON.stringify({
+          login_id: fs.email, user_name: fs.displayName
+        });
+        this.feedbackProvider.PostData(LoginData,"/facebook_login").then((result) => {
+          this.data = result;
+          this.login_method();
+        }).catch(function (error) {
+          this.feedbackProvider.showAlert(JSON.stringify(error),"Error");
+        });
+
+        if (LoginData.length > 0) {
+          this.storage.clear();
+          this.storage.set('login_id1', fs.email);
+          this.storage.set('passwd1', '0');
+  
+        } 
+
+
+      }).catch(ferr=>{
+        alert("firebase errc")
+        alert(JSON.stringify(ferr))
+      })
+    }).catch(err=>{
+      alert(JSON.stringify(err))
+    })
+
+
+
+
+
     this.submitted = true;
 
     if (form.valid) {

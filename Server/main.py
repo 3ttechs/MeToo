@@ -254,6 +254,10 @@ def get_notifications_list_method(user_id): return(get_notifications_list(user_i
 @app.route('/google_login', methods=['POST'])
 def google_login_method():  return(google_login())
 
+@app.route('/facebook_login', methods=['POST'])
+def facebook_login_method():  return(facebook_login())
+
+
 #http://localhost:5000/send_notification
 @app.route('/send_notification', methods=['GET'])
 def send_notification_method():  

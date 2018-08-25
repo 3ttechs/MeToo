@@ -24,6 +24,7 @@
     "@ionic-native/contacts": "^4.12.0",
     "@ionic-native/core": "^4.3.1",
     "@ionic-native/device": "^4.12.0",
+    "@ionic-native/facebook": "^4.12.0",
     "@ionic-native/google-plus": "^4.12.0",
     "@ionic-native/in-app-browser": "^4.3.1",
     "@ionic-native/local-notifications": "^4.10.0",
@@ -42,6 +43,7 @@
     "cordova-plugin-contacts": "^3.0.1",
     "cordova-plugin-crosswalk-webview": "^2.4.0",
     "cordova-plugin-device": "^1.1.7",
+    "cordova-plugin-facebook4": "^2.3.0",
     "cordova-plugin-googleplus": "^5.3.0",
     "cordova-plugin-inappbrowser": "^1.7.2",
     "cordova-plugin-ionic-keyboard": "^2.1.2",
@@ -100,7 +102,12 @@
       },
       "cordova-plugin-contacts": {},
       "cordova-plugin-uniquedeviceid": {},
-      "cordova-plugin-x-socialsharing": {}
+      "cordova-plugin-x-socialsharing": {},
+      "cordova-plugin-facebook4": {
+        "APP_ID": "1042366875925525",
+        "APP_NAME": "MeToo",
+        "ANDROID_SDK_VERSION": "4.+"
+      }
     }
   }
 }
