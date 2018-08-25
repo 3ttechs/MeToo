@@ -48,10 +48,10 @@
       <ion-item-sliding *ngFor="let meeting of group.meetings" #slidingItem [attr.track]="meeting.category" [hidden]="meeting.hide">
 
         <button ion-item (click)="goToMeetingDetail(meeting)">
-          <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>
-          <ion-icon small item-right color='secondary' name="checkmark-circle-outline" *ngIf="meeting.attendeeResponse === 'ACCEPT'"></ion-icon>
-          <ion-icon small item-right color='danger' name="close-circle" *ngIf="meeting.attendeeResponse === 'DECLINE'"></ion-icon>
-          <ion-icon small item-right color='dark' name="help-circle" *ngIf="meeting.attendeeResponse === 'NOT_GIVEN'"></ion-icon>
+          <ion-icon item-right color="primary" name="ribbon" *ngIf="meeting.isOrganiser === 'Yes'"></ion-icon>          
+          <ion-icon  item-right color='secondary' name="checkmark-circle-outline" *ngIf="meeting.isOrganiser === 'No' && meeting.attendeeResponse === 'ACCEPT'"></ion-icon>
+          <ion-icon  item-right color='light_danger' name="close-circle" *ngIf="meeting.isOrganiser === 'No' && meeting.attendeeResponse === 'DECLINE'"></ion-icon>
+          <ion-icon  item-right color='light' name="remove-circle" *ngIf="meeting.isOrganiser === 'No' && meeting.attendeeResponse === 'NOT_GIVEN'"></ion-icon>
           <h2>{{meeting.title}}</h2>
           <p>{{meeting.startTimeStr}}  &mdash; {{meeting.endTimeStr}}</p>
           <p>Venue: {{meeting.venue}}</p>
