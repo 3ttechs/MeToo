@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="meeting">{{meeting.title}} {{meeting.startTimeStr}}</ion-title>
+    <ion-title *ngIf="meeting">{{meeting.title}} {{meeting.startTimeStr}}&mdash;{{meeting.endTimeStr}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -83,9 +83,12 @@
   </form>
 
   
-  <ion-list-header>
+  <!--ion-list-header>
       Attendees
-  </ion-list-header>
+  </ion-list-header-->
+  <button  ion-button full icon-only color='light'> <!--#aaaaaa-->
+    Attendees
+  </button>
 
   <ion-list>
       <ion-item *ngFor="let attendee of attendees">

@@ -31,6 +31,7 @@ export class MeetingDetailPage {
   public msgEndTime: String = '';
   public msgVenue: String = '';
   public msgOrg: String = '';
+  public msgFooter: String = '';
 
   private loading: any;
 
@@ -62,13 +63,14 @@ export class MeetingDetailPage {
     try {
 
       this.msgTitle = "Title : "+ this.meeting.title.toString();
-      this.msgStartTime="Start DateTime : "+ this.meeting.startDate.toString();
+      this.msgStartTime="Start Date/Time : "+ this.meeting.startDate.toString();
       this.msgEndTime=this.meeting.startTime.toString();  // this is start time 
       this.msgVenue="Venue : "+ this.meeting.venue.toString();
       this.msgOrg="Organiser : "+ this.meeting.organiserName.toString();
+      this.msgFooter="Link : http://metoo.com"
 
       this.msgSentToMedia = this.msgTitle.toString() + ', ' +this.msgStartTime.toString()+
-       ' - '+ this.msgEndTime.toString()+', '+this.msgVenue.toString() +','+this.msgOrg.toString() +'.';
+       ' - '+ this.msgEndTime.toString()+', '+this.msgVenue.toString() +','+this.msgOrg.toString() +','+this.msgFooter+'.';
       
       if (MessageSentMediaType == 'w'){ 
         window['plugins'].socialsharing
@@ -182,12 +184,12 @@ export class MeetingDetailPage {
       let attendee: any;
 
       if (this.meeting.isPast === 'Yes') {
-        let feedbackResponse = attendeeData['feedback.feedback_response'];
-        if (feedbackResponse === 'NOT_GIVEN')
+        let feedbackResponse = attendeeData.feedback_response; //['feedback.feedback_response']
+        if (attendeeData.feedback_response === 'NOT_GIVEN')
           feedbackResponse = 'Not Given';
-        else if (feedbackResponse === 'GIVEN')
+        else if (attendeeData.feedback_response === 'GIVEN')
           feedbackResponse = 'Given';
-        else if (feedbackResponse === 'DECLINE')
+        else if (attendeeData.feedback_response === 'DECLINE')
           feedbackResponse = 'Did not attend meeting';
         else { }
 
@@ -197,16 +199,17 @@ export class MeetingDetailPage {
           phoneNo: attendeeData['user.phone_no'],
           feedbackNote: attendeeData['feedback.note'],
           starRating: attendeeData['feedback.star_rating'],
-          feedbackResponse: feedbackResponse
+          feedbackResponse: attendeeData['feedback.star_rating'],
+          isOrganiser : attendeeData.Is_Organiser
         };
       }
       else {
         let attendeeResponse = attendeeData.attendee_response;
-        if (attendeeResponse === 'NOT_GIVEN')
+        if (attendeeData.attendee_response === 'NOT_GIVEN')
           attendeeResponse = 'Yet to respond';
-        else if (attendeeResponse === 'DECLINE')
+        else if (attendeeData.attendee_response === 'DECLINE')
           attendeeResponse = 'Declined';
-        else if (attendeeResponse === 'ACCEPT')
+        else if (attendeeData.attendee_response === 'ACCEPT')
           attendeeResponse = 'Accepted';
         else { }
 
@@ -214,7 +217,8 @@ export class MeetingDetailPage {
           name: attendeeData.attendee_name,
           email: attendeeData['user.email'],
           phoneNo: attendeeData['user.phone_no'],
-          attendeeResponse: attendeeResponse
+          attendeeResponse: attendeeResponse,
+          isOrganiser : attendeeData.Is_Organiser
         };
         console.log('attendeeData.attendee_response : ' + attendeeData.attendee_response);
       }

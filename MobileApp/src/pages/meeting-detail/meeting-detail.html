@@ -1,54 +1,50 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="meeting && meeting.isPast === 'Yes'">Past Meeting Details</ion-title>
-    <ion-title *ngIf="meeting && meeting.isPast === 'No'">Upcoming Meeting Details</ion-title>
+<div *ngIf="meeting" > 
+    <ion-label  color ='white' bold > 
+        {{meeting.startDate  | date: 'dd MMM'}} ,  {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}
+    </ion-label>
+    </div>
   </ion-navbar>
 
   <ion-grid padding>
   <div *ngIf="meeting" >      
       <button ion-item full icon-only color='light'>
-          <ion-icon color='primary' item-left name="information-circle"></ion-icon>
-          <h3>{{meeting.title}}</h3>
+          <h2>{{meeting.title}}</h2>
+          <p>Venue: {{meeting.venue}}</p>
+          <p><ion-icon small color='primary' item-left name="ribbon"></ion-icon>{{meeting.organiserName}}</p>
         </button>  
-
-        <button ion-item full icon-only color='light'>
-            <ion-icon color='primary' item-left name="ribbon"></ion-icon>
-            <h3>{{meeting.organiserName}}</h3>
-          </button>  
-
-          <button ion-item full icon-only color='light'>
-            <ion-icon color='primary'  item-left name="calendar"></ion-icon>
-            <h3>{{meeting.startDate}}, {{meeting.startTime}} - {{meeting.endTime}}</h3>
-          </button>  
-
-          <button ion-item full icon-only color='light'>
-            <ion-icon color='primary'  item-left name="locate"></ion-icon>
-          <h3>{{meeting.venue}}</h3>
-        </button>  
-        <button *ngIf="meeting.isPast === 'Yes'" ion-button full icon-only color='primary'>
-          Attendees and Feedback
-        </button>
-        <button *ngIf="meeting.isPast === 'No'" ion-button full icon-only color='#aaaaaa'>
-          Attendees and Meeting Response
-        </button> 
   </div>
 </ion-grid>
 </ion-header>
 
 <ion-content padding>
+
 <ion-list>
     <ion-grid fixed>
     <ion-item *ngFor="let attendee of attendees">
       <ion-avatar item-start>
-        <img src="assets/img/appicon_o.png">
+        <!--img src="assets/img/appicon_o.png"-->
+        <ion-icon *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse === 'Accepted' && attendee.isOrganiser === 'No'" color='secondary' name="checkmark-circle-outline"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse === 'Declined' && attendee.isOrganiser === 'No'" color='danger' name="close-circle"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse === 'Yet to respond' && attendee.isOrganiser === 'No'" color='dark' name="help-circle"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Given'" color='secondary' name="checkmark-circle-outline"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Not Given'" color='dark' name="help-circle"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Did not attend meeting'" color='danger' name="close-circle"></ion-icon>
+        <ion-icon *ngIf="meeting.isPast === 'No' && attendee.isOrganiser === 'Yes'" color='primary' name="ribbon"></ion-icon>
       </ion-avatar>
       <h2>Name: {{attendee.name}}</h2>
-      <h3>Email: {{attendee.email}}</h3>
-      <h3>Phone: {{attendee.phoneNo}}</h3>
-      <p *ngIf="meeting.isPast === 'Yes'">Feedback Response: {{attendee.feedbackResponse}}</p>
-      <h3 *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Given'">Rating: {{attendee.starRating}} <ion-icon name="star"></ion-icon></h3>
-      <p *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Given'">Feedback: {{attendee.feedbackNote}}</p>
-      <p *ngIf="meeting.isPast === 'No'">Invitation Response: {{attendee.attendeeResponse}}</p>
+      <!--h3>Email: {{attendee.email}}</h3-->
+      <!--h3>Phone: {{attendee.phoneNo}}</h3-->
+      <!--p *ngIf="meeting.isPast === 'Yes'">Feedback Response: {{attendee.feedbackResponse}}</p-->
+      <h3 *ngIf="meeting.isPast === 'Yes' ">Rating: {{attendee.starRating}} <ion-icon name="star"></ion-icon></h3>
+      <p *ngIf="meeting.isPast === 'Yes' ">Feedback: <ion-icon color='secondary' name="checkmark-circle-outline"></ion-icon> {{attendee.feedbackNote}}</p>
+      <p *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Did not attend meeting'">Feedback: <ion-icon color='danger' name="close-circle"></ion-icon></p>
+      <p *ngIf="meeting.isPast === 'Yes' && attendee.feedbackResponse === 'Not Given'">Feedback: <ion-icon color='dark' name="help-circle"></ion-icon></p>
+      <p *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse=== 'Accepted' && attendee.isOrganiser === 'No'">Invitation Response: <ion-icon color='secondary' name="checkmark-circle-outline"></ion-icon></p>
+      <p *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse=== 'Declined' && attendee.isOrganiser === 'No'">Invitation Response: <ion-icon color='danger' name="close-circle"></ion-icon></p>
+      <p *ngIf="meeting.isPast === 'No' && attendee.attendeeResponse=== 'Yet to respond' && attendee.isOrganiser === 'No'">Invitation Response: <ion-icon color='dark' name="help-circle"></ion-icon></p>
+      <p *ngIf="meeting.isPast === 'No' && attendee.isOrganiser === 'Yes'"><ion-icon color='primary' name="ribbon"></ion-icon></p>
     </ion-item>
   </ion-grid>
 </ion-list>
@@ -100,7 +96,7 @@
   </ion-list>
   -->
 
-  <ion-fab bottom right #fab>
+  <ion-fab bottom left #fab>
       <button ion-fab><ion-icon name="share"></ion-icon></button>
       <ion-fab-list side="right">
         <button ion-fab color="google" (click)="fnGoogle()"><ion-icon name="logo-googleplus"></ion-icon></button>

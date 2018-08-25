@@ -41,7 +41,7 @@
 
       <ion-item-divider item-md-divider-color sticky >
         <ion-label color="primary">
-          <B>{{group.startDate | date: 'dd/MM/yyyy' }}</B>
+          <B>{{group.startDate | date: 'dd MMM yyyy' }}</B>
         </ion-label>
       </ion-item-divider>
 
@@ -52,8 +52,8 @@
           <ion-icon small item-right color='secondary' name="checkmark-circle-outline" *ngIf="meeting.attendeeResponse === 'ACCEPT'"></ion-icon>
           <ion-icon small item-right color='danger' name="close-circle" *ngIf="meeting.attendeeResponse === 'DECLINE'"></ion-icon>
           <ion-icon small item-right color='dark' name="help-circle" *ngIf="meeting.attendeeResponse === 'NOT_GIVEN'"></ion-icon>
-          <h2>Title: {{meeting.title}}</h2>
-          <p>Time: {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}</p>
+          <h2>{{meeting.title}}</h2>
+          <p>{{meeting.startTimeStr}}  &mdash; {{meeting.endTimeStr}}</p>
           <p>Venue: {{meeting.venue}}</p>
         </button>
 

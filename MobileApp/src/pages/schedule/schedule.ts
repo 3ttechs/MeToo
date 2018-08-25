@@ -22,7 +22,6 @@ export class SchedulePage {
   // the List and not a reference to the element
   @ViewChild('scheduleList', { read: List }) scheduleList: List;
 
-  //private dayIndex: number = 0;
   private queryText: string = '';
   private segment: string = 'upcoming';
   private excludeCategories: any = [];
@@ -42,10 +41,9 @@ export class SchedulePage {
     public user: UserData,
     private loginProvider: DummyLoginProvider,
     private utility: UtilityProvider
-  ) {console.log('tjv...Inside constructor()');}
+  ) {}
 
   ionViewDidLoad() {
-    console.log('tjv...Inside ionViewDidLoad()');
     this.app.setTitle('Schedule');
     this.updateScheduleOnDidLoad();
   }
@@ -55,8 +53,7 @@ export class SchedulePage {
     this.scheduleList && this.scheduleList.closeSlidingItems();
 
     let userId = this.loginProvider.UserId;
-    console.log('userId : ' + userId);
-        
+            
     this.loading = this.loadingCtrl.create({
       content: 'Fetching Meetings...'
     });
@@ -65,13 +62,13 @@ export class SchedulePage {
       this.meetingProvider.getMeetingListForUser(userId).then(result => {
         
         this.allMeetings = result;
-        //console.log(JSON.stringify(this.allMeetings));
+       
         let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
         let meetingGroups: any = meetingGroupsData.groups;
         
         this.shownMeetingsCount = meetingGroupsData.shownMeetingsCount;
         this.groups = meetingGroups;
-        console.log('this.shownMeetingsCount : ' + this.shownMeetingsCount);
+        
         this.loading.dismiss();
       });
     });
@@ -81,16 +78,12 @@ export class SchedulePage {
   updateSchedule() {
     // Close any open sliding items when the schedule updates
     this.scheduleList && this.scheduleList.closeSlidingItems();
-
-    //let userId = this.loginProvider.UserId;
-    console.log('this.allMeetings.length : ' + this.allMeetings.length);
-        
+  
     let meetingGroupsData: any = this.meetingProvider.getMeetingGroupsDataFromAllMeetings(this.allMeetings, this.queryText, this.excludeCategories, this.segment);
     let meetingGroups: any = meetingGroupsData.groups;
     
     this.shownMeetingsCount = meetingGroupsData.shownMeetingsCount;
     this.groups = meetingGroups;
-    console.log('this.shownMeetingsCount : ' + this.shownMeetingsCount);
   }
 
   presentFilter() {
@@ -142,32 +135,21 @@ export class SchedulePage {
   }
 
   respondToMeetingInvitation(meetingId: number, attendeeResponse: string){
-    console.log('tjv...Inside respondToMeetingInvitation()...attendeeResponse : ' + attendeeResponse);
     let userId = this.loginProvider.UserId;
     let attendeeId = userId;
 
     //this.utility.showLoader('Adding response...');
     this.meetingProvider.updateAttendeeMeetingResponse(meetingId, attendeeId, attendeeResponse).then((result) => {
-      console.log('tjv...Calling loading.dismiss()');
-      //this.utility.dismissLoader();
-      console.log(result);
       
+      //this.utility.dismissLoader();
       if(result === 'Success'){
-        console.log('result === Success');
-        
         this.utility.showAlert(attendeeResponse, 'Meeting');
-        
         this.doRefreshExplicitly(null, 1);
-        //this.navCtrl.push(TabsPage);
       }
       else{
-        console.log('result != 0');
         this.utility.showAlert('Response not added', 'Meeting');
-        //this.navCtrl.push(TabsPage);
       }
-      
     }, (err) => {
-      //this.utility.dismissLoader();
       this.utility.presentToast(err);
     });
 
@@ -178,12 +160,11 @@ export class SchedulePage {
     this.meetingProvider.deleteMeeting(meetingId).then((result) => {
       
       if(result === 'Success'){
-        console.log('result === Success');
         this.utility.showAlert('Meeting deleted', 'Meeting');
         this.doRefreshExplicitly(null, 1);
       }
       else{
-        console.log('result != Success');
+        
         this.utility.showAlert('Meeting not deleted', 'Meeting');
       }
       
@@ -194,7 +175,6 @@ export class SchedulePage {
   }
 
   editMeeting(meeting: any) {
-    console.log('tjv...editMeeting()...meeting :.... ');
     this.navCtrl.push(MeetingEditPage, meeting);
   }
 }

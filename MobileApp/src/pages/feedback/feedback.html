@@ -7,6 +7,10 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+
+    <ion-card-header *ngIf="pendingFeedbackArray.length === 0">
+        No pending feedback
+    </ion-card-header>
  
     <ion-card *ngFor="let pendingFeedback of pendingFeedbackArray" style="width:95%;">
 

@@ -25,15 +25,14 @@ export class FeedbackPage {
   ) {}
 
   ionViewDidLoad() {
-    console.log('tjv...Inside ionViewDidLoad()');
     this.showPendingFeedback();
   }
 
   showPendingFeedback() {
-    console.log('tjv...showPendingFeedback()');
+    
 
     let userId = this.loginProvider.UserId;
-    console.log('userId : ' + userId);
+    
 
     this.loading = this.loadingCtrl.create({
       //content: 'Fetching Pending Feedback...'
@@ -47,8 +46,6 @@ export class FeedbackPage {
         let feedBackArray: any = result;
         for(let i=0; i<feedBackArray.length; i++)
         {
-          //console.log('meeting_id : ' + feedBackArray[i].meeting_id + '...' + feedBackArray[i].feedback_id + '...' + feedBackArray[i].title);
-
           let feedBack = {meetingId: feedBackArray[i].meeting_id,
                           meetingTitle: feedBackArray[i].title,
                           meetingVenue: feedBackArray[i].venue,
@@ -60,20 +57,13 @@ export class FeedbackPage {
 
           this.pendingFeedbackArray[i] = feedBack;
         }
-        //console.log('tjv...this.pendingFeedbackArray : ' + JSON.stringify(result));
-        console.log('tjv...this.pendingFeedbackArray.length ' + this.pendingFeedbackArray.length);
         this.loading.dismiss();
       });
     });
   }
 
-
   submitFeedback(feedback: any, response: string) {
-    console.log('tjv...Submit clicked ...meetingId : ' + feedback.meetingId);
-
-    //console.log('tjv...this.pendingFeedbackArray : ' + JSON.stringify(this.pendingFeedbackArray));
-
-    //feedback.response = 'GIVEN';
+    
     feedback.response = response;
     this.showLoader();
       this.feedbackProvider.addFeedback(feedback).then((result) => {
@@ -84,7 +74,6 @@ export class FeedbackPage {
         if(result === 1){
                     
           this.showAlert('Feedback Added');
-          //this.navCtrl.push(TabsPage);
 
           if(this.pendingFeedbackArray.length <= 1)
           {
@@ -92,14 +81,11 @@ export class FeedbackPage {
           }
           else
           {
-            console.log('FeedbackPage will be loaded');
             this.navCtrl.push(FeedbackPage);
           }
         }
         else{
-          console.log('result != 0');
           this.showAlert('Feedback NOT Added');
-          //this.navCtrl.push(TabsPage);
           this.navCtrl.push(FeedbackPage);
         }
         

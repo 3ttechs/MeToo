@@ -82,10 +82,11 @@
 			</ion-input>
 		</ion-item>
 
-		<ion-item>
-                <ion-label color ="primary">Change Password</ion-label>
-                <ion-checkbox color ="primary" [(ngModel)]="changePwdFlag" (ionChange)="changePasswd($event.value)" name="changePasswd"  [ngModelOptions]="{standalone:true}"></ion-checkbox>
-        </ion-item>
+		<ion-item *ngIf="inputdataVal?.login_by === 'CONTACTS' || inputdataVal?.login_by === 'CUSTOM'"> <!--loginBy === 'CUSTOM' || -->
+			<ion-label color ="primary">Change Password</ion-label>
+			<ion-checkbox color ="primary" [(ngModel)]="changePwdFlag" (ionChange)="changePasswd($event.value)" name="changePasswd"  [ngModelOptions]="{standalone:true}"></ion-checkbox>
+		</ion-item>
+
 		<ion-item *ngIf="changePwdFlag===true">	
 		
 			<ion-label color ="primary" >New Password		:</ion-label>
