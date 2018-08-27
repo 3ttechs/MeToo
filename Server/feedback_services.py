@@ -10,7 +10,7 @@ from  global_params import *
 
 
 def get_meeting_attendees_feedback(user_id,meeting_id):
-    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no, user.email, feedback.feedback_id, feedback.star_rating, feedback.feedback_response, feedback.note '
+    query = 'select  user.user_id as attendee_id, user.user_name as attendee_name, user.phone_no as phone_no , user.email as email, feedback.feedback_id as feedback_id, feedback.star_rating as star_rating, feedback.feedback_response as feedback_response, feedback.note as note '
     query += 'from (select attendee_id, feedback_id from attendee where attendee_response in("NOT_GIVEN","ACCEPT","DECLINE") and meeting_id = '+ meeting_id+' order by attendee_id) a, feedback, user '
     query += 'where feedback.feedback_id=a.feedback_id and user.user_id = a.attendee_id '
     result = run_query(query)

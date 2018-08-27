@@ -42,7 +42,7 @@ export class AddContactsFromphonePage {
                 //this.contFromPhone.email='noreplay@gmail.com';
                 this.contFromPhone.email=JSON.stringify(pickSelectedContact.phoneNumbers[this.i].value).replace('"','').replace('"','') +'@MeeToo.com';
             } else {
-                this.contFromPhone.email= JSON.stringify(pickSelectedContact.emails[this.i].value);
+                this.contFromPhone.email= JSON.stringify(pickSelectedContact.emails[this.i].value).replace('"','').replace('"','');
             }
 
         } catch (error) {

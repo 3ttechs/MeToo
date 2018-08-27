@@ -53,6 +53,7 @@ export class ConferenceApp {
   ];
   loggedInPages: PageInterface[] = [
     { title: 'Home', name: 'TabsPage', component: TabsPage, tabComponent: SchedulePage, index: 0, icon: 'home' },
+    { title: 'History', name: 'Schedule', component: SchedulePage, icon: 'paper' },
     { title: 'Our Vision', name: 'VisionPage', component: VisionPage, icon: 'help' },
     { title: 'My Contacts', name: 'ContactsPage', component: ContactsPage, icon: 'contacts' },
     //{ title: 'Notifications', name: 'NotificationPage', component: NotificationPage, icon: 'notifications' },

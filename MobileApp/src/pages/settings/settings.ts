@@ -97,7 +97,7 @@ export class SettingsPage {
 
         // Set new Passwd if changed
         if (this.changePwdFlag === true) {
-          passwd = this.userDetails.NewPassword;
+          passwd = this.inputdataVal.Password;
           //console.log(passwd);
         }
         

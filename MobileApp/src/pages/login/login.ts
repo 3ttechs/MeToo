@@ -17,6 +17,8 @@ import { Storage } from '@ionic/storage';
 import { FeedbackPage } from '../feedback/feedback';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { Facebook } from '@ionic-native/facebook';
+//import { TwitterConnect } from '@ionic-native/twitter-connect';
+
 
 
 @Component({
@@ -32,6 +34,7 @@ export class LoginPage {
   private loading: any;
   private feedBackCountStr: any;
   private my_uuid: any;
+//  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook, private twitter: TwitterConnect,
   constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider,
@@ -182,7 +185,7 @@ export class LoginPage {
     }).then(res =>{
       firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(res.idToken))
       .then(suc=>{
-        alert('LOGIN Succesful, User ID = '+suc.email)
+        //alert('LOGIN Succesful, User ID = '+suc.email)
 
         let LoginData = JSON.stringify({
           login_id: suc.email, user_name: suc.displayName
@@ -213,8 +216,104 @@ export class LoginPage {
   )
 
   }
+/*
+
+  twLogin(form: NgForm) 
+  {
+    this.twitter.login().then( response => {
+      alert(JSON.stringify(response));
+    }, error => {
+      console.log("Error connecting to twitter: ", error);
+    });
+
+    this.submitted = true;
+    if (form.valid) {
+      this.userData.login(this.login.username);
+      this.navCtrl.push(TabsPage);
+    }
+
+  }
+
+  */
+
+
+
 
   onTLogin(form: NgForm) {
+    // App_ID:  C48ECbLFZqTdQ8YeA7oKFOLbe
+    // App_Secret: E1jQQxhS1n0bv9AlC1nGFczKgYwy6SJ1KW3AuEoWfh7ibjpl3V
+
+    alert('Inside onTLogin');
+    firebase.auth().signInWithPopup(new firebase.auth.TwitterAuthProvider())
+    .then(res => {
+      //alert('LOGIN Succesful, User ID = '+res.user.email)
+      //alert(JSON.stringify(res));
+      let LoginData = JSON.stringify({
+        login_id: res.user.email, user_name: res.user.displayName
+      });
+      this.feedbackProvider.PostData(LoginData,"/facebook_login").then((result) => {
+        this.data = result;
+        this.login_method();
+      }).catch(function (error) {
+        this.feedbackProvider.showAlert(JSON.stringify(error),"Error");
+      });
+
+      if (LoginData.length > 0) {
+        this.storage.clear();
+        this.storage.set('login_id1', res.user.email);
+        this.storage.set('passwd1', '0');
+
+      } 
+    }).catch(ferr=>{
+      alert("firebase errc")
+      alert(JSON.stringify(ferr))
+    })
+
+
+    this.submitted = true;
+    if (form.valid) {
+      this.userData.login(this.login.username);
+      this.navCtrl.push(TabsPage);
+    }
+  }
+
+
+  onTwitterLogin(form: NgForm) {
+    // App_ID: 1042366875925525
+    // App_Secret: b7f65dbb1f82ba2c14e15b2fef99d479
+    // https://www.youtube.com/watch?v=_PGob2ypXJc
+
+    this.facebook.login(['email']).then(res=>{
+      const fc=firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
+      firebase.auth().signInWithCredential(fc).then(fs=>{
+        //alert('LOGIN Succesful, User ID = '+fs.email)
+        //alert(JSON.stringify(fs));
+        let LoginData = JSON.stringify({
+          login_id: fs.email, user_name: fs.displayName
+        });
+        this.feedbackProvider.PostData(LoginData,"/facebook_login").then((result) => {
+          this.data = result;
+          this.login_method();
+        }).catch(function (error) {
+          this.feedbackProvider.showAlert(JSON.stringify(error),"Error");
+        });
+
+        if (LoginData.length > 0) {
+          this.storage.clear();
+          this.storage.set('login_id1', fs.email);
+          this.storage.set('passwd1', '0');
+  
+        } 
+
+
+      }).catch(ferr=>{
+        alert("firebase errc")
+        alert(JSON.stringify(ferr))
+      })
+    }).catch(err=>{
+      alert(JSON.stringify(err))
+    })
+
     this.submitted = true;
 
     if (form.valid) {
@@ -231,7 +330,8 @@ export class LoginPage {
     this.facebook.login(['email']).then(res=>{
       const fc=firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken)
       firebase.auth().signInWithCredential(fc).then(fs=>{
-        alert('LOGIN Succesful, User ID = '+fs.email)
+        //alert('LOGIN Succesful, User ID = '+fs.email)
+        //alert(JSON.stringify(fs));
         let LoginData = JSON.stringify({
           login_id: fs.email, user_name: fs.displayName
         });

@@ -1,6 +1,9 @@
 <ion-header>
   <ion-navbar>
-    <ion-title *ngIf="meeting">{{meeting.title}} {{meeting.startTimeStr}}&mdash;{{meeting.endTimeStr}}</ion-title>
+    <ion-label bold color ='white' *ngIf="meeting">
+      <!--{{meeting.title}} {{meeting.startTimeStr}}&mdash;{{meeting.endTimeStr}}-->
+      {{meeting.startDate  | date: 'dd MMM'}} ,  {{meeting.startTimeStr}} &mdash; {{meeting.endTimeStr}}
+    </ion-label>
   </ion-navbar>
 </ion-header>
 
@@ -12,9 +15,9 @@
       <ion-item>
         <ion-label stacked color="primary">Title</ion-label>
         
-        <ion-input [(ngModel)]="meetingEdit.Title" name="title" type="text" placeholder="Enter meeting title" #title="ngModel" spellcheck="false" autocapitalize="off"
+        <ion-textarea [(ngModel)]="meetingEdit.Title" name="title" type="text" placeholder="Enter meeting title" #title="ngModel" spellcheck="false" autocapitalize="off"
           required>
-        </ion-input>
+        </ion-textarea>
       </ion-item>
         
       <p ion-text [hidden]="title.valid || submitted == false" color="danger" padding-left>
@@ -24,9 +27,9 @@
       <ion-item>
         <ion-label stacked color="primary">Notes</ion-label>
           
-        <ion-input [(ngModel)]="meetingEdit.Notes" name="notes" type="text" placeholder="Enter meeting notes" #notes="ngModel" spellcheck="false" autocapitalize="off"
+        <ion-textarea [(ngModel)]="meetingEdit.Notes" name="notes" type="text" placeholder="Enter meeting notes" #notes="ngModel" spellcheck="false" autocapitalize="off"
           required>
-        </ion-input>
+        </ion-textarea>
       </ion-item>
               
       <p ion-text [hidden]="notes.valid || submitted == false" color="danger" padding-left>
