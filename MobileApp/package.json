@@ -27,6 +27,7 @@
     "@ionic-native/facebook": "^4.12.0",
     "@ionic-native/google-plus": "^4.12.0",
     "@ionic-native/in-app-browser": "^4.3.1",
+    "@ionic-native/linkedin": "^4.12.0",
     "@ionic-native/local-notifications": "^4.10.0",
     "@ionic-native/native-storage": "^4.11.0",
     "@ionic-native/social-sharing": "^4.12.0",
@@ -48,6 +49,7 @@
     "cordova-plugin-inappbrowser": "^1.7.2",
     "cordova-plugin-ionic-keyboard": "^2.1.2",
     "cordova-plugin-ionic-webview": "^1.2.1",
+    "cordova-plugin-linkedin": "^1.2.1",
     "cordova-plugin-local-notification": "^0.9.0-beta.2",
     "cordova-plugin-splashscreen": "^4.1.0",
     "cordova-plugin-statusbar": "^2.4.2",
@@ -107,6 +109,10 @@
         "APP_ID": "1042366875925525",
         "APP_NAME": "MeToo",
         "ANDROID_SDK_VERSION": "4.+"
+      },
+      "cordova-plugin-linkedin": {
+        "APP_ID": "811sy5gatij4cj",
+        "APP_NAME": "MeToo"
       }
     }
   }

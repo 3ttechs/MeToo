@@ -102,6 +102,10 @@
         <variable name="APP_NAME" value="MeToo" />
         <variable name="ANDROID_SDK_VERSION" value="4.+" />
     </plugin>
+    <plugin name="cordova-plugin-linkedin" spec="^1.2.1">
+        <variable name="APP_ID" value="811sy5gatij4cj" />
+        <variable name="APP_NAME" value="MeToo" />
+    </plugin>
     <engine name="ios" spec="^4.5.2" />
     <engine name="android" spec="6.3.0" />
 </widget>

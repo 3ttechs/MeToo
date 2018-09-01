@@ -16,6 +16,8 @@ from feedback_services import *
 from social_services import *
 from global_params import *
 from pyfcm import FCMNotification
+import calendar
+
 
 #from  login_with_social import *
 
@@ -141,6 +143,10 @@ def add_meeting_method(): return(add_meeting())
 #http://localhost:5000/get_meeting_list/user_id=1
 @app.route('/get_meeting_list/user_id=<user_id>', methods=['GET'])
 def get_meeting_list_method(user_id):    return(get_meeting_list(user_id))
+
+#http://localhost:5000/get_meeting_list_for_a_day/user_id=1, start_date='2018-8-29'
+@app.route('/get_meeting_list_for_a_day/user_id=<user_id>,start_date=<start_date>', methods=['GET'])
+def get_meeting_list_for_a_day_method(user_id, start_date): return(get_meeting_list_for_a_day(user_id,start_date))
 
 #http://localhost:5000/get_meeting_details/meeting_id=1
 @app.route('/get_meeting_details/meeting_id=<meeting_id>', methods=['GET'])
@@ -277,7 +283,23 @@ def send_notification_method():
     result = push_service.notify_single_device(registration_id=registration_id, message_title=message_title, message_body=message_body)
     print (result)
 
+#http://localhost:5000/calendar_data
+@app.route('/calendar_data', methods=['GET'])
+def calendar_data_method():
+  calendar.setfirstweekday(calendar.SUNDAY)
+  result=[]
+  for year in range (2018,2020):
+      week_count = 0
+      for month in range(1, 13):
+          cal = calendar.monthcalendar(year,month)
+          num_weeks = len(cal)
+          for week in range(num_weeks):
+              week_count = week_count+ 1
+              result.append({"year":year, "month":month, "month_name":calendar.month_name[month], "week":week_count, "dates":cal[week]})
+              if(week == num_weeks-1 and cal[week][6]==0):
+                  week_count = week_count-1
 
+  return json.dumps(result), 200
 
 
 @app.after_request

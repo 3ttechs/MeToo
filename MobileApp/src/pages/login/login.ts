@@ -18,6 +18,7 @@ import { FeedbackPage } from '../feedback/feedback';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 import { Facebook } from '@ionic-native/facebook';
 //import { TwitterConnect } from '@ionic-native/twitter-connect';
+import { LinkedIn, LinkedInLoginScopes } from '@ionic-native/linkedin';
 
 
 
@@ -35,7 +36,7 @@ export class LoginPage {
   private feedBackCountStr: any;
   private my_uuid: any;
 //  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook, private twitter: TwitterConnect,
-  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook,
+  constructor(  private uniqueDeviceID: UniqueDeviceID, public navCtrl: NavController, public googleplus:GooglePlus, public userData: UserData, public facebook:Facebook, private linkedin: LinkedIn,
     private feedbackProvider: FeedbackProvider,
     private loginProvider: DummyLoginProvider,
     private storage: Storage,
@@ -369,4 +370,28 @@ export class LoginPage {
       this.navCtrl.push(TabsPage);
     }
   }
+
+  onLLogin()  {
+    // Client ID:	811sy5gatij4cj
+    //Client Secret:	l2vNdmfXtaRasnsP
+
+    // check if there is an active session
+    this.linkedin.hasActiveSession().then((active) => console.log('has active session?', active));
+
+    // login
+    //const scopes:String[] = ['r_basicprofile', 'r_emailaddress', 'rw_company_admin', 'w_share'];
+    const scopes: LinkedInLoginScopes[] = ['r_basicprofile', 'r_emailaddress', 'rw_company_admin', 'w_share'];
+    this.linkedin.login(scopes, true)
+      .then((result) => {
+        console.log('Logged in!')
+        alert('Logged in!');
+        alert(JSON.stringify(result));
+
+    })
+      .catch(e => {
+        console.log('Error logging in', e);
+        alert(JSON.stringify(e));
+    });
+  }
 }
+

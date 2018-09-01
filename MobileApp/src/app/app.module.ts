@@ -44,6 +44,7 @@ import { Device } from '@ionic-native/device';
 import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 
 import { Facebook } from '@ionic-native/facebook';
+import { LinkedIn } from '@ionic-native/linkedin';
 
 //import {AngularFireAuthModule} from 'angularfire2/auth';
 
@@ -147,7 +148,8 @@ firebase.initializeApp(firebaseConfig)
     UniqueDeviceID,
     Contacts, // ChandraRao
     SocialSharing, // ChandraRao
-    Facebook
+    Facebook,
+    LinkedIn
   ]
 })
 export class AppModule { }
