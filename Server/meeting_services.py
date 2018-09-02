@@ -3,7 +3,8 @@ from datetime import datetime
 from flask import Flask, request,json,send_from_directory,Response,render_template,send_file, url_for, redirect
 from flask_mail import Mail, Message
 from  global_params import *
-import time
+import time, calendar
+
 
 # organiser_response : ACTIVE / CANCEL
 # attendee_response : NOT_GIVEN / ACCEPT / DECLINE
@@ -234,7 +235,6 @@ def get_meeting_list_for_a_day(user_id, start_date):
     
     meeting_ids_str = ','.join(str(e) for e in meeting_ids)    
     query = "select start_date, start_time,end_date,end_time,title  from meeting where meeting_id in ("+meeting_ids_str+" ) and organiser_response = 'ACTIVE' and start_date = '" + start_date +"' order by start_time"
-
     result = run_query(query)
 
     '''
@@ -269,7 +269,6 @@ def get_meeting_list_for_a_day(user_id, start_date):
         if(end<=eight_pm):
             t_line.append(start)
             t_line.append(end)
-        #print(eight_am - eight_pm) # 43200
     t_line.append(eight_pm)
 
     if (len(result)<=0):
@@ -430,3 +429,19 @@ def update_meeting():
     mail.send(msg)    
     
     return "Success", 200    
+
+def calendar_data():
+  calendar.setfirstweekday(calendar.SUNDAY)
+  result=[]
+  for year in range (2018,2020):
+      week_count = 0
+      for month in range(1, 13):
+          cal = calendar.monthcalendar(year,month)
+          num_weeks = len(cal)
+          for week in range(num_weeks):
+              week_count = week_count+ 1
+              result.append({"year":year, "month":month, "month_name":calendar.month_name[month], "week":week_count, "dates":cal[week]})
+              if(week == num_weeks-1 and cal[week][6]==0):
+                  week_count = week_count-1
+
+  return json.dumps(result), 200
