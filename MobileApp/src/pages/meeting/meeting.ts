@@ -3,7 +3,8 @@ import { Component } from "@angular/core";
 import * as moment from 'moment';
 import { FeedbackProvider } from '../../providers/feedback-provider'; 
 import { DummyLoginProvider } from '../../providers/dummy-login-provider';
-
+//"moment": "^2.22.2",
+//    "rxjs": "5.5.2",
 
 export interface Config {
 	technologies: string;
@@ -51,10 +52,8 @@ export class MeetingPage {
     
     inputdataVal: any;
 
-    constructor(public navCtrl: NavController, private modalCtrl: ModalController
-        ,private alertCtrl: AlertController,private feedbackProvider: FeedbackProvider,
-        private loginProvider: DummyLoginProvider
-    ) {
+    constructor(public navCtrl: NavController, private modalCtrl: ModalController,private alertCtrl: AlertController,private feedbackProvider: FeedbackProvider, private loginProvider: DummyLoginProvider
+        ) {
         console.log('constructor call');
         this.eventSource = this.createRandomEvents();
         console.log('constructor ');
@@ -105,7 +104,7 @@ export class MeetingPage {
     }
     this.eventSource = this.createRandomEvents();
     }
-
+    
     onEventSelected(addMeeting) {
         try{
         let start = moment(addMeeting.startTime).format('LLLL');

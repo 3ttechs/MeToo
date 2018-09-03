@@ -8,6 +8,25 @@
 
 <ion-content> 
 
+	<ion-grid style="align-items: center;">
+		<ion-row >
+			<ion-col col-3 >
+			<button  ion-fab color="google" (click)="onGLogin()"><ion-icon name="logo-googleplus" small></ion-icon></button>
+			</ion-col>
+			<ion-col col-3>
+			<button ion-fab color="twitter" (click)="onTwitterLogin(loginForm)"><ion-icon name="logo-twitter"></ion-icon></button>
+			</ion-col>
+			<ion-col col-3>
+			<button ion-fab color="linkedin" (click)="onLLogin(loginForm)"><ion-icon name="logo-linkedin"></ion-icon></button>
+			</ion-col>
+			<ion-col col-3>
+			<button ion-fab color="facebook" (click)="onFBLogin(loginForm)"><ion-icon name="logo-facebook"></ion-icon></button>
+			</ion-col>
+		</ion-row>
+		</ion-grid>
+	<ion-grid>
+
+		
 
 
 	<form #loginForm="ngForm" novalidate>
@@ -64,20 +83,6 @@
 <!--
 		<p ion-text style="text-align: center;" >Or Login with </p>
 	-->	
-<ion-grid style="align-items: center;">
-	<ion-row >
-		<ion-col col-4 >
-		<button  ion-fab color="google" (click)="onGLogin()"><ion-icon name="logo-googleplus"></ion-icon></button>
-		</ion-col>
-		<ion-col col-4>
-		<button ion-fab color="twitter" (click)="onLLogin(loginForm)"><ion-icon name="logo-twitter"></ion-icon></button>
-		</ion-col>
-		<ion-col col-4>
-		<button ion-fab color="facebook" (click)="onFBLogin(loginForm)"><ion-icon name="logo-facebook"></ion-icon></button>
-		</ion-col>
-	</ion-row>
-	</ion-grid>
-<ion-grid>
 				
 	<ion-row>
 		<ion-col></ion-col>

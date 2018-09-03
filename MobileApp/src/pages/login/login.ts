@@ -22,6 +22,7 @@ import { LinkedIn, LinkedInLoginScopes } from '@ionic-native/linkedin';
 
 
 
+
 @Component({
   selector: 'page-user',
   templateUrl: 'login.html'
